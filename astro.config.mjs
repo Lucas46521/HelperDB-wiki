@@ -25,7 +25,6 @@ export default defineConfig({
       logo: {
         src: './src/assets/logo.svg',
       },
-      contentDir: './docs',
       social: [
         {
           icon: 'github',
