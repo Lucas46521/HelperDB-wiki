@@ -68,7 +68,7 @@ export default defineConfig({
       lastUpdated: true,
       pagination: true,
       expressiveCode: {
-        themes: ['discord-dark', 'github-light'],
+        themes: ['dark-plus', 'github-light'],
       },
       components: {
         Head: './src/components/Head.astro',
