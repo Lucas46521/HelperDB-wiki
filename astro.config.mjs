@@ -26,10 +26,18 @@ export default defineConfig({
       logo: {
         src: './src/assets/logo.svg',
       },
-      social: {
-        github: 'https://github.com/your-username/helper.db',
-        discord: 'https://discord.gg/your-server',
-      },
+      social: [
+        {
+          icon: 'github',
+          label: 'GitHub',
+          link: 'https://github.com/your-username/helper.db',
+        },
+        {
+          icon: 'discord',
+          label: 'Discord',
+          link: 'https://discord.gg/your-server',
+        },
+      ],
       sidebar: [
         {
           label: 'Getting Started',
