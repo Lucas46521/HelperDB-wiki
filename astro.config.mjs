@@ -16,12 +16,12 @@ export default defineConfig({
         {
           icon: 'github',
           label: 'GitHub',
-          url: 'https://github.com/your-username/helper.db',
+          href: 'https://github.com/your-username/helper.db',
         },
         {
           icon: 'discord',
           label: 'Discord',
-          url: 'https://discord.gg/your-server',
+          href: 'https://discord.gg/your-server',
         },
       ],
       sidebar: [
