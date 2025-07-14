@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
-import vercel from '@astrojs/vercel/static';
+import vercel from '@astrojs/vercel';
 import tailwind from '@astrojs/tailwind';
 import expressiveCode from 'astro-expressive-code';
 
@@ -26,10 +26,16 @@ export default defineConfig({
       logo: {
         src: './src/assets/logo.svg',
       },
-      social: {
-        github: 'https://github.com/your-username/helper.db',
-        discord: 'https://discord.gg/your-server',
-      },
+      social: [
+        {
+          label: 'GitHub',
+          link: 'https://github.com/your-username/helper.db',
+        },
+        {
+          label: 'Discord',
+          link: 'https://discord.gg/your-server',
+        },
+      ],
       sidebar: [
         {
           label: 'Getting Started',
