@@ -22,9 +22,6 @@ export default defineConfig({
     starlight({
       title: 'Helper.db',
       description: 'Complete documentation for Helper.db - A powerful database helper package',
-      logo: {
-        src: './src/assets/logo.svg',
-      },
       social: [
         {
           icon: 'github',
