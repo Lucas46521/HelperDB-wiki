@@ -1,0 +1,157 @@
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+
+  [data-theme='dark'] {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+}
+
+/* Custom Starlight overrides */
+.sl-markdown-content {
+  @apply prose prose-slate dark:prose-invert max-w-none;
+}
+
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3,
+.sl-markdown-content h4 {
+  @apply font-semibold;
+}
+
+.sl-markdown-content code {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm;
+}
+
+.sl-markdown-content pre {
+  @apply bg-card border rounded-lg;
+}
+
+/* Method signature styling */
+.method-signature {
+  @apply bg-card border rounded-lg p-4 mb-6;
+}
+
+.method-name {
+  @apply text-primary font-mono text-lg font-semibold;
+}
+
+.method-params {
+  @apply text-muted-foreground font-mono;
+}
+
+.method-return {
+  @apply text-accent-foreground font-mono text-sm;
+}
+
+/* Parameter table styling */
+.params-table {
+  @apply w-full border-collapse border border-border rounded-lg overflow-hidden;
+}
+
+.params-table th {
+  @apply bg-muted px-4 py-2 text-left font-semibold;
+}
+
+.params-table td {
+  @apply px-4 py-2 border-t border-border;
+}
+
+.param-name {
+  @apply font-mono text-primary;
+}
+
+.param-type {
+  @apply font-mono text-muted-foreground text-sm;
+}
+
+/* Example code blocks */
+.example-block {
+  @apply border border-border rounded-lg overflow-hidden mb-6;
+}
+
+.example-header {
+  @apply bg-muted px-4 py-2 border-b border-border font-semibold;
+}
+
+/* Discord.js/aoi.js inspired styling */
+.api-method {
+  @apply border border-border rounded-lg mb-8 overflow-hidden;
+}
+
+.api-method-header {
+  @apply bg-primary text-primary-foreground px-6 py-4;
+}
+
+.api-method-content {
+  @apply p-6;
+}
+
+.api-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.api-badge.static {
+  @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200;
+}
+
+.api-badge.async {
+  @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+}
+
+.api-badge.deprecated {
+  @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
+}

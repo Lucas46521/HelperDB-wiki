@@ -1,0 +1,54 @@
+
+---
+title: Introduction
+description: Welcome to Helper.db - A powerful database helper package
+---
+
+import { Badge } from '../../../components/ui/badge';
+
+# Welcome to Helper.db
+
+Helper.db is a powerful and intuitive database helper package that simplifies database operations in your Node.js applications. Inspired by popular packages like discord.js and aoi.js, Helper.db provides a clean and developer-friendly API.
+
+## Features
+
+- 🚀 **Fast & Lightweight** - Optimized for performance
+- 🔧 **Easy to Use** - Simple and intuitive API
+- 🛡️ **Type Safe** - Full TypeScript support
+- 📦 **Modular** - Use only what you need
+- 🔄 **Async/Await** - Modern JavaScript patterns
+- 📖 **Well Documented** - Comprehensive documentation
+
+## Quick Example
+
+```javascript
+const { Database } = require('helper.db');
+
+const db = new Database('./data.json');
+
+// Set a value
+await db.set('user.123.name', 'John Doe');
+
+// Get a value
+const userName = await db.get('user.123.name');
+console.log(userName); // 'John Doe'
+
+// Check if a key exists
+const exists = await db.has('user.123');
+console.log(exists); // true
+```
+
+## Why Helper.db?
+
+Helper.db was created to provide developers with a simple yet powerful solution for handling database operations. Whether you're building a Discord bot, a web application, or any Node.js project that needs data persistence, Helper.db has you covered.
+
+### Comparison with Other Solutions
+
+| Feature | Helper.db | Native JSON | Other DBs |
+|---------|-----------|-------------|-----------|
+| Easy Setup | ✅ | ❌ | ❌ |
+| Type Safety | ✅ | ❌ | ⚠️ |
+| Performance | ✅ | ⚠️ | ✅ |
+| Learning Curve | ✅ | ⚠️ | ❌ |
+
+Ready to get started? Check out our [Installation Guide](/guides/installation/) to begin using Helper.db in your project.
