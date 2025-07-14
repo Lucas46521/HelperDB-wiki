@@ -4,6 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "astro dev --host 0.0.0.0 --port 5000",
+    "start": "astro dev --host 0.0.0.0 --port 5000",
+    "build": "astro build",
+    "preview": "astro preview --host 0.0.0.0 --port 5000",
+    "astro": "astro",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
