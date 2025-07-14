@@ -1,10 +1,12 @@
 
 ---
-title: Helper.db Documentation
-description: Welcome to Helper.db - A powerful database helper package for Node.js applications
+title: Helper.db
+description: A powerful database helper package for Node.js applications
 template: splash
 hero:
-  tagline: Simplify your database operations with Helper.db
+  tagline: A powerful Node.js module that allows you to easily interact with databases
+  image:
+    file: ../../assets/logo.svg
   actions:
     - text: Get started
       link: /guides/introduction/
@@ -13,60 +15,101 @@ hero:
     - text: View on GitHub
       link: https://github.com/your-username/helper.db
       icon: external
+      variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Quick start
+<div class="not-content">
+  <div class="flex items-center gap-4 mb-8">
+    <div class="flex gap-2">
+      <img src="https://img.shields.io/npm/v/helper.db?color=5865f2&style=flat-square" alt="npm version" />
+      <img src="https://img.shields.io/npm/dt/helper.db?color=5865f2&style=flat-square" alt="npm downloads" />
+      <img src="https://img.shields.io/github/stars/your-username/helper.db?color=5865f2&style=flat-square" alt="GitHub stars" />
+    </div>
+  </div>
+</div>
 
-Get up and running with Helper.db in minutes.
+## About
 
-<CardGrid stagger>
-  <Card title="Installation" icon="rocket">
-    Install Helper.db with npm, yarn, or pnpm
-    ```bash
-    npm install helper.db
-    ```
-  </Card>
-  <Card title="Simple Setup" icon="setting">
-    Connect to your database with just a few lines of code
-    ```javascript
-    const { Database } = require('helper.db');
-    const db = new Database('./data.db');
-    ```
-  </Card>
-  <Card title="Easy Operations" icon="document">
-    Perform CRUD operations with simple methods
-    ```javascript
-    await db.set('users.123', { name: 'John', age: 30 });
-    const user = await db.get('users.123');
-    ```
-  </Card>
-  <Card title="Advanced Features" icon="star">
-    Explore advanced features like queries, backups, and more
-  </Card>
-</CardGrid>
+Helper.db is a powerful **Node.js** module that allows you to easily interact with databases.
 
-## Why Helper.db?
+- Object-oriented
+- Predictable abstractions
+- Performant
+- 100% coverage of the database operations
 
-Helper.db provides a simple, intuitive API for database operations while maintaining performance and reliability.
+## Installation
 
-- **Easy to use**: Simple API that's perfect for beginners
-- **Powerful**: Advanced features for complex applications  
-- **Fast**: Optimized for performance
-- **Reliable**: Built-in error handling and data validation
-- **Flexible**: Works with SQLite, JSON, and more
+**Node.js 16.9.0 or newer is required.**
 
-## Next steps
+```bash
+npm install helper.db
+yarn add helper.db
+pnpm add helper.db
+bun add helper.db
+```
 
-<CardGrid>
-  <Card title="Read the guide" icon="open-book">
-    Learn the basics in our [getting started guide](/guides/introduction/).
-  </Card>
-  <Card title="Browse examples" icon="laptop">
-    See Helper.db in action with practical [examples](/examples/discord-bot/).
-  </Card>
-  <Card title="API reference" icon="setting">
-    Explore the complete [API documentation](/reference/database/).
-  </Card>
-</CardGrid>
+### Optional packages
+
+- **zlib-sync** for WebSocket data compression and inflation (`npm install zlib-sync`)
+- **bufferutil** for a much faster WebSocket connection (`npm install bufferutil`)
+- **@helper/voice** for interacting with databases (`npm install @helper/voice`)
+
+## Example usage
+
+Install helper.db:
+
+```bash
+npm install helper.db
+```
+
+Register a slash command against the Discord API:
+
+```javascript
+const { Database } = require('helper.db');
+
+// Create a new database instance
+const db = new Database('./my-database.db');
+
+// Store user data
+await db.set('users.123456789', {
+  name: 'John Doe',
+  level: 1,
+  coins: 100
+});
+
+// Retrieve user data
+const user = await db.get('users.123456789');
+console.log(user); // { name: 'John Doe', level: 1, coins: 100 }
+
+// Update specific properties
+await db.add('users.123456789.coins', 50);
+await db.set('users.123456789.level', 2);
+
+// Work with arrays
+await db.push('users.123456789.inventory', 'sword');
+await db.push('users.123456789.inventory', 'shield');
+
+// Check if data exists
+const hasUser = await db.has('users.123456789');
+console.log(hasUser); // true
+```
+
+## Links
+
+- [Website](https://helper-db.com) ([source](https://github.com/your-username/helper.db-docs))
+- [Documentation](https://helper-db.com/docs)
+- [Guide](https://helper-db.com/guide) ([source](https://github.com/your-username/helper.db-guide))
+- [Helper.db Discord server](https://discord.gg/helper-db)
+- [Discord API Discord server](https://discord.gg/discord-api)
+- [GitHub](https://github.com/your-username/helper.db)
+- [npm](https://www.npmjs.com/package/helper.db)
+
+## Contributing
+
+Before creating an issue, please ensure that it hasn't already been reported/suggested, and double-check the documentation.
+
+## Help
+
+If you don't understand something in the documentation, you are experiencing problems, or you just need a gentle nudge in the right direction, please don't hesitate to join our official [Helper.db Server](https://discord.gg/helper-db).

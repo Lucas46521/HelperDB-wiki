@@ -1,42 +1,21 @@
+
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
-import vercel from '@astrojs/vercel';
 import tailwind from '@astrojs/tailwind';
-import expressiveCode from 'astro-expressive-code';
 
 export default defineConfig({
-  site: 'https://helperdb-docs.vercel.app',
-  output: 'static',
-  adapter: vercel({
-    webAnalytics: { enabled: true }
-  }),
   integrations: [
-    expressiveCode({
-      themes: ['dark-plus', 'light-plus'],
-      styleOverrides: {
-        borderRadius: '0.5rem',
-      },
-    }),
     starlight({
       title: 'Helper.db',
-      description: 'Complete documentation for Helper.db - A powerful database helper package',
       logo: {
         src: './src/assets/logo.svg',
       },
-      social: [
-        {
-          icon: 'github',
-          label: 'GitHub',
-          href: 'https://github.com/your-username/helper.db',
-        },
-        {
-          icon: 'discord',
-          label: 'Discord',
-          href: 'https://discord.gg/your-server',
-        },
-      ],
+      social: {
+        github: 'https://github.com/your-username/helper.db',
+        discord: 'https://discord.gg/your-server',
+      },
       sidebar: [
         {
           label: 'Getting Started',
@@ -47,12 +26,21 @@ export default defineConfig({
           ],
         },
         {
-          label: 'API Reference',
+          label: 'Classes',
           autogenerate: { directory: 'reference' },
+          items: [
+            { label: 'Database', link: '/reference/database/' },
+            { label: 'Query', link: '/reference/query/' },
+            { label: 'Backup', link: '/reference/backup/' },
+          ],
         },
         {
           label: 'Examples',
-          autogenerate: { directory: 'examples' },
+          items: [
+            { label: 'Discord Bot', link: '/examples/discord-bot/' },
+            { label: 'Web Application', link: '/examples/web-app/' },
+            { label: 'API Server', link: '/examples/api-server/' },
+          ],
         },
         {
           label: 'Advanced',
@@ -73,7 +61,10 @@ export default defineConfig({
       lastUpdated: true,
       pagination: true,
       expressiveCode: {
-        themes: ['dark-plus', 'light-plus'],
+        themes: ['discord-dark', 'github-light'],
+      },
+      components: {
+        Head: './src/components/Head.astro',
       },
     }),
     react(),

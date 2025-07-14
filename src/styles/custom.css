@@ -5,48 +5,48 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --background: 255 255 255;
+    --foreground: 36 41 47;
+    --card: 255 255 255;
+    --card-foreground: 36 41 47;
+    --popover: 255 255 255;
+    --popover-foreground: 36 41 47;
+    --primary: 88 101 242;
+    --primary-foreground: 255 255 255;
+    --secondary: 243 244 246;
+    --secondary-foreground: 36 41 47;
+    --muted: 248 250 252;
+    --muted-foreground: 100 116 139;
+    --accent: 239 242 255;
+    --accent-foreground: 88 101 242;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --border: 226 232 240;
+    --input: 226 232 240;
+    --ring: 88 101 242;
     --radius: 0.5rem;
   }
 
   [data-theme='dark'] {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 84% 4.9%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 94.1%;
+    --background: 32 34 37;
+    --foreground: 220 221 222;
+    --card: 47 49 54;
+    --card-foreground: 220 221 222;
+    --popover: 47 49 54;
+    --popover-foreground: 220 221 222;
+    --primary: 88 101 242;
+    --primary-foreground: 255 255 255;
+    --secondary: 54 57 63;
+    --secondary-foreground: 185 187 190;
+    --muted: 54 57 63;
+    --muted-foreground: 142 146 151;
+    --accent: 54 57 63;
+    --accent-foreground: 220 221 222;
+    --destructive: 237 66 69;
+    --destructive-foreground: 255 255 255;
+    --border: 54 57 63;
+    --input: 54 57 63;
+    --ring: 88 101 242;
   }
 }
 
@@ -56,80 +56,73 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 }
 
-/* Custom Starlight overrides */
+/* Discord.js style overrides */
+.sl-container {
+  @apply max-w-none;
+}
+
+.sl-nav {
+  @apply bg-card border-r border-border;
+  width: 280px;
+}
+
+.sl-nav ul {
+  @apply space-y-1;
+}
+
+.sl-nav a {
+  @apply text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-md px-3 py-2 text-sm font-medium transition-colors;
+}
+
+.sl-nav a[aria-current="page"] {
+  @apply bg-accent text-accent-foreground;
+}
+
+.sl-nav .top-level > li > details > summary {
+  @apply font-semibold text-foreground;
+}
+
+/* Main content styling */
 .sl-markdown-content {
   @apply prose prose-slate dark:prose-invert max-w-none;
 }
 
-.sl-markdown-content h1,
-.sl-markdown-content h2,
-.sl-markdown-content h3,
+.sl-markdown-content h1 {
+  @apply text-3xl font-bold text-foreground border-b border-border pb-4 mb-6;
+}
+
+.sl-markdown-content h2 {
+  @apply text-2xl font-semibold text-foreground mt-8 mb-4;
+}
+
+.sl-markdown-content h3 {
+  @apply text-xl font-semibold text-foreground mt-6 mb-3;
+}
+
 .sl-markdown-content h4 {
-  @apply font-semibold;
+  @apply text-lg font-semibold text-foreground mt-4 mb-2;
 }
 
 .sl-markdown-content code {
-  @apply bg-muted px-1.5 py-0.5 rounded text-sm;
+  @apply bg-muted px-2 py-1 rounded text-sm font-mono;
 }
 
 .sl-markdown-content pre {
-  @apply bg-card border rounded-lg;
+  @apply bg-card border border-border rounded-lg overflow-hidden;
 }
 
-/* Method signature styling */
-.method-signature {
-  @apply bg-card border rounded-lg p-4 mb-6;
+.sl-markdown-content pre code {
+  @apply bg-transparent p-0;
 }
 
-.method-name {
-  @apply text-primary font-mono text-lg font-semibold;
-}
-
-.method-params {
-  @apply text-muted-foreground font-mono;
-}
-
-.method-return {
-  @apply text-accent-foreground font-mono text-sm;
-}
-
-/* Parameter table styling */
-.params-table {
-  @apply w-full border-collapse border border-border rounded-lg overflow-hidden;
-}
-
-.params-table th {
-  @apply bg-muted px-4 py-2 text-left font-semibold;
-}
-
-.params-table td {
-  @apply px-4 py-2 border-t border-border;
-}
-
-.param-name {
-  @apply font-mono text-primary;
-}
-
-.param-type {
-  @apply font-mono text-muted-foreground text-sm;
-}
-
-/* Example code blocks */
-.example-block {
-  @apply border border-border rounded-lg overflow-hidden mb-6;
-}
-
-.example-header {
-  @apply bg-muted px-4 py-2 border-b border-border font-semibold;
-}
-
-/* Discord.js/aoi.js inspired styling */
+/* Discord.js inspired method documentation */
 .api-method {
-  @apply border border-border rounded-lg mb-8 overflow-hidden;
+  @apply border border-border rounded-lg mb-8 overflow-hidden bg-card;
 }
 
 .api-method-header {
@@ -140,18 +133,114 @@
   @apply p-6;
 }
 
+.method-signature {
+  @apply bg-muted/50 border border-border rounded-lg p-4 mb-6 font-mono text-sm;
+}
+
+.method-name {
+  @apply text-primary font-bold;
+}
+
+.method-params {
+  @apply text-muted-foreground;
+}
+
+.method-return {
+  @apply text-accent-foreground;
+}
+
+/* Parameter table styling */
+.params-table {
+  @apply w-full border-collapse border border-border rounded-lg overflow-hidden;
+}
+
+.params-table th {
+  @apply bg-muted px-4 py-3 text-left font-semibold text-sm;
+}
+
+.params-table td {
+  @apply px-4 py-3 border-t border-border text-sm;
+}
+
+.param-name {
+  @apply font-mono text-primary font-semibold;
+}
+
+.param-type {
+  @apply font-mono text-muted-foreground bg-muted/50 px-2 py-1 rounded;
+}
+
+/* Badge styling */
 .api-badge {
   @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
 }
 
 .api-badge.static {
-  @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200;
+  @apply bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300;
 }
 
 .api-badge.async {
-  @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+  @apply bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300;
 }
 
 .api-badge.deprecated {
-  @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
+  @apply bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300;
+}
+
+/* Example code blocks */
+.example-block {
+  @apply border border-border rounded-lg overflow-hidden mb-6 bg-card;
+}
+
+.example-header {
+  @apply bg-muted px-4 py-2 border-b border-border font-semibold text-sm;
+}
+
+.example-block pre {
+  @apply m-0 border-0;
+}
+
+/* Search styling */
+.sl-search {
+  @apply bg-muted border border-border;
+}
+
+.sl-search input {
+  @apply bg-transparent;
+}
+
+/* Sidebar styling for classes */
+.sl-nav .top-level > li > details[open] > summary {
+  @apply text-primary;
+}
+
+.sl-nav .nested {
+  @apply ml-3 pl-3 border-l border-border;
+}
+
+/* Header styling */
+.sl-nav-header {
+  @apply border-b border-border pb-4 mb-4;
+}
+
+/* Footer styling */
+.sl-footer {
+  @apply border-t border-border mt-12 pt-8;
+}
+
+/* Custom scrollbar */
+.sl-nav::-webkit-scrollbar {
+  @apply w-2;
+}
+
+.sl-nav::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+.sl-nav::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground rounded-full;
+}
+
+.sl-nav::-webkit-scrollbar-thumb:hover {
+  @apply bg-foreground;
 }
