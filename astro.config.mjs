@@ -12,10 +12,18 @@ export default defineConfig({
       logo: {
         src: './src/assets/logo.svg',
       },
-      social: {
-        github: 'https://github.com/your-username/helper.db',
-        discord: 'https://discord.gg/your-server',
-      },
+      social: [
+        {
+          icon: 'github',
+          label: 'GitHub',
+          url: 'https://github.com/your-username/helper.db',
+        },
+        {
+          icon: 'discord',
+          label: 'Discord',
+          url: 'https://discord.gg/your-server',
+        },
+      ],
       sidebar: [
         {
           label: 'Getting Started',
@@ -27,7 +35,6 @@ export default defineConfig({
         },
         {
           label: 'Classes',
-          autogenerate: { directory: 'reference' },
           items: [
             { label: 'Database', link: '/reference/database/' },
             { label: 'Query', link: '/reference/query/' },
