@@ -6,7 +6,7 @@ import vercel from '@astrojs/vercel';
 import tailwind from '@astrojs/tailwind';
 import expressiveCode from 'astro-expressive-code';
 
-
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://helperdb-docs.vercel.app',
@@ -92,5 +92,7 @@ export default defineConfig({
     define: {
       __DATE__: `'${new Date().toISOString()}'`,
     },
+
+    plugins: [tailwindcss()],
   },
 });
