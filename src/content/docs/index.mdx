@@ -1,0 +1,74 @@
+
+---
+title: Helper.db Documentation
+description: Welcome to Helper.db - A powerful database helper package for Node.js applications
+template: splash
+hero:
+  tagline: Simplify your database operations with Helper.db
+  image:
+    file: ../../assets/logo.svg
+  actions:
+    - text: Get started
+      link: /guides/introduction/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/your-username/helper.db
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Quick start
+
+Get up and running with Helper.db in minutes.
+
+<CardGrid stagger>
+  <Card title="Installation" icon="rocket">
+    Install Helper.db with npm, yarn, or pnpm
+    ```bash
+    npm install helper.db
+    ```
+  </Card>
+  <Card title="Simple Setup" icon="setting">
+    Connect to your database with just a few lines of code
+    ```javascript
+    const { Database } = require('helper.db');
+    const db = new Database('./data.db');
+    ```
+  </Card>
+  <Card title="Easy Operations" icon="document">
+    Perform CRUD operations with simple methods
+    ```javascript
+    await db.set('users.123', { name: 'John', age: 30 });
+    const user = await db.get('users.123');
+    ```
+  </Card>
+  <Card title="Advanced Features" icon="star">
+    Explore advanced features like queries, backups, and more
+  </Card>
+</CardGrid>
+
+## Why Helper.db?
+
+Helper.db provides a simple, intuitive API for database operations while maintaining performance and reliability.
+
+- **Easy to use**: Simple API that's perfect for beginners
+- **Powerful**: Advanced features for complex applications  
+- **Fast**: Optimized for performance
+- **Reliable**: Built-in error handling and data validation
+- **Flexible**: Works with SQLite, JSON, and more
+
+## Next steps
+
+<CardGrid>
+  <Card title="Read the guide" icon="open-book">
+    Learn the basics in our [getting started guide](/guides/introduction/).
+  </Card>
+  <Card title="Browse examples" icon="laptop">
+    See Helper.db in action with practical [examples](/examples/discord-bot/).
+  </Card>
+  <Card title="API reference" icon="setting">
+    Explore the complete [API documentation](/reference/database/).
+  </Card>
+</CardGrid>

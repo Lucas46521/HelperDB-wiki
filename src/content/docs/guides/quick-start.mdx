@@ -1,0 +1,138 @@
+
+---
+title: Quick Start
+description: Get up and running with Helper.db in just a few minutes
+---
+
+import { CodeExample } from '../../../components/CodeExample.tsx';
+
+## Create Your First Database
+
+Let's start by creating a simple database and performing basic operations.
+
+<CodeExample 
+  title="Basic Setup"
+  code={`const { Database } = require('helper.db');
+
+// Create a new database
+const db = new Database('./my-data.db');
+
+// Set some data
+await db.set('user.name', 'John Doe');
+await db.set('user.age', 25);
+await db.set('user.email', 'john@example.com');
+
+// Get data
+const name = await db.get('user.name');
+console.log(name); // "John Doe"
+
+// Get entire user object
+const user = await db.get('user');
+console.log(user); // { name: "John Doe", age: 25, email: "john@example.com" }`}
+/>
+
+## Working with Arrays
+
+Helper.db makes it easy to work with arrays:
+
+<CodeExample
+  title="Array Operations"
+  code={`// Add items to an array
+await db.push('fruits', 'apple');
+await db.push('fruits', 'banana');
+await db.push('fruits', 'orange');
+
+// Get the array
+const fruits = await db.get('fruits');
+console.log(fruits); // ["apple", "banana", "orange"]
+
+// Remove an item
+await db.pull('fruits', 'banana');
+console.log(await db.get('fruits')); // ["apple", "orange"]`}
+/>
+
+## Mathematical Operations
+
+Perform math operations directly on stored numbers:
+
+<CodeExample
+  title="Math Operations"
+  code={`// Set initial value
+await db.set('score', 100);
+
+// Add to the value
+await db.add('score', 50);
+console.log(await db.get('score')); // 150
+
+// Subtract from the value
+await db.subtract('score', 25);
+console.log(await db.get('score')); // 125`}
+/>
+
+## Checking Data Existence
+
+<CodeExample
+  title="Data Existence"
+  code={`// Check if a key exists
+const hasUser = await db.has('user');
+console.log(hasUser); // true
+
+const hasAdmin = await db.has('admin');
+console.log(hasAdmin); // false
+
+// Get all keys
+const allKeys = await db.all();
+console.log(allKeys); // Array of all stored keys`}
+/>
+
+## Deleting Data
+
+<CodeExample
+  title="Deleting Data"
+  code={`// Delete a specific key
+await db.delete('user.email');
+
+// Delete entire user object
+await db.delete('user');
+
+// Clear all data (use with caution!)
+await db.clear();`}
+/>
+
+## Next Steps
+
+Great! You now know the basics of Helper.db. Here's what you can explore next:
+
+- **[API Reference](/reference/database/)** - Complete documentation of all methods
+- **[Examples](/examples/discord-bot/)** - Real-world usage examples
+- **[Advanced Configuration](/advanced/configuration/)** - Customize Helper.db for your needs
+
+## Common Patterns
+
+### User Management
+```javascript
+// Add a new user
+await db.set(`users.${userId}`, {
+  name: 'John Doe',
+  email: 'john@example.com',
+  createdAt: Date.now()
+});
+
+// Update user data
+await db.set(`users.${userId}.lastLogin`, Date.now());
+
+// Get user
+const user = await db.get(`users.${userId}`);
+```
+
+### Counters and Statistics
+```javascript
+// Initialize counter
+await db.set('stats.visits', 0);
+
+// Increment on each visit
+await db.add('stats.visits', 1);
+
+// Track daily stats
+await db.set(`stats.daily.${today}`, await db.get('stats.visits'));
+```

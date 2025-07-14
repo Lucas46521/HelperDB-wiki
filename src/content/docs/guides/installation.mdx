@@ -1,0 +1,60 @@
+
+---
+title: Installation
+description: Learn how to install and set up Helper.db in your project
+---
+
+## Requirements
+
+- Node.js 14 or higher
+- npm, yarn, or pnpm
+
+## Installation
+
+### Using npm
+
+```bash
+npm install helper.db
+```
+
+### Using yarn
+
+```bash
+yarn add helper.db
+```
+
+### Using pnpm
+
+```bash
+pnpm add helper.db
+```
+
+## Verify Installation
+
+After installation, you can verify that Helper.db is working correctly:
+
+```javascript
+const { Database } = require('helper.db');
+
+// Create a new database instance
+const db = new Database('./test.db');
+
+console.log('Helper.db installed successfully!');
+```
+
+## Next Steps
+
+Now that you have Helper.db installed, you can:
+
+1. Follow the [Quick Start guide](/guides/quick-start/) to learn the basics
+2. Explore the [API Reference](/reference/database/) for detailed documentation
+3. Check out [Examples](/examples/discord-bot/) to see Helper.db in action
+
+## Troubleshooting
+
+If you encounter any issues during installation:
+
+1. Make sure you have Node.js 14 or higher installed
+2. Clear your npm cache: `npm cache clean --force`
+3. Delete `node_modules` and `package-lock.json`, then reinstall
+4. Check the [GitHub Issues](https://github.com/your-username/helper.db/issues) for known problems
