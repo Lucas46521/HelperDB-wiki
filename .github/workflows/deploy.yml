@@ -82,3 +82,4 @@ jobs:
           else
             echo "No build output directory found"
             echo "### Build output directory not found" >> $GITHUB_STEP_SUMMARY
+          fi
