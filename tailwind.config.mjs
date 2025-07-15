@@ -25,7 +25,32 @@ export default {
         },
       },
       borderColor: {
-        border: 'rgb(var(--border))', // Add custom border color for --border variable
+        border: 'rgb(var(--border))',
+      },
+      backgroundColor: {
+        background: 'rgb(var(--background))',
+        card: 'rgb(var(--card))',
+        popover: 'rgb(var(--popover))',
+        primary: 'rgb(var(--primary))',
+        secondary: 'rgb(var(--secondary))',
+        muted: 'rgb(var(--muted))',
+        accent: 'rgb(var(--accent))',
+      },
+      textColor: {
+        foreground: 'rgb(var(--foreground))',
+        'card-foreground': 'rgb(var(--card-foreground))',
+        'popover-foreground': 'rgb(var(--popover-foreground))',
+        'primary-foreground': 'rgb(var(--primary-foreground))',
+        'secondary-foreground': 'rgb(var(--secondary-foreground))',
+        'muted-foreground': 'rgb(var(--muted-foreground))',
+        'accent-foreground': 'rgb(var(--accent-foreground))',
+        'destructive-foreground': 'rgb(var(--destructive-foreground))',
+      },
+      ringColor: {
+        ring: 'rgb(var(--ring))',
+      },
+      borderRadius: {
+        radius: 'var(--radius)',
       },
       typography: {
         DEFAULT: {
