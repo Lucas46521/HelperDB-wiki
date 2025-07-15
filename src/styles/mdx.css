@@ -75,20 +75,9 @@
   background-color: rgb(var(--muted));
 }
 
-.hamburger-icon {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
 
-.hamburger-line {
-  width: 100%;
-  height: 2px;
-  background-color: rgb(var(--foreground));
-  transition: all 0.3s;
-}
+
+
 
 .mdx-sidebar-content {
   padding: 1.5rem;
