@@ -1,5 +1,4 @@
-
-name: Deploy to Vercel
+name: CI Pipeline
 
 on:
   push:
@@ -8,29 +7,29 @@ on:
     branches: [ main, master ]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Build project
-      run: npm run build
-      
-    - name: Deploy to Vercel
-      uses: amondnet/vercel-action@v25
-      with:
-        vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        vercel-args: '--prod'
+      # Passo 1: Clonar o repositório
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      # Passo 2: Configurar o ambiente Node.js
+      - name: 🛠️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      # Passo 3: Instalar dependências do projeto
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      # Passo 4: Construir o projeto
+      - name: 🏗️ Build project
+        run: npm run build
+
+      # Passo 5: Executar testes (opcional, descomente se necessário)
+      # - name: 🧪 Run tests
+      #   run: npm test
