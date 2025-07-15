@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
+      - name: 📝 Log checkout status
+        run: echo "### Checkout completed :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
       - name: 🔍 Detect package manager
         id: detect-package-manager
@@ -41,6 +43,8 @@ jobs:
             echo "Unable to determine package manager"
             exit 1
           fi
+      - name: 📝 Log package manager detection
+        run: echo "### Package manager detected: ${{ steps.detect-package-manager.outputs.manager }} :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
       - name: 🛠️ Setup Node.js
         uses: actions/setup-node@v4
@@ -48,11 +52,17 @@ jobs:
           node-version: '22'
           cache: ${{ steps.detect-package-manager.outputs.manager }}
           cache-dependency-path: ${{ steps.detect-package-manager.outputs.lockfile }}
+      - name: 📝 Log Node.js setup
+        run: echo "### Node.js setup completed (version 22) :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
       - name: 📦 Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+      - name: 📝 Log dependencies installation
+        run: echo "### Dependencies installed :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
       - name: 🏗️ Build project
         run: ${{ steps.detect-package-manager.outputs.runner }} astro build
         env:
-          NODE_ENV: production 
+          NODE_ENV: production
+      - name: 📝 Log build status
+        run: echo "### Build completed :white_check_mark:" >> $GITHUB_STEP_SUMMARY
