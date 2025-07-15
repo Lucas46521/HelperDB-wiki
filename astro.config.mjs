@@ -63,6 +63,7 @@ export default defineConfig({
       customCss: [
         './src/styles/global.css',
         './src/styles/custom.css',
+        './src/styles/mdx.css',
       ],
       
       editLink: {

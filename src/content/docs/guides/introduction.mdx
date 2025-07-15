@@ -1,97 +1,68 @@
-
 ---
-title: Introduction
-description: Get started with Helper.db - A powerful database helper package
+layout: '../../../components/MDXLayout.astro'
+title: 'Introduction'
+description: 'Get started with Helper.db - A powerful Node.js database helper module'
 ---
 
-# Welcome to Helper.db
+# Introduction
 
-Helper.db is a powerful, easy-to-use database helper package designed to simplify database operations in Node.js applications. Whether you're building a simple bot or a complex web application, Helper.db provides an intuitive API that makes data management effortless.
+Welcome to **Helper.db** - a powerful Node.js module that makes database interactions simple and intuitive.
 
 ## What is Helper.db?
 
-Helper.db is a lightweight wrapper around various database engines that provides:
+Helper.db is designed to simplify database operations while providing:
 
-- **Simple API**: Easy-to-understand methods for common operations
-- **Multiple Database Support**: Works with SQLite, JSON, and more
-- **TypeScript Support**: Full type definitions included
-- **Automatic Backups**: Built-in backup and restore functionality
-- **Query Support**: Advanced querying capabilities
-- **Performance Optimized**: Efficient operations for large datasets
+- **Object-oriented approach**: Clean, readable code patterns
+- **Predictable abstractions**: Consistent API across different operations  
+- **High performance**: Optimized for speed and efficiency
+- **100% coverage**: Complete database operation support
 
 ## Key Features
 
-### 🚀 Easy to Use
+### Simple Database Operations
 ```javascript
 const { Database } = require('helper.db');
-const db = new Database('./mydata.db');
+const db = new Database('myDatabase.db');
 
-// Set data
-await db.set('user.123', { name: 'John', age: 25 });
+// Insert data
+await db.insert('users', { name: 'John', age: 30 });
 
-// Get data
-const user = await db.get('user.123');
-console.log(user); // { name: 'John', age: 25 }
+// Query data
+const users = await db.find('users', { age: { $gt: 25 } });
+
+// Update data
+await db.update('users', { name: 'John' }, { age: 31 });
 ```
 
-### 📊 Multiple Data Types
-Helper.db seamlessly handles various data types:
-- Strings, Numbers, Booleans
-- Objects and Arrays
-- Nested data structures
-- Binary data
-
-### 🔧 Advanced Operations
-Beyond basic CRUD operations, Helper.db offers:
-- Mathematical operations (add, subtract, multiply, divide)
-- Array manipulation (push, pull, includes)
-- Bulk operations
-- Conditional updates
-
-## Who Should Use Helper.db?
-
-Helper.db is perfect for:
-
-- **Discord Bot Developers**: Store user data, guild settings, and more
-- **Web Developers**: Session management, user preferences, caching
-- **Game Developers**: Player stats, leaderboards, game state
-- **API Developers**: Configuration storage, rate limiting data
-- **Students**: Learning database concepts with a simple interface
-
-## Architecture
-
-Helper.db is built with modularity in mind:
-
-```
-Helper.db
-├── Core Engine      # Main database operations
-├── Query System     # Advanced querying
-├── Backup Manager   # Automatic backups
-├── Type System      # TypeScript definitions
-└── Adapters         # Database-specific implementations
+### Advanced Querying
+```javascript
+// Complex queries made simple
+const results = await db.query()
+  .from('users')
+  .where('age', '>', 18)
+  .and('status', '=', 'active')
+  .orderBy('created_at', 'desc')
+  .limit(10)
+  .execute();
 ```
 
-## Performance
+### Built-in Backup System
+```javascript
+// Automatic backups
+const backup = new Backup(db);
+await backup.create('backup_20240101.db');
+await backup.restore('backup_20240101.db');
+```
 
-Helper.db is optimized for performance:
+## Why Choose Helper.db?
 
-- **Memory Efficient**: Minimal memory footprint
-- **Fast Operations**: Optimized read/write operations
-- **Connection Pooling**: Efficient database connections
-- **Caching**: Intelligent caching for frequently accessed data
+- **Easy to learn**: Intuitive API that follows JavaScript best practices
+- **Flexible**: Works with various database engines
+- **Reliable**: Extensively tested and battle-proven
+- **Well documented**: Comprehensive guides and examples
 
-## Getting Started
+## Next Steps
 
-Ready to dive in? Here's what you need to do:
+Ready to get started? Check out our [Installation Guide](/guides/installation/) to begin using Helper.db in your project.
 
-1. **[Install Helper.db](/guides/installation/)** - Get the package installed in your project
-2. **[Quick Start Guide](/guides/quick-start/)** - Learn the basics in minutes
-3. **[Browse Examples](/examples/discord-bot/)** - See real-world usage examples
-
-## Community and Support
-
-- **GitHub**: [Report issues and contribute](https://github.com/your-username/helper.db)
-- **Discord**: [Join our community server](https://discord.gg/your-server)
-- **Documentation**: You're already here! Explore the guides and API reference
-
-Let's get started building amazing applications with Helper.db! 🚀
+Or jump straight to the [Quick Start Guide](/guides/quick-start/) to see Helper.db in action!

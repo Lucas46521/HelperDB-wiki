@@ -1,0 +1,147 @@
+
+---
+import '../styles/mdx.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+
+const navigation = [
+  {
+    title: 'Getting Started',
+    items: [
+      { label: 'Introduction', href: '/guides/introduction/' },
+      { label: 'Installation', href: '/guides/installation/' },
+      { label: 'Quick Start', href: '/guides/quick-start/' },
+    ]
+  },
+  {
+    title: 'Classes',
+    items: [
+      { label: 'Database', href: '/reference/database/' },
+      { label: 'Query', href: '/reference/query/' },
+      { label: 'Backup', href: '/reference/backup/' },
+    ]
+  },
+  {
+    title: 'Examples',
+    items: [
+      { label: 'Discord Bot', href: '/examples/discord-bot/' },
+      { label: 'Web Application', href: '/examples/web-app/' },
+      { label: 'API Server', href: '/examples/api-server/' },
+    ]
+  },
+  {
+    title: 'Advanced',
+    items: [
+      { label: 'Configuration', href: '/advanced/configuration/' },
+      { label: 'Performance', href: '/advanced/performance/' },
+      { label: 'Troubleshooting', href: '/advanced/troubleshooting/' },
+    ]
+  }
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} - Helper.db</title>
+  {description && <meta name="description" content={description} />}
+</head>
+<body>
+  <div class="mdx-container">
+    <!-- Overlay for mobile -->
+    <div class="mdx-sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <!-- Sidebar -->
+    <aside class="mdx-sidebar" id="sidebar">
+      <div class="mdx-sidebar-content">
+        <div class="mb-6">
+          <h1 class="text-xl font-bold text-foreground">Helper.db</h1>
+          <p class="text-sm text-muted-foreground mt-1">Documentation</p>
+        </div>
+        
+        <nav>
+          {navigation.map((section) => (
+            <div class="mdx-nav-section">
+              <h2 class="mdx-nav-title">{section.title}</h2>
+              <ul class="mdx-nav-list">
+                {section.items.map((item) => (
+                  <li class="mdx-nav-item">
+                    <a 
+                      href={item.href} 
+                      class={`mdx-nav-link ${currentPath === item.href ? 'active' : ''}`}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="mdx-content">
+      <!-- Header with hamburger menu -->
+      <header class="mdx-header">
+        <button class="hamburger-button" id="hamburger-btn">
+          <div class="hamburger-icon">
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+          </div>
+        </button>
+        <h1 class="text-lg font-semibold text-foreground">{title}</h1>
+      </header>
+
+      <!-- Page content -->
+      <main class="mdx-main">
+        <article class="mdx-article">
+          <slot />
+        </article>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    function toggleSidebar() {
+      sidebar?.classList.toggle('open');
+      overlay?.classList.toggle('open');
+    }
+
+    function closeSidebar() {
+      sidebar?.classList.remove('open');
+      overlay?.classList.remove('open');
+    }
+
+    hamburgerBtn?.addEventListener('click', toggleSidebar);
+    overlay?.addEventListener('click', closeSidebar);
+
+    // Close sidebar on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeSidebar();
+      }
+    });
+
+    // Close sidebar on navigation (mobile)
+    document.addEventListener('astro:page-load', () => {
+      closeSidebar();
+    });
+  </script>
+</body>
+</html>

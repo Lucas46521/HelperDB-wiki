@@ -1,60 +1,142 @@
 
 ---
-title: Installation
-description: Learn how to install and set up Helper.db in your project
+layout: '../../../components/MDXLayout.astro'
+title: 'Installation'
+description: 'Learn how to install and set up Helper.db in your Node.js project'
 ---
 
-## Requirements
+# Installation
 
-- Node.js 14 or higher
-- npm, yarn, or pnpm
+Get Helper.db up and running in your Node.js project in just a few simple steps.
 
-## Installation
+## Prerequisites
 
-### Using npm
+Before installing Helper.db, make sure you have:
+
+- **Node.js** version 14.0 or higher
+- **npm** or **yarn** package manager
+- A Node.js project initialized with `package.json`
+
+## Install via npm
 
 ```bash
 npm install helper.db
 ```
 
-### Using yarn
+## Install via yarn
 
 ```bash
 yarn add helper.db
 ```
 
-### Using pnpm
-
-```bash
-pnpm add helper.db
-```
-
 ## Verify Installation
 
-After installation, you can verify that Helper.db is working correctly:
+Create a simple test file to verify Helper.db is working correctly:
+
+```javascript
+// test-helper.js
+const { Database } = require('helper.db');
+
+async function testInstallation() {
+  try {
+    const db = new Database(':memory:'); // In-memory database for testing
+    console.log('✅ Helper.db installed successfully!');
+    
+    // Test basic operations
+    await db.insert('test', { message: 'Hello Helper.db!' });
+    const result = await db.find('test');
+    console.log('📦 Test data:', result);
+    
+  } catch (error) {
+    console.error('❌ Installation test failed:', error);
+  }
+}
+
+testInstallation();
+```
+
+Run the test:
+
+```bash
+node test-helper.js
+```
+
+You should see:
+```
+✅ Helper.db installed successfully!
+📦 Test data: [{ id: 1, message: 'Hello Helper.db!' }]
+```
+
+## TypeScript Support
+
+Helper.db includes built-in TypeScript definitions. No additional `@types` package needed!
+
+```typescript
+import { Database, Query, Backup } from 'helper.db';
+
+const db: Database = new Database('myapp.db');
+```
+
+## Environment Setup
+
+### Development Environment
+
+For development, you might want to use file-based databases:
 
 ```javascript
 const { Database } = require('helper.db');
+const db = new Database('./dev-database.db');
+```
 
-// Create a new database instance
-const db = new Database('./test.db');
+### Production Environment
 
-console.log('Helper.db installed successfully!');
+For production, consider using environment variables:
+
+```javascript
+const { Database } = require('helper.db');
+const dbPath = process.env.DATABASE_PATH || './production.db';
+const db = new Database(dbPath);
+```
+
+### Testing Environment
+
+For testing, use in-memory databases:
+
+```javascript
+const { Database } = require('helper.db');
+const db = new Database(':memory:'); // Temporary, in-memory database
+```
+
+## Common Installation Issues
+
+### Node.js Version Compatibility
+
+If you encounter compatibility issues, ensure you're using Node.js 14 or higher:
+
+```bash
+node --version
+```
+
+### Permission Issues
+
+On Unix systems, you might need to adjust file permissions:
+
+```bash
+chmod 755 ./database-directory
+```
+
+### SQLite Dependencies
+
+Helper.db uses SQLite under the hood. If you encounter native module compilation issues:
+
+```bash
+npm rebuild
+# or
+npm install --build-from-source
 ```
 
 ## Next Steps
 
-Now that you have Helper.db installed, you can:
+Now that Helper.db is installed, you're ready to start building! 
 
-1. Follow the [Quick Start guide](/guides/quick-start/) to learn the basics
-2. Explore the [API Reference](/reference/database/) for detailed documentation
-3. Check out [Examples](/examples/discord-bot/) to see Helper.db in action
-
-## Troubleshooting
-
-If you encounter any issues during installation:
-
-1. Make sure you have Node.js 14 or higher installed
-2. Clear your npm cache: `npm cache clean --force`
-3. Delete `node_modules` and `package-lock.json`, then reinstall
-4. Check the [GitHub Issues](https://github.com/your-username/helper.db/issues) for known problems
+Continue to the [Quick Start Guide](/guides/quick-start/) to create your first database operations.

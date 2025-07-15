@@ -1,0 +1,302 @@
+
+---
+layout: '../../../components/MDXLayout.astro'
+title: 'Database Class'
+description: 'Complete reference for the Database class in Helper.db'
+---
+
+# Database Class
+
+The `Database` class is the core of Helper.db, providing a simple interface for database operations.
+
+## Constructor
+
+### `new Database(path, options?)`
+
+Creates a new database instance.
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `path` | `string` | Path to the database file or `:memory:` for in-memory database |
+| `options` | `object` | Optional configuration object |
+
+#### Example
+
+```javascript
+const { Database } = require('helper.db');
+
+// File-based database
+const db = new Database('./myapp.db');
+
+// In-memory database
+const memDb = new Database(':memory:');
+
+// With options
+const configuredDb = new Database('./app.db', {
+  verbose: true,
+  timeout: 10000
+});
+```
+
+## Methods
+
+### `insert(table, data)`
+
+Inserts a single record into the specified table.
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `table` | `string` | Table name |
+| `data` | `object` | Data to insert |
+
+#### Returns
+
+`Promise<number>` - The ID of the inserted record
+
+#### Example
+
+```javascript
+const userId = await db.insert('users', {
+  name: 'John Doe',
+  email: 'john@example.com',
+  age: 30
+});
+
+console.log('New user ID:', userId);
+```
+
+### `insertMany(table, dataArray)`
+
+Inserts multiple records into the specified table.
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `table` | `string` | Table name |
+| `dataArray` | `array` | Array of objects to insert |
+
+#### Returns
+
+`Promise<number[]>` - Array of inserted record IDs
+
+#### Example
+
+```javascript
+const userIds = await db.insertMany('users', [
+  { name: 'Alice', email: 'alice@example.com' },
+  { name: 'Bob', email: 'bob@example.com' }
+]);
+
+console.log('New user IDs:', userIds);
+```
+
+### `find(table, conditions?)`
+
+Finds records matching the specified conditions.
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `table` | `string` | Table name |
+| `conditions` | `object` | Optional query conditions |
+
+#### Returns
+
+`Promise<object[]>` - Array of matching records
+
+#### Example
+
+```javascript
+// Find all users
+const allUsers = await db.find('users');
+
+// Find users with conditions
+const activeUsers = await db.find('users', { 
+  status: 'active',
+  age: { $gt: 18 }
+});
+```
+
+### `findOne(table, conditions?)`
+
+Finds the first record matching the specified conditions.
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `table` | `string` | Table name |
+| `conditions` | `object` | Optional query conditions |
+
+#### Returns
+
+`Promise<object|null>` - The first matching record or null
+
+#### Example
+
+```javascript
+const user = await db.findOne('users', { 
+  email: 'john@example.com' 
+});
+
+if (user) {
+  console.log('Found user:', user.name);
+}
+```
+
+### `update(table, conditions, data)`
+
+Updates records matching the specified conditions.
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `table` | `string` | Table name |
+| `conditions` | `object` | Query conditions |
+| `data` | `object` | Data to update |
+
+#### Returns
+
+`Promise<number>` - Number of affected records
+
+#### Example
+
+```javascript
+const updatedCount = await db.update('users',
+  { email: 'john@example.com' },
+  { name: 'John Smith', age: 31 }
+);
+
+console.log(`Updated ${updatedCount} records`);
+```
+
+### `delete(table, conditions)`
+
+Deletes records matching the specified conditions.
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `table` | `string` | Table name |
+| `conditions` | `object` | Query conditions |
+
+#### Returns
+
+`Promise<number>` - Number of deleted records
+
+#### Example
+
+```javascript
+const deletedCount = await db.delete('users', { 
+  status: 'inactive',
+  last_login: { $lt: '2023-01-01' }
+});
+
+console.log(`Deleted ${deletedCount} inactive users`);
+```
+
+### `createTable(table, schema)`
+
+Creates a new table with the specified schema.
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `table` | `string` | Table name |
+| `schema` | `object` | Column definitions |
+
+#### Example
+
+```javascript
+await db.createTable('products', {
+  id: 'INTEGER PRIMARY KEY AUTOINCREMENT',
+  name: 'TEXT NOT NULL',
+  price: 'DECIMAL(10,2)',
+  category_id: 'INTEGER',
+  created_at: 'DATETIME DEFAULT CURRENT_TIMESTAMP'
+});
+```
+
+### `query()`
+
+Returns a new Query builder instance for complex queries.
+
+#### Returns
+
+`Query` - Query builder instance
+
+#### Example
+
+```javascript
+const results = await db.query()
+  .from('users')
+  .where('age', '>', 18)
+  .orderBy('name')
+  .limit(10)
+  .execute();
+```
+
+### `close()`
+
+Closes the database connection.
+
+#### Returns
+
+`Promise<void>`
+
+#### Example
+
+```javascript
+await db.close();
+console.log('Database connection closed');
+```
+
+## Query Operators
+
+Helper.db supports various query operators for flexible data filtering:
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| `$eq` | Equal to | `{ age: { $eq: 25 } }` |
+| `$ne` | Not equal to | `{ status: { $ne: 'inactive' } }` |
+| `$gt` | Greater than | `{ age: { $gt: 18 } }` |
+| `$gte` | Greater than or equal | `{ age: { $gte: 21 } }` |
+| `$lt` | Less than | `{ age: { $lt: 65 } }` |
+| `$lte` | Less than or equal | `{ age: { $lte: 30 } }` |
+| `$in` | In array | `{ status: { $in: ['active', 'pending'] } }` |
+| `$nin` | Not in array | `{ role: { $nin: ['admin', 'moderator'] } }` |
+| `$like` | SQL LIKE pattern | `{ name: { $like: 'John%' } }` |
+| `$null` | Is null | `{ deleted_at: { $null: true } }` |
+
+## Events
+
+The Database class emits events for various operations:
+
+```javascript
+db.on('insert', (table, data, id) => {
+  console.log(`Inserted into ${table}:`, data, 'with ID:', id);
+});
+
+db.on('update', (table, conditions, data, count) => {
+  console.log(`Updated ${count} records in ${table}`);
+});
+
+db.on('delete', (table, conditions, count) => {
+  console.log(`Deleted ${count} records from ${table}`);
+});
+```
+
+## Next Steps
+
+- Learn about the [Query Builder](/reference/query/) for advanced queries
+- Explore [Backup and Restore](/reference/backup/) functionality
+- See practical examples in our [Examples](/examples/discord-bot/) section
