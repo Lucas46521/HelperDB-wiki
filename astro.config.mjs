@@ -11,9 +11,6 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Helper.db',
-      logo: {
-        src: './src/assets/logo.svg',
-      },
       social: [
         {
           icon: 'github',
