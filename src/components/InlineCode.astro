@@ -1,0 +1,98 @@
+
+---
+interface Props {
+  code: string;
+  language?: string;
+}
+
+const { code, language = 'javascript' } = Astro.props;
+---
+
+<div class="inline-code-wrapper">
+  <code class="inline-code">{code}</code>
+  <button class="inline-copy-button" data-code={code} title="Copiar código">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+    </svg>
+  </button>
+</div>
+
+<style>
+.inline-code-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: rgb(var(--muted));
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, consolas, 'DejaVu Sans Mono', monospace;
+}
+
+.inline-code {
+  background: transparent;
+  padding: 0;
+  font-size: 0.875rem;
+  color: rgb(var(--foreground));
+}
+
+.inline-copy-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.125rem;
+  background: transparent;
+  border: none;
+  color: rgb(var(--muted-foreground));
+  cursor: pointer;
+  border-radius: 0.125rem;
+  transition: all 0.2s;
+}
+
+.inline-copy-button:hover {
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+}
+
+.inline-copy-button.copied {
+  color: rgb(var(--primary));
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const inlineCopyButtons = document.querySelectorAll('.inline-copy-button');
+  
+  inlineCopyButtons.forEach(button => {
+    button.addEventListener('click', async function() {
+      const code = this.getAttribute('data-code');
+      
+      try {
+        await navigator.clipboard.writeText(code);
+        
+        // Visual feedback
+        this.classList.add('copied');
+        
+        // Reset after 1 second
+        setTimeout(() => {
+          this.classList.remove('copied');
+        }, 1000);
+        
+      } catch (err) {
+        // Fallback para browsers antigos
+        const textArea = document.createElement('textarea');
+        textArea.value = code;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        this.classList.add('copied');
+        setTimeout(() => {
+          this.classList.remove('copied');
+        }, 1000);
+      }
+    });
+  });
+});
+</script>

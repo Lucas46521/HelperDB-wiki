@@ -234,6 +234,13 @@
   padding: 0;
 }
 
+/* Override for custom code blocks */
+.mdx-article .code-block-container pre {
+  margin-bottom: 0;
+  border: 0;
+  border-radius: 0;
+}
+
 .mdx-article blockquote {
   border-left: 4px solid rgb(var(--primary));
   padding-left: 1rem;

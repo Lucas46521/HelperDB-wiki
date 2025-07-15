@@ -1,0 +1,176 @@
+
+---
+interface Props {
+  code: string;
+  language?: string;
+  title?: string;
+}
+
+const { code, language = 'javascript', title } = Astro.props;
+const isSmallBlock = code.split('\n').length <= 3 && code.length <= 100;
+---
+
+<div class="code-block-container">
+  {!isSmallBlock && (
+    <div class="code-block-header">
+      <span class="code-block-title">{title || language}</span>
+      <button class="copy-button" data-code={code}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <span class="copy-text">Copiar</span>
+      </button>
+    </div>
+  )}
+  
+  <div class="code-block-content">
+    <pre class={`language-${language}`}><code>{code}</code></pre>
+    
+    {isSmallBlock && (
+      <button class="copy-button copy-button-small" data-code={code}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+      </button>
+    )}
+  </div>
+</div>
+
+<style>
+.code-block-container {
+  border: 1px solid rgb(var(--border));
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  background-color: rgb(var(--card));
+}
+
+.code-block-header {
+  background-color: rgb(var(--muted));
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgb(var(--border));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.code-block-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: rgb(var(--foreground));
+  text-transform: capitalize;
+}
+
+.code-block-content {
+  position: relative;
+}
+
+.code-block-content pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  background-color: rgb(var(--card));
+}
+
+.copy-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: rgb(var(--background));
+  border: 1px solid rgb(var(--border));
+  border-radius: 0.375rem;
+  color: rgb(var(--muted-foreground));
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copy-button:hover {
+  background-color: rgb(var(--muted));
+  color: rgb(var(--foreground));
+}
+
+.copy-button-small {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.375rem;
+  gap: 0;
+  min-width: auto;
+}
+
+.copy-button-small .copy-text {
+  display: none;
+}
+
+.copy-button.copied {
+  background-color: rgb(var(--primary));
+  color: rgb(var(--primary-foreground));
+  border-color: rgb(var(--primary));
+}
+
+@media (max-width: 768px) {
+  .copy-text {
+    display: none;
+  }
+  
+  .copy-button {
+    padding: 0.5rem;
+    min-width: auto;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const copyButtons = document.querySelectorAll('.copy-button');
+  
+  copyButtons.forEach(button => {
+    button.addEventListener('click', async function() {
+      const code = this.getAttribute('data-code');
+      const copyText = this.querySelector('.copy-text');
+      
+      try {
+        await navigator.clipboard.writeText(code);
+        
+        // Visual feedback
+        this.classList.add('copied');
+        if (copyText) {
+          copyText.textContent = 'Copiado!';
+        }
+        
+        // Reset after 2 seconds
+        setTimeout(() => {
+          this.classList.remove('copied');
+          if (copyText) {
+            copyText.textContent = 'Copiar';
+          }
+        }, 2000);
+        
+      } catch (err) {
+        console.error('Erro ao copiar código:', err);
+        
+        // Fallback para browsers antigos
+        const textArea = document.createElement('textarea');
+        textArea.value = code;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        if (copyText) {
+          copyText.textContent = 'Copiado!';
+          setTimeout(() => {
+            copyText.textContent = 'Copiar';
+          }, 2000);
+        }
+      }
+    });
+  });
+});
+</script>
