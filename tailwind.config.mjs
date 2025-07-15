@@ -26,6 +26,7 @@ export default {
       },
       borderColor: {
         border: 'rgb(var(--border))',
+        DEFAULT: 'rgb(var(--border))',
       },
       backgroundColor: {
         background: 'rgb(var(--background))',
