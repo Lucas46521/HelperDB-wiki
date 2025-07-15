@@ -1,15 +1,10 @@
-# Workflow para construir um site (ex.: Astro) com deploy automático via Vercel
 name: Build for Vercel
 
-# Gatilhos para executar o workflow
 on:
-  # Executa em pushes para a branch principal
   push:
     branches: [ main, master ]
-  # Executa em pull requests para a branch principal
   pull_request:
     branches: [ main, master ]
-  # Permite execução manual via Actions tab
   workflow_dispatch:
 
 permissions:
