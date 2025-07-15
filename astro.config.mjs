@@ -2,7 +2,8 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from "@tailwindcss/vite";
+
 
 
 
@@ -78,11 +79,10 @@ export default defineConfig({
     }),
     react(),
     mdx(),
-    tailwind({
-      applyBaseStyles: false,
-    }),
+    
   ],
   vite: {
+    plugins: [tailwindcss()],
     define: {
       __DATE__: `'${new Date().toISOString()}'`,
     },
