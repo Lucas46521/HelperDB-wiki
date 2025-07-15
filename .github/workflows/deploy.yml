@@ -17,16 +17,16 @@ concurrency:
 
 jobs:
   build:
-    name: 🛠️ Build Project
+    name: Build Project
     runs-on: ubuntu-latest
-
     steps:
-      - name: 📥 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
-      - name: 📝 Log checkout status
-        run: echo "### Checkout completed :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
-      - name: 🔍 Detect package manager
+      - name: Log checkout status
+        run: echo "### Checkout completed" >> $GITHUB_STEP_SUMMARY
+
+      - name: Detect package manager
         id: detect-package-manager
         run: |
           if [ -f "${{ github.workspace }}/yarn.lock" ]; then
@@ -43,26 +43,42 @@ jobs:
             echo "Unable to determine package manager"
             exit 1
           fi
-      - name: 📝 Log package manager detection
-        run: echo "### Package manager detected: ${{ steps.detect-package-manager.outputs.manager }} :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
-      - name: 🛠️ Setup Node.js
+      - name: Log package manager detection
+        run: echo "### Package manager detected: ${{ steps.detect-package-manager.outputs.manager }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: ${{ steps.detect-package-manager.outputs.manager }}
           cache-dependency-path: ${{ steps.detect-package-manager.outputs.lockfile }}
-      - name: 📝 Log Node.js setup
-        run: echo "### Node.js setup completed (version 22) :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
-      - name: 📦 Install dependencies
+      - name: Log Node.js setup
+        run: echo "### Node.js setup completed (version 22)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: 📝 Log dependencies installation
-        run: echo "### Dependencies installed :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
-      - name: 🏗️ Build project
+      - name: Log dependencies installation
+        run: echo "### Dependencies installed" >> $GITHUB_STEP_SUMMARY
+
+      - name: Build project
         run: ${{ steps.detect-package-manager.outputs.runner }} astro build
         env:
           NODE_ENV: production
-      - name: 📝 Log build status
-        run: echo "### Build completed :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+
+      - name: Log build status
+        run: echo "### Build completed" >> $GITHUB_STEP_SUMMARY
+
+      - name: Show build output size
+        run: |
+          if [ -d "./dist" ]; then
+            du -sh ./dist
+            echo "### Build output size (dist): $(du -sh ./dist | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          elif [ -d "./out" ]; then
+            du -sh ./out
+            echo "### Build output size (out): $(du -sh ./out | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No build output directory found"
+            echo "### Build output directory not found" >> $GITHUB_STEP_SUMMARY
