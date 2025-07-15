@@ -45,7 +45,9 @@ jobs:
           fi
 
       - name: Log package manager detection
-        run: echo "### Package manager detected: ${{ steps.detect-package-manager.outputs.manager }}" >> $GITHUB_STEP_SUMMARY
+        run: echo "### Package manager detected: $MANAGER" >> $GITHUB_STEP_SUMMARY
+        env:
+          MANAGER: ${{ steps.detect-package-manager.outputs.manager }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
