@@ -1,19 +1,19 @@
 
 ---
-title: Helper.db
-description: A powerful database helper package for Node.js applications
+title: Helper.DB
+description: Uma biblioteca de banco de dados JavaScript simples, poderosa e versátil
 template: splash
 hero:
-  tagline: A powerful Node.js module that allows you to easily interact with databases
+  tagline: Uma biblioteca de banco de dados JavaScript simples, poderosa e versátil
   image:
     file: ../../assets/logo.svg
   actions:
-    - text: Get started
+    - text: Começar agora
       link: /guides/introduction/
       icon: right-arrow
       variant: primary
-    - text: View on GitHub
-      link: https://github.com/your-username/helper.db
+    - text: Ver no GitHub
+      link: https://github.com/Lucas46521/Helper-db
       icon: external
       variant: minimal
 ---
@@ -21,95 +21,136 @@ hero:
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <div class="not-content">
-  <div class="flex items-center gap-4 mb-8">
-    <div class="flex gap-2">
-      <img src="https://img.shields.io/npm/v/helper.db?color=5865f2&style=flat-square" alt="npm version" />
-      <img src="https://img.shields.io/npm/dt/helper.db?color=5865f2&style=flat-square" alt="npm downloads" />
-      <img src="https://img.shields.io/github/stars/your-username/helper.db?color=5865f2&style=flat-square" alt="GitHub stars" />
+  <div class="flex flex-wrap items-center justify-center gap-2 mb-8">
+    <img src="https://img.shields.io/npm/v/helper.db?color=5865f2&style=for-the-badge" alt="npm version" />
+    <img src="https://img.shields.io/npm/dt/helper.db?color=5865f2&style=for-the-badge" alt="npm downloads" />
+    <img src="https://img.shields.io/github/stars/Lucas46521/Helper-db?color=5865f2&style=for-the-badge" alt="GitHub stars" />
+    <img src="https://img.shields.io/badge/Node.js-16.9.0+-green?style=for-the-badge" alt="Node.js version" />
+  </div>
+</div>
+
+## 🚀 Visão Geral
+
+Helper.DB é uma **biblioteca de banco de dados JavaScript** que permite interagir facilmente com bancos de dados de forma simples e intuitiva.
+
+### ✨ Características
+
+- **Orientado a objetos** - API limpa e intuitiva
+- **Abstrações previsíveis** - Métodos consistentes e fáceis de usar
+- **Performático** - Otimizado para velocidade
+- **Cobertura completa** - 100% de cobertura das operações de banco de dados
+
+## 📦 Instalação
+
+**Node.js 16.9.0 ou superior é necessário.**
+
+```bash
+npm install helper.db
+```
+
+<div class="not-content">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 my-8">
+    <div class="bg-card border border-border rounded-lg p-4 text-center">
+      <code class="text-sm font-mono">npm install helper.db</code>
+    </div>
+    <div class="bg-card border border-border rounded-lg p-4 text-center">
+      <code class="text-sm font-mono">yarn add helper.db</code>
+    </div>
+    <div class="bg-card border border-border rounded-lg p-4 text-center">
+      <code class="text-sm font-mono">pnpm add helper.db</code>
+    </div>
+    <div class="bg-card border border-border rounded-lg p-4 text-center">
+      <code class="text-sm font-mono">bun add helper.db</code>
     </div>
   </div>
 </div>
 
-## About
-
-Helper.db is a powerful **Node.js** module that allows you to easily interact with databases.
-
-- Object-oriented
-- Predictable abstractions
-- Performant
-- 100% coverage of the database operations
-
-## Installation
-
-**Node.js 16.9.0 or newer is required.**
-
-```bash
-npm install helper.db
-yarn add helper.db
-pnpm add helper.db
-bun add helper.db
-```
-
-### Optional packages
-
-- **zlib-sync** for WebSocket data compression and inflation (`npm install zlib-sync`)
-- **bufferutil** for a much faster WebSocket connection (`npm install bufferutil`)
-- **@helper/voice** for interacting with databases (`npm install @helper/voice`)
-
-## Example usage
-
-Install helper.db:
-
-```bash
-npm install helper.db
-```
-
-Register a slash command against the Discord API:
+## 🔧 Uso Rápido
 
 ```javascript
 const { Database } = require('helper.db');
 
-// Create a new database instance
-const db = new Database('./my-database.db');
+// Criar uma nova instância do banco de dados
+const db = new Database('./meu-banco.db');
 
-// Store user data
-await db.set('users.123456789', {
-  name: 'John Doe',
-  level: 1,
-  coins: 100
+// Armazenar dados do usuário
+await db.set('usuarios.123456789', {
+  nome: 'João Silva',
+  nivel: 1,
+  moedas: 100
 });
 
-// Retrieve user data
-const user = await db.get('users.123456789');
-console.log(user); // { name: 'John Doe', level: 1, coins: 100 }
+// Recuperar dados do usuário
+const usuario = await db.get('usuarios.123456789');
+console.log(usuario); // { nome: 'João Silva', nivel: 1, moedas: 100 }
 
-// Update specific properties
-await db.add('users.123456789.coins', 50);
-await db.set('users.123456789.level', 2);
+// Atualizar propriedades específicas
+await db.add('usuarios.123456789.moedas', 50);
+await db.set('usuarios.123456789.nivel', 2);
 
-// Work with arrays
-await db.push('users.123456789.inventory', 'sword');
-await db.push('users.123456789.inventory', 'shield');
+// Trabalhar com arrays
+await db.push('usuarios.123456789.inventario', 'espada');
+await db.push('usuarios.123456789.inventario', 'escudo');
 
-// Check if data exists
-const hasUser = await db.has('users.123456789');
-console.log(hasUser); // true
+// Verificar se os dados existem
+const temUsuario = await db.has('usuarios.123456789');
+console.log(temUsuario); // true
 ```
 
-## Links
+<CardGrid>
+  <Card title="📖 Guias" icon="document">
+    Aprenda a usar o Helper.DB com nossos guias passo a passo.
+    <a href="/guides/introduction/" class="inline-flex items-center gap-1 text-primary hover:underline mt-2">
+      Começar agora →
+    </a>
+  </Card>
+  
+  <Card title="🔍 Referência da API" icon="laptop">
+    Documentação completa de todos os métodos disponíveis.
+    <a href="/reference/database/" class="inline-flex items-center gap-1 text-primary hover:underline mt-2">
+      Ver API →
+    </a>
+  </Card>
+  
+  <Card title="💬 Suporte" icon="external">
+    Precisa de ajuda? Junte-se à nossa comunidade no Discord.
+    <a href="https://discord.gg/helper-db" class="inline-flex items-center gap-1 text-primary hover:underline mt-2">
+      Discord →
+    </a>
+  </Card>
+  
+  <Card title="🐛 Issues" icon="github">
+    Encontrou um bug ou tem uma sugestão? Abra uma issue no GitHub.
+    <a href="https://github.com/Lucas46521/Helper-db/issues" class="inline-flex items-center gap-1 text-primary hover:underline mt-2">
+      GitHub Issues →
+    </a>
+  </Card>
+</CardGrid>
 
-- [Website](https://helper-db.com) ([source](https://github.com/your-username/helper.db-docs))
-- [Documentation](https://helper-db.com/docs)
-- [Guide](https://helper-db.com/guide) ([source](https://github.com/your-username/helper.db-guide))
-- [Helper.db Discord server](https://discord.gg/helper-db)
-- [Discord API Discord server](https://discord.gg/discord-api)
-- [GitHub](https://github.com/your-username/helper.db)
-- [npm](https://www.npmjs.com/package/helper.db)
+## 🔗 Links Úteis
 
-## Contributing
+- **[Website](https://helper-db.com)** - Site oficial
+- **[Documentação](https://helper-db.com/docs)** - Documentação completa
+- **[GitHub](https://github.com/Lucas46521/Helper-db)** - Código fonte
+- **[npm](https://www.npmjs.com/package/helper.db)** - Pacote no npm
+- **[Discord](https://discord.gg/helper-db)** - Servidor da comunidade
 
-Before creating an issue, please ensure that it hasn't already been reported/suggested, and double-check the documentation.
+## 🤝 Contribuindo
 
-## Help
+Antes de criar uma issue, verifique se ela já não foi reportada e consulte a documentação.
 
-If you don't understand something in the documentation, you are experiencing problems, or you just need a gentle nudge in the right direction, please don't hesitate to join our official [Helper.db Server](https://discord.gg/helper-db).
+Se você não entende algo na documentação, está enfrentando problemas ou apenas precisa de uma orientação, não hesite em se juntar ao nosso [Servidor Discord oficial](https://discord.gg/helper-db).
+
+---
+
+<div class="not-content text-center mt-12 p-6 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg border border-border">
+  <h3 class="text-xl font-semibold mb-4">Pronto para começar?</h3>
+  <div class="flex flex-col sm:flex-row gap-4 items-center justify-center">
+    <a href="/guides/introduction/" class="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">
+      📚 Ler a documentação
+    </a>
+    <a href="https://github.com/Lucas46521/Helper-db" class="inline-flex items-center gap-2 bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-medium hover:bg-secondary/90 transition-colors">
+      ⭐ Dar uma estrela no GitHub
+    </a>
+  </div>
+</div>
