@@ -2,9 +2,9 @@ name: Build for Vercel
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
   workflow_dispatch:
 
 permissions:
@@ -71,15 +71,16 @@ jobs:
       - name: Log build status
         run: echo "### Build completed" >> $GITHUB_STEP_SUMMARY
 
-      - name: Show build output size
+      - name: Show build output size (dist)
+        if: ${{ hashFiles('dist/**') != '' }}
         run: |
-          if [ -d "./dist" ]; then
-            du -sh ./dist
-            echo "### Build output size (dist): $(du -sh ./dist | cut -f1)" >> $GITHUB_STEP_SUMMARY
-          elif [ -d "./out" ]; then
-            du -sh ./out
-            echo "### Build output size (out): $(du -sh ./out | cut -f1)" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "No build output directory found"
-            echo "### Build output directory not found" >> $GITHUB_STEP_SUMMARY
-          fi
+          du -sh ./dist
+          SIZE=$(du -sh ./dist | cut -f1)
+          echo "### Build output size (dist): $SIZE" >> $GITHUB_STEP_SUMMARY
+
+      - name: Show build output size (out)
+        if: ${{ hashFiles('out/**') != '' }}
+        run: |
+          du -sh ./out
+          SIZE=$(du -sh ./out | cut -f1)
+          echo "### Build output size (out): $SIZE" >> $GITHUB_STEP_SUMMARY
