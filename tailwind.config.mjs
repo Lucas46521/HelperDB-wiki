@@ -24,6 +24,9 @@ export default {
           'not-quite-white': '#fafafa',
         },
       },
+      borderColor: {
+        border: 'rgb(var(--border))', // Add custom border color for --border variable
+      },
       typography: {
         DEFAULT: {
           css: {
