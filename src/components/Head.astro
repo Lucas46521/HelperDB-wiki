@@ -1,5 +1,7 @@
 
 ---
+import logoImage from '../assets/logo-with-text.png';
+
 export interface Props {
   title: string;
   description: string;
@@ -8,15 +10,15 @@ export interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = '/src/assets/logo-with-text.png' } = Astro.props;
+const { title, description, image = logoImage.src } = Astro.props;
 ---
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/x-icon" href="/src/assets/favicon.ico" />
-<link rel="icon" type="image/png" sizes="16x16" href="/src/assets/favicon-16x16.png" />
-<link rel="icon" type="image/png" sizes="32x32" href="/src/assets/favicon-32x32.png" />
+<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
 <meta name="generator" content={Astro.generator} />
 
 <!-- Canonical URL -->
