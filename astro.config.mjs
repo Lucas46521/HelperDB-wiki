@@ -62,7 +62,6 @@ export default defineConfig({
         './src/styles/custom.css',
         './src/styles/mdx.css',
       ],
-      favicon: './src/assets/favicon.ico',
       
       editLink: {
         baseUrl: 'https://github.com/your-username/helper.db-docs/edit/main/',
