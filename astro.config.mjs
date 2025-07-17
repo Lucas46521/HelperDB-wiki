@@ -4,56 +4,27 @@ import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
 import tailwindcss from "@tailwindcss/vite";
 
-
-
-
 export default defineConfig({
   integrations: [
     starlight({
       title: 'Helper.db',
-      social: [
-        {
-          icon: 'github',
-          label: 'GitHub',
-          href: 'https://github.com/your-username/helper.db',
-        },
-        {
-          icon: 'discord',
-          label: 'Discord',
-          href: 'https://discord.gg/your-server',
-        },
-      ],
+      description: 'Documentação completa da biblioteca Helper.db',
+      social: {
+        github: 'https://github.com/your-username/helper.db',
+      },
       sidebar: [
         {
-          label: 'Getting Started',
+          label: 'Começando',
           items: [
-            { label: 'Introduction', link: '/guides/introduction/' },
-            { label: 'Installation', link: '/guides/installation/' },
-            { label: 'Quick Start', link: '/guides/quick-start/' },
+            { label: 'Introdução', slug: 'guides/introduction' },
+            { label: 'Instalação', slug: 'guides/installation' },
+            { label: 'Início Rápido', slug: 'guides/quick-start' },
           ],
         },
         {
-          label: 'Classes',
+          label: 'Referência',
           items: [
-            { label: 'Database', link: '/reference/database/' },
-            { label: 'Query', link: '/reference/query/' },
-            { label: 'Backup', link: '/reference/backup/' },
-          ],
-        },
-        {
-          label: 'Examples',
-          items: [
-            { label: 'Discord Bot', link: '/examples/discord-bot/' },
-            { label: 'Web Application', link: '/examples/web-app/' },
-            { label: 'API Server', link: '/examples/api-server/' },
-          ],
-        },
-        {
-          label: 'Advanced',
-          items: [
-            { label: 'Configuration', link: '/advanced/configuration/' },
-            { label: 'Performance', link: '/advanced/performance/' },
-            { label: 'Troubleshooting', link: '/advanced/troubleshooting/' },
+            { label: 'Database', slug: 'reference/database' },
           ],
         },
       ],
@@ -62,15 +33,13 @@ export default defineConfig({
         './src/styles/custom.css',
         './src/styles/mdx.css',
       ],
-      
+
       editLink: {
         baseUrl: 'https://github.com/your-username/helper.db-docs/edit/main/',
       },
       lastUpdated: true,
       pagination: true,
-      expressiveCode: {
-        themes: ['dark-plus', 'github-light'],
-      },
+      expressiveCode: false, // Desabilitar para usar nossos componentes
       components: {
         Head: './src/components/Head.astro',
         pre: './src/components/AutoCodeBlock.astro',
@@ -78,7 +47,6 @@ export default defineConfig({
     }),
     react(),
     mdx(),
-    
   ],
   vite: {
     plugins: [tailwindcss()],

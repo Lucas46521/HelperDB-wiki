@@ -1,79 +1,50 @@
-
 ---
 import CodeBlock from './CodeBlock.astro';
 
-const { class: className, children, ...props } = Astro.props;
+const { children, class: className, ...props } = Astro.props;
 
-// Função para extrair código de elementos aninhados
-function extractCodeContent(node: any): string {
-  if (typeof node === 'string') {
-    return node;
+// Função para extrair conteúdo de código
+function extractCode(content: any): string {
+  if (typeof content === 'string') {
+    return content;
   }
-  
-  if (Array.isArray(node)) {
-    return node.map(extractCodeContent).join('');
+
+  if (Array.isArray(content)) {
+    return content.map(extractCode).join('');
   }
-  
-  if (node && typeof node === 'object') {
-    // Verifica props primeiro
-    if (node.props) {
-      if (typeof node.props.children === 'string') {
-        return node.props.children;
-      }
-      if (node.props.children) {
-        return extractCodeContent(node.props.children);
-      }
+
+  if (content && typeof content === 'object') {
+    if (content.props?.children) {
+      return extractCode(content.props.children);
     }
-    
-    // Depois verifica children direto
-    if (node.children) {
-      return extractCodeContent(node.children);
-    }
-    
-    // Se for um elemento code, pega o conteúdo
-    if (node.type === 'element' && node.tagName === 'code') {
-      return extractCodeContent(node.children);
+    if (content.children) {
+      return extractCode(content.children);
     }
   }
-  
+
   return '';
 }
 
 // Extrair o código
 let code = '';
-let language = 'text';
-
-// Primeiro tenta extrair dos children
 if (children) {
-  code = extractCodeContent(children).trim();
+  code = extractCode(children).trim();
 }
 
-// Se não conseguiu, tenta dos props
-if (!code && props.children) {
-  code = extractCodeContent(props.children).trim();
-}
-
-// Extrair linguagem das classes
-const allClasses = [
-  className,
-  props.class,
-  children?.props?.className,
-  children?.props?.class
-].filter(Boolean).join(' ');
-
-const languageMatch = allClasses.match(/language-(\w+)/);
+// Detectar linguagem
+let language = 'text';
+const classNames = [className, props.class].filter(Boolean).join(' ');
+const languageMatch = classNames.match(/language-(\w+)/);
 if (languageMatch) {
   language = languageMatch[1];
 }
 
-// Se ainda não tem linguagem, verifica se é um elemento code com classe
-if (language === 'text' && children && children.props) {
-  const codeClass = children.props.className || children.props.class || '';
-  const codeLanguageMatch = codeClass.match(/language-(\w+)/);
-  if (codeLanguageMatch) {
-    language = codeLanguageMatch[1];
-  }
-}
+// Se há código válido, usar o CodeBlock, senão renderizar o slot
+const hasValidCode = code && code.length > 0;
 ---
 
-{code ? <CodeBlock code={code} language={language} /> : <slot />}
+{hasValidCode ? (
+  <CodeBlock code={code} language={language} />
+) : (
+  <slot />
+)}
