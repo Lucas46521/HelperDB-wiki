@@ -81,6 +81,7 @@ export default defineConfig({
       },
       components: {
         Head: './src/components/Head.astro',
+        CustomCodeBlock: './src/components/CustomCodeBlock.astro',
       },
     }),
     react(),
