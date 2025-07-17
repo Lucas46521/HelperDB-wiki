@@ -9,7 +9,6 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   integrations: [
-    mdx(),
     starlight({
       title: 'Helper.db',
       social: [
@@ -85,6 +84,7 @@ export default defineConfig({
         CustomCodeBlock: './src/components/CustomCodeBlock.astro',
       },
     }),
+    mdx(),
     react(),
     
   ],
