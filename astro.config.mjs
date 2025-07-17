@@ -3,6 +3,7 @@ import starlight from '@astrojs/starlight';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
 import tailwindcss from "@tailwindcss/vite";
+import { remarkCodeBlock } from './src/lib/mdx-code-block-plugin.js';
 
 
 
@@ -76,7 +77,9 @@ export default defineConfig({
       },
     }),
     react(),
-    mdx(),
+    mdx({
+      remarkPlugins: [remarkCodeBlock],
+    }),
     
   ],
   vite: {
