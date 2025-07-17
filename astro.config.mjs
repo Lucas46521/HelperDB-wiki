@@ -81,17 +81,10 @@ export default defineConfig({
       },
       components: {
         Head: './src/components/Head.astro',
+        CustomCodeBlock: './src/components/CustomCodeBlock.astro',
       },
     }),
     react(),
-    mdx({
-      remarkPlugins: [],
-      rehypePlugins: [],
-      extendMarkdownConfig: false,
-      globals: {
-        components: './src/components/mdx-components.ts',
-      },
-    }),
     
   ],
   vite: {
