@@ -8,21 +8,27 @@ description: 'How to install Helper.db in your project'
 
 Install Helper.db using npm:
 
-```bash
-npm install helper.db
-```
+<CustomCodeBlock 
+  code="npm install helper.db"
+  language="bash" 
+  title="Terminal"
+/>
 
 Or using yarn:
 
-```bash
-yarn add helper.db
-```
+<CustomCodeBlock 
+  code="yarn add helper.db"
+  language="bash" 
+  title="Terminal"
+/>
 
 Or using pnpm:
 
-```bash
-pnpm add helper.db
-```
+<CustomCodeBlock 
+  code="pnpm add helper.db"
+  language="bash" 
+  title="Terminal"
+/>
 
 ## Prerequisites
 
@@ -36,8 +42,8 @@ Before installing Helper.db, make sure you have:
 
 Create a simple test file to verify Helper.db is working correctly:
 
-```javascript
-// test-helper.js
+<CustomCodeBlock 
+  code={`// test-helper.js
 const { Database } = require('helper.db');
 
 async function testInstallation() {
@@ -55,8 +61,10 @@ async function testInstallation() {
   }
 }
 
-testInstallation();
-```
+testInstallation();`}
+  language="javascript" 
+  title="test-helper.js"
+/>
 
 Run the test:
 
@@ -74,11 +82,13 @@ You should see:
 
 Helper.db includes built-in TypeScript definitions. No additional `@types` package needed!
 
-```typescript
-import { Database, Query, Backup } from 'helper.db';
+<CustomCodeBlock 
+  code={`import { Database, Query, Backup } from 'helper.db';
 
-const db: Database = new Database('myapp.db');
-```
+const db: Database = new Database('myapp.db');`}
+  language="typescript" 
+  title="app.ts"
+/>
 
 ## Environment Setup
 
@@ -86,29 +96,35 @@ const db: Database = new Database('myapp.db');
 
 For development, you might want to use file-based databases:
 
-```javascript
-const { Database } = require('helper.db');
-const db = new Database('./dev-database.db');
-```
+<CustomCodeBlock 
+  code={`const { Database } = require('helper.db');
+const db = new Database('./dev-database.db');`}
+  language="javascript" 
+  title="dev.js"
+/>
 
 ### Production Environment
 
 For production, consider using environment variables:
 
-```javascript
-const { Database } = require('helper.db');
+<CustomCodeBlock 
+  code={`const { Database } = require('helper.db');
 const dbPath = process.env.DATABASE_PATH || './production.db';
-const db = new Database(dbPath);
-```
+const db = new Database(dbPath);`}
+  language="javascript" 
+  title="production.js"
+/>
 
 ### Testing Environment
 
 For testing, use in-memory databases:
 
-```javascript
-const { Database } = require('helper.db');
-const db = new Database(':memory:'); // Temporary, in-memory database
-```
+<CustomCodeBlock 
+  code={`const { Database } = require('helper.db');
+const db = new Database(':memory:'); // Temporary, in-memory database`}
+  language="javascript" 
+  title="test.js"
+/>
 
 ## Common Installation Issues
 

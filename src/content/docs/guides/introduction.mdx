@@ -10,8 +10,8 @@ Helper.db is a simple and powerful database library for Node.js applications.
 
 ## Quick Example
 
-```javascript
-const { Database } = require('helper.db');
+<CustomCodeBlock 
+  code={`const { Database } = require('helper.db');
 const db = new Database('myapp');
 
 // Set data
@@ -19,8 +19,10 @@ db.set('user.name', 'João');
 db.set('user.age', 25);
 
 // Get data
-console.log(db.get('user.name')); // João
-```
+console.log(db.get('user.name')); // João`}
+  language="javascript" 
+  title="app.js"
+/>
 
 ## Features
 
@@ -41,8 +43,8 @@ Helper.db is designed to simplify database operations while providing:
 ## Key Features
 
 ### Simple Database Operations
-```javascript
-const { Database } = require('helper.db');
+<CustomCodeBlock 
+  code={`const { Database } = require('helper.db');
 const db = new Database('myDatabase.db');
 
 // Insert data
@@ -52,28 +54,34 @@ await db.insert('users', { name: 'John', age: 30 });
 const users = await db.find('users', { age: { $gt: 25 } });
 
 // Update data
-await db.update('users', { name: 'John' }, { age: 31 });
-```
+await db.update('users', { name: 'John' }, { age: 31 });`}
+  language="javascript" 
+  title="database-operations.js"
+/>
 
 ### Advanced Querying
-```javascript
-// Complex queries made simple
+<CustomCodeBlock 
+  code={`// Complex queries made simple
 const results = await db.query()
   .from('users')
   .where('age', '>', 18)
   .and('status', '=', 'active')
   .orderBy('created_at', 'desc')
   .limit(10)
-  .execute();
-```
+  .execute();`}
+  language="javascript" 
+  title="advanced-query.js"
+/>
 
 ### Built-in Backup System
-```javascript
-// Automatic backups
+<CustomCodeBlock 
+  code={`// Automatic backups
 const backup = new Backup(db);
 await backup.create('backup_20240101.db');
-await backup.restore('backup_20240101.db');
-```
+await backup.restore('backup_20240101.db');`}
+  language="javascript" 
+  title="backup.js"
+/>
 
 ## Why Choose Helper.db?
 

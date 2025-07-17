@@ -4,6 +4,8 @@ title: 'Database Reference'
 description: 'Complete reference for the Database class'
 ---
 
+import CustomCodeBlock from '../../../components/CustomCodeBlock.astro';
+
 # Database Class Reference
 
 ## Constructor
@@ -50,7 +52,10 @@ db.delete('user'); // Remove objeto completo
 
 Verifica se uma chave existe.
 
-```javascript
-if (db.has('user.name')) {
+<CustomCodeBlock 
+  code={`if (db.has('user.name')) {
   console.log('User has a name');
-}
+}`}
+  language="javascript" 
+  title="has() method"
+/>

@@ -8,16 +8,18 @@ description: 'Get up and running with Helper.db in minutes with this quick start
 
 Primeiro, instale o Helper.db:
 
-```bash
-npm install helper.db
-```
+<CustomCodeBlock 
+  code="npm install helper.db"
+  language="bash" 
+  title="Terminal"
+/>
 
 ## Exemplo básico
 
 Aqui está um exemplo simples de como usar:
 
-```javascript
-const { Database } = require('helper.db');
+<CustomCodeBlock 
+  code={`const { Database } = require('helper.db');
 const db = new Database('mydata');
 
 // Salvar dados
@@ -26,13 +28,15 @@ db.set('user.age', 25);
 
 // Ler dados
 console.log(db.get('user.name')); // João
-console.log(db.get('user')); // { name: 'João', age: 25 }
-```
+console.log(db.get('user')); // { name: 'João', age: 25 }`}
+  language="javascript" 
+  title="app.js"
+/>
 
 ## Exemplo com TypeScript
 
-```typescript
-import { Database } from 'helper.db';
+<CustomCodeBlock 
+  code={`import { Database } from 'helper.db';
 
 interface User {
   name: string;
@@ -48,8 +52,10 @@ const user: User = {
   email: 'maria@example.com'
 };
 
-db.set('user.1', user);
-```
+db.set('user.1', user);`}
+  language="typescript" 
+  title="app.ts"
+/>
 
 # Quick Start
 
@@ -59,8 +65,8 @@ Get up and running with Helper.db in just a few minutes! This guide will walk yo
 
 Let's create a simple user management system:
 
-```javascript
-const { Database } = require('helper.db');
+<CustomCodeBlock 
+  code={`const { Database } = require('helper.db');
 
 // Create or connect to a database
 const db = new Database('users.db');
@@ -78,15 +84,18 @@ async function main() {
   console.log('✅ Database and table created!');
 }
 
-main().catch(console.error);
-```
+main().catch(console.error);`}
+  language="javascript" 
+  title="setup.js"
+/>
 
 ## Insert Data
 
 Add some users to your database:
 
 ```javascript
-async function addUsers() {
+<CustomCodeBlock 
+  code={`async function addUsers() {
   // Insert a single user
   const userId = await db.insert('users', {
     name: 'Alice Johnson',
@@ -104,7 +113,10 @@ async function addUsers() {
   ]);
 
   console.log('👥 Multiple users added!');
-}
+}`}
+  language="javascript" 
+  title="insert-data.js"
+/>
 ```
 
 ## Query Data
