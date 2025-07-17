@@ -1,0 +1,19 @@
+
+---
+import CodeBlock from './CodeBlock.astro';
+
+interface Props {
+  class?: string;
+  children: any;
+}
+
+const { class: className, children, ...props } = Astro.props;
+
+// Extrair informações do elemento code
+const codeElement = children;
+const className_code = codeElement?.props?.className || '';
+const language = className_code.replace('language-', '') || 'text';
+const code = codeElement?.props?.children || '';
+---
+
+<CodeBlock code={code} language={language} />

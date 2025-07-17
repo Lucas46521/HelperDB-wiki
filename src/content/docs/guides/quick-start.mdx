@@ -1,9 +1,55 @@
-
 ---
 layout: '../../../components/MDXLayout.astro'
 title: 'Quick Start'
 description: 'Get up and running with Helper.db in minutes with this quick start guide'
 ---
+
+## Instalação
+
+Primeiro, instale o Helper.db:
+
+```bash
+npm install helper.db
+```
+
+## Exemplo básico
+
+Aqui está um exemplo simples de como usar:
+
+```js
+const { Database } = require('helper.db');
+const db = new Database('mydata');
+
+// Salvar dados
+db.set('user.name', 'João');
+db.set('user.age', 25);
+
+// Ler dados
+console.log(db.get('user.name')); // João
+console.log(db.get('user')); // { name: 'João', age: 25 }
+```
+
+## Exemplo com TypeScript
+
+```typescript
+import { Database } from 'helper.db';
+
+interface User {
+  name: string;
+  age: number;
+  email: string;
+}
+
+const db = new Database<User>('users');
+
+const user: User = {
+  name: 'Maria',
+  age: 30,
+  email: 'maria@example.com'
+};
+
+db.set('user.1', user);
+```
 
 # Quick Start
 
@@ -86,7 +132,7 @@ async function queryUsers() {
     .orderBy('name', 'asc')
     .limit(5)
     .execute();
-  
+
   console.log('Sorted results:', sortedUsers);
 }
 ```
