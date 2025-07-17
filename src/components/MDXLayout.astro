@@ -100,7 +100,13 @@ const currentPath = Astro.url.pathname;
     <div class="mdx-content">
       <!-- Header with hamburger menu -->
       <header class="mdx-header">
-        <button class="hamburger-button" id="hamburger-btn">
+        <button
+          class="hamburger-button"
+          id="hamburger-btn"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+          aria-controls="sidebar"
+        >
           <img src="/src/assets/logo.svg" alt="Menu" width="24" height="24" />
         </button>
         <h1 class="text-lg font-semibold text-foreground">{title}</h1>
@@ -112,7 +118,9 @@ const currentPath = Astro.url.pathname;
           <slot />
         </article>
       </div>
-  </div>
+    </div> <!-- fechamento da .mdx-content -->
+
+  </div> <!-- fechamento da .mdx-container -->
 
   <script>
     const hamburgerBtn = document.getElementById('hamburger-btn');
@@ -120,13 +128,15 @@ const currentPath = Astro.url.pathname;
     const overlay = document.getElementById('sidebar-overlay');
 
     function toggleSidebar() {
-      sidebar?.classList.toggle('open');
+      const expanded = sidebar?.classList.toggle('open');
       overlay?.classList.toggle('open');
+      hamburgerBtn?.setAttribute('aria-expanded', expanded ? 'true' : 'false');
     }
 
     function closeSidebar() {
       sidebar?.classList.remove('open');
       overlay?.classList.remove('open');
+      hamburgerBtn?.setAttribute('aria-expanded', 'false');
     }
 
     hamburgerBtn?.addEventListener('click', toggleSidebar);
