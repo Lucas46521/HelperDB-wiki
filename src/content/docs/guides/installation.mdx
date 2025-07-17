@@ -1,13 +1,28 @@
-
 ---
 layout: '../../../components/MDXLayout.astro'
 title: 'Installation'
-description: 'Learn how to install and set up Helper.db in your Node.js project'
+description: 'How to install Helper.db in your project'
 ---
 
 # Installation
 
-Get Helper.db up and running in your Node.js project in just a few simple steps.
+Install Helper.db using npm:
+
+```bash
+npm install helper.db
+```
+
+Or using yarn:
+
+```bash
+yarn add helper.db
+```
+
+Or using pnpm:
+
+```bash
+pnpm add helper.db
+```
 
 ## Prerequisites
 
@@ -16,18 +31,6 @@ Before installing Helper.db, make sure you have:
 - **Node.js** version 14.0 or higher
 - **npm** or **yarn** package manager
 - A Node.js project initialized with `package.json`
-
-## Install via npm
-
-```bash
-npm install helper.db
-```
-
-## Install via yarn
-
-```bash
-yarn add helper.db
-```
 
 ## Verify Installation
 
@@ -41,12 +44,12 @@ async function testInstallation() {
   try {
     const db = new Database(':memory:'); // In-memory database for testing
     console.log('✅ Helper.db installed successfully!');
-    
+
     // Test basic operations
     await db.insert('test', { message: 'Hello Helper.db!' });
     const result = await db.find('test');
     console.log('📦 Test data:', result);
-    
+
   } catch (error) {
     console.error('❌ Installation test failed:', error);
   }

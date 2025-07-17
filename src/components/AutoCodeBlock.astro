@@ -4,16 +4,37 @@ import CodeBlock from './CodeBlock.astro';
 
 interface Props {
   class?: string;
-  children: any;
+  children?: any;
+  [key: string]: any;
 }
 
 const { class: className, children, ...props } = Astro.props;
 
-// Extrair informações do elemento code
-const codeElement = children;
-const className_code = codeElement?.props?.className || '';
-const language = className_code.replace('language-', '') || 'text';
-const code = codeElement?.props?.children || '';
+// Verificar se temos children válidos
+if (!children) {
+  return null;
+}
+
+// Se children é uma string, usar diretamente
+let code = '';
+let language = 'text';
+
+if (typeof children === 'string') {
+  code = children;
+} else if (children && typeof children === 'object') {
+  // Extrair código do elemento
+  code = children.props?.children || children.children || children;
+  
+  // Extrair linguagem da className
+  const elementClass = children.props?.className || className || '';
+  const match = elementClass.match(/language-(\w+)/);
+  language = match ? match[1] : 'text';
+}
+
+// Se ainda não temos código válido, tentar extrair de props
+if (!code && props.children) {
+  code = props.children;
+}
 ---
 
 <CodeBlock code={code} language={language} />

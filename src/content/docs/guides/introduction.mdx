@@ -1,12 +1,33 @@
 ---
 layout: '../../../components/MDXLayout.astro'
 title: 'Introduction'
-description: 'Get started with Helper.db - A powerful Node.js database helper module'
+description: 'Getting started with Helper.db - A simple and powerful database library'
 ---
 
-# Introduction
+# Introduction to Helper.db
 
-Welcome to **Helper.db** - a powerful Node.js module that makes database interactions simple and intuitive.
+Helper.db is a simple and powerful database library for Node.js applications.
+
+## Quick Example
+
+```js
+const { Database } = require('helper.db');
+const db = new Database('myapp');
+
+// Set data
+db.set('user.name', 'João');
+db.set('user.age', 25);
+
+// Get data
+console.log(db.get('user.name')); // João
+```
+
+## Features
+
+- Simple key-value storage
+- Nested object support
+- Fast and lightweight
+- Easy to use API
 
 ## What is Helper.db?
 
