@@ -1,16 +1,13 @@
 ---
-layout: '../../../components/MDXLayout.astro'
 title: 'Database Reference'
 description: 'Complete reference for the Database class'
 ---
-
-import CustomCodeBlock from '../../../components/CustomCodeBlock.astro';
 
 # Database Class Reference
 
 ## Constructor
 
-```js
+```javascript
 const db = new Database(name, options);
 ```
 
@@ -52,10 +49,8 @@ db.delete('user'); // Remove objeto completo
 
 Verifica se uma chave existe.
 
-<CustomCodeBlock 
-  code={`if (db.has('user.name')) {
+```javascript title="has() method"
+if (db.has('user.name')) {
   console.log('User has a name');
-}`}
-  language="javascript" 
-  title="has() method"
-/>
+}
+```

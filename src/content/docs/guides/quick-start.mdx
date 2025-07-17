@@ -1,5 +1,4 @@
 ---
-layout: '../../../components/MDXLayout.astro'
 title: 'Quick Start'
 description: 'Get up and running with Helper.db in minutes with this quick start guide'
 ---
@@ -8,18 +7,16 @@ description: 'Get up and running with Helper.db in minutes with this quick start
 
 Primeiro, instale o Helper.db:
 
-<CustomCodeBlock 
-  code="npm install helper.db"
-  language="bash" 
-  title="Terminal"
-/>
+```bash title="Terminal"
+npm install helper.db
+```
 
 ## Exemplo básico
 
 Aqui está um exemplo simples de como usar:
 
-<CustomCodeBlock 
-  code={`const { Database } = require('helper.db');
+```javascript title="app.js"
+const { Database } = require('helper.db');
 const db = new Database('mydata');
 
 // Salvar dados
@@ -28,15 +25,13 @@ db.set('user.age', 25);
 
 // Ler dados
 console.log(db.get('user.name')); // João
-console.log(db.get('user')); // { name: 'João', age: 25 }`}
-  language="javascript" 
-  title="app.js"
-/>
+console.log(db.get('user')); // { name: 'João', age: 25 }
+```
 
 ## Exemplo com TypeScript
 
-<CustomCodeBlock 
-  code={`import { Database } from 'helper.db';
+```typescript title="app.ts"
+import { Database } from 'helper.db';
 
 interface User {
   name: string;
@@ -52,10 +47,8 @@ const user: User = {
   email: 'maria@example.com'
 };
 
-db.set('user.1', user);`}
-  language="typescript" 
-  title="app.ts"
-/>
+db.set('user.1', user);
+```
 
 # Quick Start
 
@@ -65,8 +58,8 @@ Get up and running with Helper.db in just a few minutes! This guide will walk yo
 
 Let's create a simple user management system:
 
-<CustomCodeBlock 
-  code={`const { Database } = require('helper.db');
+```javascript title="setup.js"
+const { Database } = require('helper.db');
 
 // Create or connect to a database
 const db = new Database('users.db');
@@ -84,18 +77,15 @@ async function main() {
   console.log('✅ Database and table created!');
 }
 
-main().catch(console.error);`}
-  language="javascript" 
-  title="setup.js"
-/>
+main().catch(console.error);
+```
 
 ## Insert Data
 
 Add some users to your database:
 
-```javascript
-<CustomCodeBlock 
-  code={`async function addUsers() {
+```javascript title="insert-data.js"
+async function addUsers() {
   // Insert a single user
   const userId = await db.insert('users', {
     name: 'Alice Johnson',
@@ -113,10 +103,7 @@ Add some users to your database:
   ]);
 
   console.log('👥 Multiple users added!');
-}`}
-  language="javascript" 
-  title="insert-data.js"
-/>
+}
 ```
 
 ## Query Data

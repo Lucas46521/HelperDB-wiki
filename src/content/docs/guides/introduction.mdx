@@ -1,5 +1,4 @@
 ---
-layout: '../../../components/MDXLayout.astro'
 title: 'Introduction'
 description: 'Getting started with Helper.db - A simple and powerful database library'
 ---
@@ -10,8 +9,8 @@ Helper.db is a simple and powerful database library for Node.js applications.
 
 ## Quick Example
 
-<CustomCodeBlock 
-  code={`const { Database } = require('helper.db');
+```javascript title="app.js"
+const { Database } = require('helper.db');
 const db = new Database('myapp');
 
 // Set data
@@ -19,10 +18,8 @@ db.set('user.name', 'João');
 db.set('user.age', 25);
 
 // Get data
-console.log(db.get('user.name')); // João`}
-  language="javascript" 
-  title="app.js"
-/>
+console.log(db.get('user.name')); // João
+```
 
 ## Features
 
@@ -43,8 +40,9 @@ Helper.db is designed to simplify database operations while providing:
 ## Key Features
 
 ### Simple Database Operations
-<CustomCodeBlock 
-  code={`const { Database } = require('helper.db');
+
+```javascript title="database-operations.js"
+const { Database } = require('helper.db');
 const db = new Database('myDatabase.db');
 
 // Insert data
@@ -54,34 +52,30 @@ await db.insert('users', { name: 'John', age: 30 });
 const users = await db.find('users', { age: { $gt: 25 } });
 
 // Update data
-await db.update('users', { name: 'John' }, { age: 31 });`}
-  language="javascript" 
-  title="database-operations.js"
-/>
+await db.update('users', { name: 'John' }, { age: 31 });
+```
 
 ### Advanced Querying
-<CustomCodeBlock 
-  code={`// Complex queries made simple
+
+```javascript title="advanced-query.js"
+// Complex queries made simple
 const results = await db.query()
   .from('users')
   .where('age', '>', 18)
   .and('status', '=', 'active')
   .orderBy('created_at', 'desc')
   .limit(10)
-  .execute();`}
-  language="javascript" 
-  title="advanced-query.js"
-/>
+  .execute();
+```
 
 ### Built-in Backup System
-<CustomCodeBlock 
-  code={`// Automatic backups
+
+```javascript title="backup.js"
+// Automatic backups
 const backup = new Backup(db);
 await backup.create('backup_20240101.db');
-await backup.restore('backup_20240101.db');`}
-  language="javascript" 
-  title="backup.js"
-/>
+await backup.restore('backup_20240101.db');
+```
 
 ## Why Choose Helper.db?
 
