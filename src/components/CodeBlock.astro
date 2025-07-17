@@ -13,13 +13,8 @@ const isSmallBlock = code.split('\n').length <= 3 && code.length <= 100;
   <div class="code-block-header">
     <span class="code-block-title">{title || language}</span>
     <button class="copy-button" data-code={code}>
-      <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-      </svg>
-      <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="20,6 9,17 4,12"></polyline>
-      </svg>
+      <span class="copy-icon">⧉</span>
+      <span class="check-icon">✔</span>
       <span class="copy-text">Copiar</span>
     </button>
   </div>
@@ -38,16 +33,18 @@ const isSmallBlock = code.split('\n').length <= 3 && code.length <= 100;
   background-color: rgb(var(--card));
 }
 
+/* HEADER */
 .code-block-header {
   background: linear-gradient(135deg, rgb(var(--muted)) 0%, rgba(var(--muted), 0.8) 100%);
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid rgb(var(--border));
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-radius: 0.75rem;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  border-bottom: 1px solid rgb(var(--border));
 }
 
 .code-block-title {
@@ -69,19 +66,7 @@ const isSmallBlock = code.split('\n').length <= 3 && code.length <= 100;
   box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27ca3f;
 }
 
-.code-block-content {
-  position: relative;
-}
-
-.code-block-content pre {
-  margin: 0;
-  border: 0;
-  border-radius: 0 0 0.75rem 0.75rem;
-  padding: 1rem;
-  overflow-x: auto;
-  background-color: rgb(var(--card));
-}
-
+/* COPY BUTTON */
 .copy-button {
   display: flex;
   align-items: center;
@@ -135,6 +120,21 @@ const isSmallBlock = code.split('\n').length <= 3 && code.length <= 100;
   color: rgb(34, 197, 94);
 }
 
+/* CODE AREA */
+.code-block-content {
+  position: relative;
+}
+
+.code-block-content pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0 0 0.75rem 0.75rem;
+  padding: 1rem;
+  overflow-x: auto;
+  background-color: rgb(var(--card));
+}
+
+/* RESPONSIVO */
 @media (max-width: 768px) {
   .copy-text {
     display: none;
@@ -165,35 +165,12 @@ document.addEventListener('DOMContentLoaded', function () {
         await navigator.clipboard.writeText(code);
         this.classList.add('copied');
         if (copyText) copyText.textContent = 'Copiado!';
-
         setTimeout(() => {
           this.classList.remove('copied');
           if (copyText) copyText.textContent = 'Copiar';
         }, 2500);
       } catch (err) {
         console.error('Erro ao copiar código:', err);
-        const textArea = document.createElement('textarea');
-        textArea.value = code;
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-999999px';
-        textArea.style.top = '-999999px';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-
-        try {
-          document.execCommand('copy');
-          this.classList.add('copied');
-          if (copyText) copyText.textContent = 'Copiado!';
-          setTimeout(() => {
-            this.classList.remove('copied');
-            if (copyText) copyText.textContent = 'Copiar';
-          }, 2500);
-        } catch (fallbackErr) {
-          console.error('Fallback copy failed:', fallbackErr);
-        }
-
-        document.body.removeChild(textArea);
       }
     });
   });
