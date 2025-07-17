@@ -72,16 +72,17 @@ export default defineConfig({
         themes: ['github-dark', 'github-light'],
         styleOverrides: {
           borderRadius: '8px',
-          codeFontFamily: '"Fira Code", "JetBrains Mono", "Cascadia Code", monospace',
+          codeFontFamily: '"Fira Code", "JetBrains Mono", "Cascadia Code", "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace',
         },
         defaultProps: {
           showLineNumbers: false,
           wrap: true,
         },
+        plugins: [],
+        useDarkModeMediaQuery: false,
       },
       components: {
         Head: './src/components/Head.astro',
-        CustomCodeBlock: './src/components/CustomCodeBlock.astro',
       },
     }),
     mdx(),

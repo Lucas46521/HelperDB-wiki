@@ -148,37 +148,49 @@
   font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, consolas, 'DejaVu Sans Mono', monospace;
 }
 
-/* Expressive Code styling */
+/* GitHub/VS Code style code blocks */
 .expressive-code {
   margin: 1.5rem 0;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgb(var(--border));
+  background-color: rgb(var(--card));
+  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
 }
 
 .expressive-code .frame {
-  border: 1px solid rgb(var(--border));
+  border: none;
+  background: transparent;
 }
 
 .expressive-code pre {
-  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
   font-size: 0.875rem;
   line-height: 1.5;
-}
-
-/* GitHub-style copy button */
-.expressive-code .copy button {
-  background-color: rgba(var(--muted), 0.8);
-  border: 1px solid rgb(var(--border));
-  color: rgb(var(--muted-foreground));
-  border-radius: 6px;
-  padding: 0.5rem;
-  transition: all 0.2s ease;
-}
-
-.expressive-code .copy button:hover {
-  background-color: rgb(var(--muted));
+  padding: 1rem;
+  margin: 0;
+  background: transparent;
+  overflow-x: auto;
   color: rgb(var(--foreground));
+}
+
+.expressive-code code {
+  font-family: inherit;
+  font-size: inherit;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+}
+
+/* Title bar styling */
+.expressive-code .title {
+  background-color: rgb(var(--muted));
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgb(var(--muted-foreground));
+  border-bottom: 1px solid rgb(var(--border));
 }
 
 /* Discord.js inspired method documentation */

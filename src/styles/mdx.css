@@ -234,36 +234,34 @@
   padding: 0;
 }
 
-/* Override for custom code blocks */
-.mdx-article .code-block-container pre {
-  margin-bottom: 0;
-  border: 0;
-  border-radius: 0;
-}
-
-/* Ensure custom codeblocks have proper spacing */
-.mdx-article .codeblock {
-  margin: 1.5rem 0;
-}
-
-/* Expressive Code integration */
+/* Standard code blocks styling */
 .mdx-article .expressive-code {
   margin: 1.5rem 0;
   border-radius: 8px;
   border: 1px solid rgb(var(--border));
+  background-color: rgb(var(--card));
+  overflow: hidden;
 }
 
 .mdx-article .expressive-code pre {
   margin: 0;
   background: transparent;
   border: none;
+  padding: 1rem;
+  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: rgb(var(--foreground));
+  overflow-x: auto;
 }
 
 .mdx-article .expressive-code code {
   background: transparent;
   padding: 0;
   border-radius: 0;
-  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
 }
 
 .mdx-article blockquote {
