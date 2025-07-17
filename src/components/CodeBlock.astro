@@ -12,10 +12,7 @@ const isSmallBlock = code.split('\n').length <= 3 && code.length <= 100;
 <div class="code-block-container">
   <div class="code-block-header">
     <span class="code-block-title">{title || language}</span>
-  </div>
-
-  <div class="code-block-content">
-    <button class="copy-button floating" data-code={code}>
+    <button class="copy-button" data-code={code}>
       <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -25,7 +22,9 @@ const isSmallBlock = code.split('\n').length <= 3 && code.length <= 100;
       </svg>
       <span class="copy-text">Copiar</span>
     </button>
+  </div>
 
+  <div class="code-block-content">
     <pre class={`language-${language}`}><code>{code}</code></pre>
   </div>
 </div>
@@ -41,7 +40,7 @@ const isSmallBlock = code.split('\n').length <= 3 && code.length <= 100;
 
 .code-block-header {
   background: linear-gradient(135deg, rgb(var(--muted)) 0%, rgba(var(--muted), 0.8) 100%);
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem;
   border-bottom: 1px solid rgb(var(--border));
   display: flex;
   justify-content: space-between;
@@ -86,17 +85,16 @@ const isSmallBlock = code.split('\n').length <= 3 && code.length <= 100;
 .copy-button {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background-color: rgba(var(--background), 0.8);
+  gap: 0.4rem;
+  padding: 0.35rem 0.6rem;
+  background-color: rgba(var(--background), 0.85);
   border: 1px solid rgba(var(--border), 0.6);
-  border-radius: 0.5rem;
-  color: rgb(var(--muted-foreground));
-  font-size: 0.875rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  transition: all 0.3s ease;
+  color: rgb(var(--muted-foreground));
+  white-space: nowrap;
 }
 
 .copy-button:hover {
@@ -108,7 +106,7 @@ const isSmallBlock = code.split('\n').length <= 3 && code.length <= 100;
 
 .copy-button .copy-icon,
 .copy-button .check-icon {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
 }
 
 .copy-button .check-icon {
@@ -137,22 +135,13 @@ const isSmallBlock = code.split('\n').length <= 3 && code.length <= 100;
   color: rgb(34, 197, 94);
 }
 
-.copy-button.floating {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  z-index: 2;
-  background-color: rgba(var(--background), 0.9);
-  backdrop-filter: blur(4px);
-}
-
 @media (max-width: 768px) {
   .copy-text {
     display: none;
   }
 
   .copy-button {
-    padding: 0.5rem;
+    padding: 0.4rem;
     min-width: auto;
   }
 
@@ -163,14 +152,13 @@ const isSmallBlock = code.split('\n').length <= 3 && code.length <= 100;
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const copyButtons = document.querySelectorAll('.copy-button');
 
   copyButtons.forEach(button => {
-    button.addEventListener('click', async function() {
+    button.addEventListener('click', async function () {
       const code = this.getAttribute('data-code');
       const copyText = this.querySelector('.copy-text');
-
       if (this.classList.contains('copied')) return;
 
       try {
