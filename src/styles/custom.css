@@ -148,12 +148,12 @@
   font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, consolas, 'DejaVu Sans Mono', monospace;
 }
 
-/* Force hide default pre elements */
+/* Force hide default pre elements but keep our custom ones */
 .sl-markdown-content pre:not(.codeblock pre) {
   display: none !important;
 }
 
-/* Only show our custom codeblocks */
+/* Ensure our custom codeblocks are always visible */
 .codeblock {
   display: block !important;
   margin: 1.5rem 0 !important;

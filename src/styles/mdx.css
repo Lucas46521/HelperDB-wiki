@@ -246,41 +246,31 @@
   margin: 1.5rem 0;
 }
 
-/* Hide default pre elements that contain code with language classes */
-.sl-markdown-content pre:has(code[class*="language-"]) {
-  display: none !important;
-}
-
-/* Also hide in mdx articles */
-.mdx-article pre:has(code[class*="language-"]) {
-  display: none !important;
-}
-
-/* Hide all default pre elements in starlight content when they contain code */
-.sl-markdown-content pre code[class*="language-"] {
-  display: none !important;
-}
-
-/* Hide parent pre elements too */
-.sl-markdown-content pre:has(code[class*="language-"]) {
-  display: none !important;
-}
-
-/* Force hide any remaining pre elements with language classes */
-pre[class*="language-"] {
-  display: none !important;
-}
-
 /* Hide astro-code elements that might interfere */
 .astro-code {
   display: none !important;
 }
 
-/* Hide default code styles when using custom CodeBlock */
-.mdx-article pre code {
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
+/* Hide default pre elements only when they don't contain our custom codeblocks */
+.sl-markdown-content pre:not(.codeblock pre) {
+  display: none !important;
+}
+
+/* Ensure our custom codeblocks are visible */
+.codeblock {
+  display: block !important;
+  margin: 1.5rem 0 !important;
+}
+
+.codeblock pre {
+  display: block !important;
+  margin: 0 !important;
+}
+
+.codeblock pre code {
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
 }
 
 .mdx-article blockquote {
