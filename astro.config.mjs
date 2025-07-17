@@ -73,7 +73,7 @@ export default defineConfig({
       },
       components: {
         Head: './src/components/Head.astro',
-        pre: './src/components/AutoCodeBlock.astro',
+        Code: './src/components/AutoCodeBlock.astro',
       },
     }),
     react(),

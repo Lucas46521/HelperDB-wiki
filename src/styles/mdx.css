@@ -246,6 +246,16 @@
   margin: 1.5rem 0;
 }
 
+/* Hide default pre elements that contain code with language classes */
+.sl-markdown-content pre:has(code[class*="language-"]) {
+  display: none !important;
+}
+
+/* Also hide in mdx articles */
+.mdx-article pre:has(code[class*="language-"]) {
+  display: none !important;
+}
+
 /* Hide default code styles when using custom CodeBlock */
 .mdx-article pre code {
   background: transparent;
