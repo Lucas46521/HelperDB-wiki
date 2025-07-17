@@ -9,6 +9,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   integrations: [
+    mdx(),
     starlight({
       title: 'Helper.db',
       social: [
