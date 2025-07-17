@@ -1,3 +1,4 @@
+
 ---
 import '../styles/mdx.css';
 
@@ -58,7 +59,7 @@ const currentPath = Astro.url.pathname;
   <div class="mdx-container">
     <!-- Overlay for mobile -->
     <div class="mdx-sidebar-overlay" id="sidebar-overlay"></div>
-
+    
     <!-- Sidebar -->
     <aside class="mdx-sidebar" id="sidebar">
       <div class="mdx-sidebar-content">
@@ -66,7 +67,7 @@ const currentPath = Astro.url.pathname;
           <h1 class="text-xl font-bold text-foreground">Helper.db</h1>
           <p class="text-sm text-muted-foreground mt-1">Documentation</p>
         </div>
-
+        
         <nav>
           {navigation.map((section) => (
             <div class="mdx-nav-section">
