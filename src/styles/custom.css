@@ -148,30 +148,37 @@
   font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, consolas, 'DejaVu Sans Mono', monospace;
 }
 
-/* Force hide default pre elements but keep our custom ones */
-.sl-markdown-content pre:not(.codeblock pre) {
-  display: none !important;
+/* Expressive Code styling */
+.expressive-code {
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-/* Ensure our custom codeblocks are always visible */
-.codeblock {
-  display: block !important;
-  margin: 1.5rem 0 !important;
+.expressive-code .frame {
+  border: 1px solid rgb(var(--border));
 }
 
-.codeblock pre {
-  display: block !important;
-  background-color: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  margin: 0 !important;
-  padding: 1rem !important;
+.expressive-code pre {
+  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
-.codeblock pre code {
-  background: transparent !important;
-  padding: 0 !important;
-  color: #eee !important;
+/* GitHub-style copy button */
+.expressive-code .copy button {
+  background-color: rgba(var(--muted), 0.8);
+  border: 1px solid rgb(var(--border));
+  color: rgb(var(--muted-foreground));
+  border-radius: 6px;
+  padding: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.expressive-code .copy button:hover {
+  background-color: rgb(var(--muted));
+  color: rgb(var(--foreground));
 }
 
 /* Discord.js inspired method documentation */

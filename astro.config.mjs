@@ -69,11 +69,18 @@ export default defineConfig({
       lastUpdated: true,
       pagination: true,
       expressiveCode: {
-        themes: ['dark-plus', 'github-light'],
+        themes: ['github-dark', 'github-light'],
+        styleOverrides: {
+          borderRadius: '8px',
+          codeFontFamily: '"Fira Code", "JetBrains Mono", "Cascadia Code", monospace',
+        },
+        defaultProps: {
+          showLineNumbers: false,
+          wrap: true,
+        },
       },
       components: {
         Head: './src/components/Head.astro',
-        pre: './src/components/AutoCodeBlock.astro',
       },
     }),
     react(),
