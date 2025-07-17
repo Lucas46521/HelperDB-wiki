@@ -23,7 +23,7 @@ const db = new Database(name, options);
 
 Define um valor para uma chave específica.
 
-```js
+```javascript
 db.set('user.name', 'Maria');
 db.set('config.theme', 'dark');
 ```
@@ -32,7 +32,7 @@ db.set('config.theme', 'dark');
 
 Recupera o valor de uma chave.
 
-```js
+```javascript
 const name = db.get('user.name');
 const user = db.get('user'); // Retorna objeto completo
 ```
@@ -41,7 +41,7 @@ const user = db.get('user'); // Retorna objeto completo
 
 Remove uma chave do banco de dados.
 
-```js
+```javascript
 db.delete('user.name');
 db.delete('user'); // Remove objeto completo
 ```
@@ -50,7 +50,7 @@ db.delete('user'); // Remove objeto completo
 
 Verifica se uma chave existe.
 
-```js
+```javascript
 if (db.has('user.name')) {
   console.log('User has a name');
 }

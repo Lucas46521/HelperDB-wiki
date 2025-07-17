@@ -256,6 +256,26 @@
   display: none !important;
 }
 
+/* Hide all default pre elements in starlight content when they contain code */
+.sl-markdown-content pre code[class*="language-"] {
+  display: none !important;
+}
+
+/* Hide parent pre elements too */
+.sl-markdown-content pre:has(code[class*="language-"]) {
+  display: none !important;
+}
+
+/* Force hide any remaining pre elements with language classes */
+pre[class*="language-"] {
+  display: none !important;
+}
+
+/* Hide astro-code elements that might interfere */
+.astro-code {
+  display: none !important;
+}
+
 /* Hide default code styles when using custom CodeBlock */
 .mdx-article pre code {
   background: transparent;

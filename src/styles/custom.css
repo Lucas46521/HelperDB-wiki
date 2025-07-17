@@ -148,16 +148,30 @@
   font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, consolas, 'DejaVu Sans Mono', monospace;
 }
 
-.sl-markdown-content pre {
-  background-color: rgb(var(--card));
-  border: 1px solid rgb(var(--border));
-  border-radius: 0.5rem;
-  overflow: hidden;
+/* Force hide default pre elements */
+.sl-markdown-content pre:not(.codeblock pre) {
+  display: none !important;
 }
 
-.sl-markdown-content pre code {
-  background: transparent;
-  padding: 0;
+/* Only show our custom codeblocks */
+.codeblock {
+  display: block !important;
+  margin: 1.5rem 0 !important;
+}
+
+.codeblock pre {
+  display: block !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 1rem !important;
+}
+
+.codeblock pre code {
+  background: transparent !important;
+  padding: 0 !important;
+  color: #eee !important;
 }
 
 /* Discord.js inspired method documentation */
