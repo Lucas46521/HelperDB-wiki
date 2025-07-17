@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import react from '@astrojs/react';
-import mdx from '@astrojs/mdx';
+
 import tailwindcss from "@tailwindcss/vite";
 
 
@@ -85,7 +85,6 @@ export default defineConfig({
         Head: './src/components/Head.astro',
       },
     }),
-    mdx(),
     react(),
     
   ],

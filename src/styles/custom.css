@@ -1,64 +1,13 @@
-@import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Global styles */
+html {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
 
-@layer base {
-  :root {
-    --background: 255 255 255;
-    --foreground: 36 41 47;
-    --card: 255 255 255;
-    --card-foreground: 36 41 47;
-    --popover: 255 255 255;
-    --popover-foreground: 36 41 47;
-    --primary: 88 101 242;
-    --primary-foreground: 255 255 255;
-    --secondary: 243 244 246;
-    --secondary-foreground: 36 41 47;
-    --muted: 248 250 252;
-    --muted-foreground: 100 116 139;
-    --accent: 239 242 255;
-    --accent-foreground: 88 101 242;
-    --destructive: 239 68 68;
-    --destructive-foreground: 255 255 255;
-    --border: 226 232 240;
-    --input: 226 232 240;
-    --ring: 88 101 242;
-    --radius: 0.5rem;
-  }
-
-  [data-theme='dark'] {
-    --background: 32 34 37;
-    --foreground: 220 221 222;
-    --card: 47 49 54;
-    --card-foreground: 220 221 222;
-    --popover: 47 49 54;
-    --popover-foreground: 220 221 222;
-    --primary: 88 101 242;
-    --primary-foreground: 255 255 255;
-    --secondary: 54 57 63;
-    --secondary-foreground: 185 187 190;
-    --muted: 54 57 63;
-    --muted-foreground: 142 146 151;
-    --accent: 54 57 63;
-    --accent-foreground: 220 221 222;
-    --destructive: 237 66 69;
-    --destructive-foreground: 255 255 255;
-    --border: 54 57 63;
-    --input: 54 57 63;
-    --ring: 88 101 242;
-  }
-
-  * {
-    border-color: rgb(var(--border));
-  }
-
-  body {
-    background-color: rgb(var(--background));
-    color: rgb(var(--foreground));
-    font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
-  }
+body {
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+  font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-feature-settings: 'rlig' 1, 'calt' 1;
 }
 
 /* Discord.js style overrides */
@@ -145,7 +94,7 @@
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, consolas, 'DejaVu Sans Mono', monospace;
+  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
 }
 
 /* GitHub/VS Code style code blocks */
@@ -193,7 +142,7 @@
   border-bottom: 1px solid rgb(var(--border));
 }
 
-/* Discord.js inspired method documentation */
+/* API documentation styling */
 .api-method {
   border: 1px solid rgb(var(--border));
   border-radius: 0.5rem;
@@ -218,7 +167,7 @@
   border-radius: 0.5rem;
   padding: 1rem;
   margin-bottom: 1.5rem;
-  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, consolas, 'DejaVu Sans Mono', monospace;
+  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
   font-size: 0.875rem;
 }
 
@@ -256,133 +205,15 @@
   padding: 0.75rem 1rem;
   border-top: 1px solid rgb(var(--border));
   font-size: 0.875rem;
+  color: rgb(var(--muted-foreground));
 }
 
 .param-name {
-  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, consolas, 'DejaVu Sans Mono', monospace;
   color: rgb(var(--primary));
   font-weight: 600;
 }
 
 .param-type {
-  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, consolas, 'DejaVu Sans Mono', monospace;
-  color: rgb(var(--muted-foreground));
-  background-color: rgba(var(--muted), 0.5);
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-}
-
-/* Badge styling */
-.api-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.125rem 0.625rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
+  color: rgb(var(--accent));
   font-weight: 500;
-}
-
-.api-badge.static {
-  background-color: rgb(219 234 254);
-  color: rgb(30 64 175);
-}
-
-.api-badge.async {
-  background-color: rgb(220 252 231);
-  color: rgb(21 128 61);
-}
-
-.api-badge.deprecated {
-  background-color: rgb(254 226 226);
-  color: rgb(153 27 27);
-}
-
-[data-theme='dark'] .api-badge.static {
-  background-color: rgba(30 58 138, 0.3);
-  color: rgb(147 197 253);
-}
-
-[data-theme='dark'] .api-badge.async {
-  background-color: rgba(20 83 45, 0.3);
-  color: rgb(134 239 172);
-}
-
-[data-theme='dark'] .api-badge.deprecated {
-  background-color: rgba(127 29 29, 0.3);
-  color: rgb(252 165 165);
-}
-
-/* Example code blocks */
-.example-block {
-  border: 1px solid rgb(var(--border));
-  border-radius: 0.5rem;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-  background-color: rgb(var(--card));
-}
-
-.example-header {
-  background-color: rgb(var(--muted));
-  padding: 0.5rem 1rem;
-  border-bottom: 1px solid rgb(var(--border));
-  font-weight: 600;
-  font-size: 0.875rem;
-}
-
-.example-block pre {
-  margin: 0;
-  border: 0;
-}
-
-/* Search styling */
-.sl-search {
-  background-color: rgb(var(--muted));
-  border: 1px solid rgb(var(--border));
-}
-
-.sl-search input {
-  background: transparent;
-}
-
-/* Sidebar styling for classes */
-.sl-nav .top-level > li > details[open] > summary {
-  color: rgb(var(--primary));
-}
-
-.sl-nav .nested {
-  margin-left: 0.75rem;
-  padding-left: 0.75rem;
-  border-left: 1px solid rgb(var(--border));
-}
-
-/* Header styling */
-.sl-nav-header {
-  border-bottom: 1px solid rgb(var(--border));
-  padding-bottom: 1rem;
-  margin-bottom: 1rem;
-}
-
-/* Footer styling */
-.sl-footer {
-  border-top: 1px solid rgb(var(--border));
-  margin-top: 3rem;
-  padding-top: 2rem;
-}
-
-/* Custom scrollbar */
-.sl-nav::-webkit-scrollbar {
-  width: 0.5rem;
-}
-
-.sl-nav::-webkit-scrollbar-track {
-  background-color: rgb(var(--muted));
-}
-
-.sl-nav::-webkit-scrollbar-thumb {
-  background-color: rgb(var(--muted-foreground));
-  border-radius: 9999px;
-}
-
-.sl-nav::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(var(--foreground));
 }
