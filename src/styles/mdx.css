@@ -1,3 +1,4 @@
+
 /* MDX-specific styles */
 .mdx-container {
   display: flex;
@@ -145,33 +146,21 @@
     transform: translateX(0);
     height: auto;
   }
-
+  
   .mdx-sidebar-overlay {
     display: none;
   }
-
+  
   .mdx-content {
     margin-left: 280px;
   }
-
+  
   .hamburger-button {
     display: none;
   }
 }
 
-/* Garantir que codeblocks apareçam no MDX */
-.mdx-article .code-block-wrapper {
-  display: block !important;
-  margin: 1.5rem 0;
-}
-
-/* Esconder elementos de código padrão no MDX também */
-.mdx-article .astro-code,
-.mdx-article pre:not(.code-pre) {
-  display: none !important;
-}
-
-/* Estilos para conteúdo MDX */
+/* MDX content styles */
 .mdx-article h1 {
   font-size: 2.25rem;
   font-weight: 700;
@@ -222,7 +211,7 @@
   margin-bottom: 0.5rem;
 }
 
-.mdx-article code:not(.code-pre code) {
+.mdx-article code {
   background-color: rgb(var(--muted));
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
@@ -243,6 +232,45 @@
 .mdx-article pre code {
   background: transparent;
   padding: 0;
+}
+
+/* Override for custom code blocks */
+.mdx-article .code-block-container pre {
+  margin-bottom: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+/* Ensure custom codeblocks have proper spacing */
+.mdx-article .codeblock {
+  margin: 1.5rem 0;
+}
+
+/* Hide astro-code elements that might interfere */
+.astro-code {
+  display: none !important;
+}
+
+/* Hide default pre elements only when they don't contain our custom codeblocks */
+.sl-markdown-content pre:not(.codeblock pre) {
+  display: none !important;
+}
+
+/* Ensure our custom codeblocks are visible */
+.codeblock {
+  display: block !important;
+  margin: 1.5rem 0 !important;
+}
+
+.codeblock pre {
+  display: block !important;
+  margin: 0 !important;
+}
+
+.codeblock pre code {
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
 }
 
 .mdx-article blockquote {

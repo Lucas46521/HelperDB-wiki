@@ -1,219 +1,125 @@
-
 ---
 interface Props {
   code: string;
   language?: string;
   title?: string;
-  class?: string;
 }
 
-const { code, language = 'javascript', title, class: className } = Astro.props;
+const { code, language = 'javascript', title } = Astro.props;
 ---
 
-<div class={`code-block-wrapper ${className || ''}`}>
-  {title && (
-    <div class="code-title">
-      {title}
+<div class="codeblock">
+  <div class="code-header">
+    <div class="window-buttons">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
     </div>
-  )}
-  <div class="code-block-container">
-    <div class="code-header">
-      <div class="window-controls">
-        <span class="control-dot red"></span>
-        <span class="control-dot yellow"></span>
-        <span class="control-dot green"></span>
-      </div>
-      <span class="language-label">{language}</span>
-      <button class="copy-button" data-copy={code} aria-label="Copiar código">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="m5 15-4-4v-11h11l4 4"></path>
-        </svg>
-      </button>
-    </div>
-    <div class="code-content">
-      <pre class="code-pre"><code class={`language-${language}`} set:html={code}></code></pre>
-    </div>
+    <button class="copy-btn" data-code={code}>⧉</button>
   </div>
+  <pre><code>{code}</code></pre>
 </div>
 
 <style>
-.code-block-wrapper {
-  margin: 1.5rem 0;
-  border-radius: 8px;
+.codeblock {
+  background-color: #2e2e38;
+  border-radius: 10px;
   overflow: hidden;
-  border: 1px solid rgb(var(--border));
-  background: rgb(var(--card));
-}
-
-.code-title {
-  background: rgb(var(--muted));
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: rgb(var(--foreground));
-  border-bottom: 1px solid rgb(var(--border));
-}
-
-.code-block-container {
-  position: relative;
+  font-family: 'Fira Code', monospace;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  margin-bottom: 1.5rem;
 }
 
 .code-header {
+  background-color: #3c3c46;
+  padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1rem;
-  background: #2a2d3a;
-  border-bottom: 1px solid #3a3f4b;
+  border-radius: 10px 10px 0 0;
+  position: relative;
 }
 
-.window-controls {
+.window-buttons {
   display: flex;
   gap: 6px;
-  align-items: center;
 }
 
-.control-dot {
-  width: 12px;
-  height: 12px;
+.dot {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
+  display: inline-block;
 }
 
-.control-dot.red {
-  background: #ff5f56;
+.red { 
+  background-color: #ff5f56; 
 }
 
-.control-dot.yellow {
-  background: #ffbd2e;
+.yellow { 
+  background-color: #ffbd2e; 
 }
 
-.control-dot.green {
-  background: #27c93f;
+.green { 
+  background-color: #27c93f; 
 }
 
-.language-label {
-  font-size: 0.75rem;
-  color: #8b949e;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.copy-button {
+.copy-btn {
   background: none;
   border: none;
-  color: #8b949e;
+  color: #ccc;
+  font-size: 1rem;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
+  padding: 6px 10px;
+  border-radius: 6px;
   transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.copy-button:hover {
-  color: #f0f6fc;
-  background: rgba(255, 255, 255, 0.1);
+.copy-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
 }
 
-.copy-button.copied {
-  color: #3fb950;
+.copy-btn.copied {
+  color: #8f8;
+  pointer-events: none;
 }
 
-.code-content {
-  background: #161b22;
-  overflow-x: auto;
-}
-
-.code-pre {
+pre {
   margin: 0;
   padding: 1rem;
-  background: transparent;
   overflow-x: auto;
-  font-family: 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-  font-size: 0.875rem;
+  color: #eee;
+  font-size: 0.95rem;
   line-height: 1.5;
 }
 
-.code-pre code {
-  background: transparent !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-  color: #f0f6fc;
+code {
   display: block;
   white-space: pre;
-}
-
-/* Syntax highlighting básico */
-.code-pre code .token.comment {
-  color: #8b949e;
-  font-style: italic;
-}
-
-.code-pre code .token.string {
-  color: #a5d6ff;
-}
-
-.code-pre code .token.number {
-  color: #79c0ff;
-}
-
-.code-pre code .token.boolean {
-  color: #79c0ff;
-}
-
-.code-pre code .token.keyword {
-  color: #ff7b72;
-}
-
-.code-pre code .token.function {
-  color: #d2a8ff;
-}
-
-.code-pre code .token.class-name {
-  color: #ffa657;
-}
-
-.code-pre code .token.operator {
-  color: #ff7b72;
-}
-
-.code-pre code .token.punctuation {
-  color: #c9d1d9;
 }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const copyButtons = document.querySelectorAll('.copy-button');
-  
+document.addEventListener('DOMContentLoaded', function () {
+  const copyButtons = document.querySelectorAll('.copy-btn');
+
   copyButtons.forEach(button => {
-    button.addEventListener('click', async () => {
-      const code = button.getAttribute('data-copy');
-      if (!code || button.classList.contains('copied')) return;
-      
+    button.addEventListener('click', async function () {
+      const code = this.getAttribute('data-code');
+      if (this.classList.contains('copied')) return;
+
       try {
         await navigator.clipboard.writeText(code);
-        button.classList.add('copied');
-        button.innerHTML = `
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20,6 9,17 4,12"></polyline>
-          </svg>
-        `;
-        
+        const original = this.innerText;
+        this.innerText = "✓";
+        this.classList.add('copied');
         setTimeout(() => {
-          button.classList.remove('copied');
-          button.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-              <path d="m5 15-4-4v-11h11l4 4"></path>
-            </svg>
-          `;
-        }, 2000);
+          this.innerText = original;
+          this.classList.remove('copied');
+        }, 600);
       } catch (err) {
-        console.error('Erro ao copiar:', err);
+        console.error('Erro ao copiar código:', err);
       }
     });
   });
