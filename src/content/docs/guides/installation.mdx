@@ -1,56 +1,83 @@
 ---
 title: Installation
-description: How to install Helper.DB in your project
+description: Learn how to install Helper.db in your Node.js project.
 ---
+
+import { Badge } from '../../../components/ui/badge.tsx';
+import { MultiCodeBlock } from '../../../components/MultiCodeBlock.tsx';
 
 # Installation
 
-Get started with Helper.DB in your Node.js project.
+Helper.db is available as an npm package and can be installed using your preferred package manager.
 
-## Prerequisites
+## Requirements
 
-Before installing Helper.DB, make sure you have:
+<Badge variant="default">Node.js 16+</Badge>
+<Badge variant="default">npm/yarn/pnpm</Badge>
 
-- Node.js 16.x or higher
-- npm, yarn, or pnpm package manager
+- Node.js version 16 or higher
+- npm, yarn, pnpm, or bun package manager
 
-## Installation Methods
+## Package Installation
 
-### Using npm
+Install Helper.db using your preferred package manager:
 
-```bash title="Terminal"
-npm install helper.db
-```
+<MultiCodeBlock
+  title="Install Helper.db"
+  options={[
+    { label: "npm", code: "npm install helper.db" },
+    { label: "yarn", code: "yarn add helper.db" },
+    { label: "pnpm", code: "pnpm add helper.db" },
+    { label: "bun", code: "bun add helper.db" }
+  ]}
+  language="bash"
+/>
 
-### Using yarn
+## TypeScript Support
 
-```bash title="Terminal"
-yarn add helper.db
-```
+Helper.db includes built-in TypeScript definitions. No additional @types packages are required.
 
-### Using pnpm
-
-```bash title="Terminal"
-pnpm add helper.db
-```
+<MultiCodeBlock
+  title="TypeScript Project Setup"
+  options={[
+    { label: "npm", code: "npm install helper.db\nnpm install -D typescript @types/node" },
+    { label: "yarn", code: "yarn add helper.db\nyarn add -D typescript @types/node" },
+    { label: "pnpm", code: "pnpm add helper.db\npnpm add -D typescript @types/node" },
+    { label: "bun", code: "bun add helper.db\nbun add -D typescript @types/node" }
+  ]}
+  language="bash"
+/>
 
 ## Verification
 
-After installation, verify that Helper.DB is working correctly:
+After installation, verify that Helper.db is working correctly:
 
 ```javascript title="test.js"
 const { Database } = require('helper.db');
 
-// Create a new database instance
-const db = new Database();
-
-// Set a value
-db.set('test', 'Hello World');
-
-// Get the value
-console.log(db.get('test')); // Output: Hello World
+const db = new Database('test.db');
+console.log('Helper.db installed successfully!');
 ```
+
+Run the test file:
+
+<MultiCodeBlock
+  title="Run Test"
+  options={[
+    { label: "npm", code: "node test.js" },
+    { label: "yarn", code: "yarn node test.js" },
+    { label: "pnpm", code: "pnpm node test.js" },
+    { label: "bun", code: "bun test.js" }
+  ]}
+  language="bash"
+/>
+
+If you see "Helper.db installed successfully!" in your console, the installation was successful.
 
 ## Next Steps
 
-Now that you have Helper.DB installed, check out the [Quick Start Guide](/guides/quick-start/) to learn the basics.
+Now that you have Helper.db installed, you can:
+
+- Read the [Quick Start Guide](/guides/quick-start/) to learn the basics
+- Explore the [Database Reference](/reference/database/) for detailed API documentation
+- Check out [Examples](/examples/) for real-world use cases

@@ -1,4 +1,3 @@
-
 ---
 import logoImage from '../assets/logo-with-text.png';
 
@@ -16,6 +15,10 @@ const imageUrl = image && image.startsWith('http') ? image :
                  image && Astro.site ? new URL(image, Astro.site).href : 
                  logoImage.src;
 ---
+
+<script>
+  import { CodeBlockEnhancer } from './CodeBlockEnhancer.tsx';
+</script>
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
@@ -44,5 +47,5 @@ const imageUrl = image && image.startsWith('http') ? image :
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
+<meta property="twitter:description} content={description} />
 {imageUrl && <meta property="twitter:image" content={imageUrl} />}

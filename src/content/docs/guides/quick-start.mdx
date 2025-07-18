@@ -1,283 +1,223 @@
 ---
-title: 'Quick Start'
-description: 'Get up and running with Helper.db in minutes with this quick start guide'
+title: Quick Start
+description: Get started with Helper.db in minutes with this comprehensive guide.
 ---
 
-## Instalação
+import { MethodSignature } from '../../../components/MethodSignature.tsx';
+import { MultiCodeBlock } from '../../../components/MultiCodeBlock.tsx';
 
-Primeiro, instale o Helper.db:
+# Quick Start Guide
 
-```bash title="Terminal"
-npm install helper.db
-```
+This guide will help you get up and running with Helper.db quickly. We'll cover the basic concepts and show you how to perform common database operations.
 
-## Exemplo básico
+## Installation
 
-Aqui está um exemplo simples de como usar:
+First, make sure you have Helper.db installed:
+
+<MultiCodeBlock
+  title="Install Helper.db"
+  options={[
+    { label: "npm", code: "npm install helper.db" },
+    { label: "yarn", code: "yarn add helper.db" },
+    { label: "pnpm", code: "pnpm add helper.db" },
+    { label: "bun", code: "bun add helper.db" }
+  ]}
+  language="bash"
+/>
+
+## Basic Setup
+
+Create a new database instance and start working with data:
 
 ```javascript title="app.js"
 const { Database } = require('helper.db');
-const db = new Database('mydata');
 
-// Salvar dados
-db.set('user.name', 'João');
-db.set('user.age', 25);
+// Create a new database instance
+const db = new Database('myapp.db');
 
-// Ler dados
-console.log(db.get('user.name')); // João
-console.log(db.get('user')); // { name: 'João', age: 25 }
+// The database file will be created automatically
+console.log('Database created successfully!');
 ```
 
-## Exemplo com TypeScript
+## Core Concepts
 
-```typescript title="app.ts"
-import { Database } from 'helper.db';
+### Database Instance
 
-interface User {
-  name: string;
-  age: number;
-  email: string;
-}
+The `Database` class is the main entry point for all operations:
 
-const db = new Database<User>('users');
-
-const user: User = {
-  name: 'Maria',
-  age: 30,
-  email: 'maria@example.com'
-};
-
-db.set('user.1', user);
-```
-
-# Quick Start
-
-Get up and running with Helper.db in just a few minutes! This guide will walk you through the basics.
-
-## Your First Database
-
-Let's create a simple user management system:
-
-```javascript title="setup.js"
+```javascript title="Creating Database"
 const { Database } = require('helper.db');
 
-// Create or connect to a database
-const db = new Database('users.db');
+// Basic database
+const db = new Database('data.db');
 
-async function main() {
-  // Create a users table (if it doesn't exist)
-  await db.createTable('users', {
-    id: 'INTEGER PRIMARY KEY AUTOINCREMENT',
-    name: 'TEXT NOT NULL',
-    email: 'TEXT UNIQUE',
-    age: 'INTEGER',
-    created_at: 'DATETIME DEFAULT CURRENT_TIMESTAMP'
-  });
-
-  console.log('✅ Database and table created!');
-}
-
-main().catch(console.error);
+// Database with options
+const dbWithOptions = new Database('data.db', {
+  autoSave: true,
+  saveInterval: 5000
+});
 ```
 
-## Insert Data
+### Setting Data
 
-Add some users to your database:
+Store data using the `set` method:
 
-```javascript title="insert-data.js"
-async function addUsers() {
-  // Insert a single user
-  const userId = await db.insert('users', {
-    name: 'Alice Johnson',
-    email: 'alice@example.com',
-    age: 28
-  });
+```javascript title="Setting Data"
+// Simple key-value
+db.set('username', 'john_doe');
+db.set('score', 1500);
 
-  console.log('👤 User created with ID:', userId);
+// Nested objects
+db.set('user.profile.name', 'John Doe');
+db.set('user.profile.email', 'john@example.com');
 
-  // Insert multiple users at once
-  await db.insertMany('users', [
-    { name: 'Bob Smith', email: 'bob@example.com', age: 32 },
-    { name: 'Carol Davis', email: 'carol@example.com', age: 25 },
-    { name: 'David Wilson', email: 'david@example.com', age: 29 }
-  ]);
-
-  console.log('👥 Multiple users added!');
-}
+// Arrays
+db.set('tags', ['javascript', 'database', 'nodejs']);
 ```
 
-## Query Data
+### Getting Data
 
-Retrieve data with simple or complex queries:
+Retrieve data using the `get` method:
 
-```javascript
-async function queryUsers() {
-  // Get all users
-  const allUsers = await db.find('users');
-  console.log('All users:', allUsers);
+```javascript title="Getting Data"
+// Get simple values
+const username = db.get('username');
+const score = db.get('score');
 
-  // Find users by age
-  const youngUsers = await db.find('users', { age: { $lt: 30 } });
-  console.log('Users under 30:', youngUsers);
+// Get nested values
+const name = db.get('user.profile.name');
 
-  // Find a specific user
-  const alice = await db.findOne('users', { email: 'alice@example.com' });
-  console.log('Alice:', alice);
+// Get with default value
+const theme = db.get('settings.theme', 'dark');
 
-  // Advanced query with sorting
-  const sortedUsers = await db.query()
-    .from('users')
-    .where('age', '>', 25)
-    .orderBy('name', 'asc')
-    .limit(5)
-    .execute();
-
-  console.log('Sorted results:', sortedUsers);
-}
-```
-
-## Update Data
-
-Modify existing records:
-
-```javascript
-async function updateUsers() {
-  // Update a single user
-  await db.update('users', 
-    { email: 'alice@example.com' }, // condition
-    { age: 29 }                     // update data
-  );
-
-  // Update multiple users
-  await db.updateMany('users',
-    { age: { $lt: 30 } },           // condition
-    { status: 'young' }             // update data
-  );
-
-  console.log('✏️ Users updated!');
-}
-```
-
-## Delete Data
-
-Remove records when needed:
-
-```javascript
-async function deleteUsers() {
-  // Delete a specific user
-  await db.delete('users', { email: 'bob@example.com' });
-
-  // Delete multiple users
-  await db.deleteMany('users', { age: { $gt: 35 } });
-
-  console.log('🗑️ Users deleted!');
-}
+console.log('Username:', username);
+console.log('Score:', score);
+console.log('Name:', name);
+console.log('Theme:', theme);
 ```
 
 ## Complete Example
 
-Here's a complete working example:
+Here's a complete example showing common operations:
 
-```javascript
+```javascript title="complete-example.js"
 const { Database } = require('helper.db');
 
-async function userManagementExample() {
-  const db = new Database('example.db');
+// Initialize database
+const db = new Database('example.db');
 
-  try {
-    // Setup
-    await db.createTable('users', {
-      id: 'INTEGER PRIMARY KEY AUTOINCREMENT',
-      name: 'TEXT NOT NULL',
-      email: 'TEXT UNIQUE',
-      age: 'INTEGER',
-      status: 'TEXT DEFAULT "active"',
-      created_at: 'DATETIME DEFAULT CURRENT_TIMESTAMP'
-    });
+// Set user data
+db.set('users.1', {
+  id: 1,
+  name: 'Alice Johnson',
+  email: 'alice@example.com',
+  score: 2500,
+  achievements: ['first-login', 'score-1000']
+});
 
-    // Add users
-    await db.insertMany('users', [
-      { name: 'Emma Thompson', email: 'emma@example.com', age: 27 },
-      { name: 'James Brown', email: 'james@example.com', age: 34 },
-      { name: 'Sofia Martinez', email: 'sofia@example.com', age: 22 }
-    ]);
+db.set('users.2', {
+  id: 2,
+  name: 'Bob Smith',
+  email: 'bob@example.com',
+  score: 1800,
+  achievements: ['first-login']
+});
 
-    // Query users
-    const activeUsers = await db.find('users', { status: 'active' });
-    console.log(`Found ${activeUsers.length} active users`);
+// Get user data
+const user1 = db.get('users.1');
+const user2 = db.get('users.2');
 
-    // Update user
-    await db.update('users', 
-      { name: 'Emma Thompson' }, 
-      { age: 28, status: 'premium' }
-    );
+console.log('User 1:', user1);
+console.log('User 2:', user2);
 
-    // Advanced query
-    const premiumUsers = await db.query()
-      .from('users')
-      .where('status', '=', 'premium')
-      .select(['name', 'email', 'age'])
-      .execute();
+// Update user score
+db.set('users.1.score', 2750);
 
-    console.log('Premium users:', premiumUsers);
+// Add achievement
+const achievements = db.get('users.2.achievements');
+achievements.push('score-1500');
+db.set('users.2.achievements', achievements);
 
-  } catch (error) {
-    console.error('Error:', error);
-  } finally {
-    await db.close();
-  }
+// Get all users
+const allUsers = db.get('users');
+console.log('All users:', allUsers);
+
+// Check if key exists
+if (db.has('users.1.premium')) {
+  console.log('User 1 is premium');
+} else {
+  console.log('User 1 is not premium');
 }
 
-userManagementExample();
+// Delete data
+db.delete('users.2.achievements.0'); // Remove first achievement
+
+console.log('Operations completed successfully!');
 ```
 
-## Query Builder
+## Running Your Code
 
-Helper.db includes a powerful query builder for complex operations:
+Save your code to a file and run it:
 
-```javascript
-// Complex query with joins and conditions
-const results = await db.query()
-  .from('users')
-  .join('orders', 'users.id', '=', 'orders.user_id')
-  .where('users.age', '>', 18)
-  .and('orders.status', '=', 'completed')
-  .groupBy('users.id')
-  .having('COUNT(orders.id)', '>', 5)
-  .orderBy('users.created_at', 'desc')
-  .limit(10)
-  .execute();
-```
+<MultiCodeBlock
+  title="Run Your App"
+  options={[
+    { label: "npm", code: "node app.js" },
+    { label: "yarn", code: "yarn node app.js" },
+    { label: "pnpm", code: "pnpm node app.js" },
+    { label: "bun", code: "bun app.js" }
+  ]}
+  language="bash"
+/>
 
-## Backup and Restore
+## Method Reference
 
-Protect your data with built-in backup functionality:
+Here are some essential methods you'll use frequently:
 
-```javascript
-const { Backup } = require('helper.db');
+<MethodSignature 
+  name="set"
+  parameters={[
+    { name: 'key', type: 'string', description: 'The key to set the value for' },
+    { name: 'value', type: 'any', description: 'The value to store' }
+  ]}
+  returnType="Database"
+  description="Sets a value in the database. Supports dot notation for nested objects."
+/>
 
-async function backupExample() {
-  const backup = new Backup(db);
+<MethodSignature 
+  name="get"
+  parameters={[
+    { name: 'key', type: 'string', description: 'The key to retrieve the value for' },
+    { name: 'defaultValue', type: 'any', optional: true, description: 'Default value if key doesn\'t exist' }
+  ]}
+  returnType="any"
+  description="Gets a value from the database. Returns undefined if key doesn't exist."
+/>
 
-  // Create a backup
-  await backup.create('backup-' + Date.now() + '.db');
-  console.log('📥 Backup created!');
+<MethodSignature 
+  name="has"
+  parameters={[
+    { name: 'key', type: 'string', description: 'The key to check for existence' }
+  ]}
+  returnType="boolean"
+  description="Checks if a key exists in the database."
+/>
 
-  // List all backups
-  const backups = await backup.list();
-  console.log('Available backups:', backups);
+<MethodSignature 
+  name="delete"
+  parameters={[
+    { name: 'key', type: 'string', description: 'The key to delete' }
+  ]}
+  returnType="boolean"
+  description="Deletes a key from the database. Returns true if the key existed."
+/>
 
-  // Restore from backup (if needed)
-  // await backup.restore('backup-1234567890.db');
-}
-```
+## Next Steps
 
-## What's Next?
+Now that you understand the basics, you can:
 
-You now know the basics of Helper.db! Here are some next steps:
+- Explore the [Database API Reference](/reference/database/) for all available methods
+- Learn about [Advanced Features](/advanced/configuration/) like encryption and compression
+- Check out [Real-world Examples](/examples/) for inspiration
 
-- **Explore Classes**: Learn about the [Database](/reference/database/), [Query](/reference/query/), and [Backup](/reference/backup/) classes
-- **See Examples**: Check out real-world examples like [Discord Bot](/examples/discord-bot/) integration
-- **Advanced Features**: Dive into [Configuration](/advanced/configuration/) and [Performance](/advanced/performance/) tuning
-
-Happy coding! 🚀
+Happy coding with Helper.db! 🚀
