@@ -111,6 +111,7 @@ body {
 .expressive-code .frame {
   border: none;
   background: transparent;
+  position: relative;
 }
 
 .expressive-code pre {
@@ -145,6 +146,44 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+}
+
+/* Copy button styling */
+.expressive-code .copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(var(--background), 0.8);
+  border: 1px solid rgb(var(--border));
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  color: rgb(var(--muted-foreground));
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.expressive-code .copy:hover {
+  background: rgba(var(--accent), 0.1);
+  color: rgb(var(--foreground));
+  border-color: rgb(var(--accent));
+}
+
+.expressive-code .copy:active {
+  transform: scale(0.95);
+}
+
+/* Ensure copy button is properly positioned in code blocks with titles */
+.expressive-code:has(.header) .copy,
+.expressive-code:has(.title) .copy {
+  top: 3rem;
+}
+
+/* Copy button for code blocks without titles */
+.expressive-code:not(:has(.header)):not(:has(.title)) .copy {
+  top: 0.5rem;
 }
 
 /* Multi CodeBlock Styling */
