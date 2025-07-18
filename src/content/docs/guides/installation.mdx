@@ -4,7 +4,7 @@ description: Learn how to install Helper.db in your Node.js project.
 ---
 
 import { Badge } from '../../../components/ui/badge.tsx';
-import MultiCodeBlock from '../../../components/MultiCodeBlock.astro';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 # Installation
 
@@ -22,31 +22,59 @@ Helper.db is available as an npm package and can be installed using your preferr
 
 Install Helper.db using your preferred package manager:
 
-<MultiCodeBlock
-  title="Install Helper.db"
-  options={[
-    { label: "npm", code: "npm install helper.db" },
-    { label: "yarn", code: "yarn add helper.db" },
-    { label: "pnpm", code: "pnpm add helper.db" },
-    { label: "bun", code: "bun add helper.db" }
-  ]}
-  language="bash"
-/>
+<Tabs>
+  <TabItem label="npm">
+  ```bash
+  npm install helper.db
+  ```
+  </TabItem>
+  <TabItem label="yarn">
+  ```bash
+  yarn add helper.db
+  ```
+  </TabItem>
+  <TabItem label="pnpm">
+  ```bash
+  pnpm add helper.db
+  ```
+  </TabItem>
+  <TabItem label="bun">
+  ```bash
+  bun add helper.db
+  ```
+  </TabItem>
+</Tabs>
 
 ## TypeScript Support
 
 Helper.db includes built-in TypeScript definitions. No additional @types packages are required.
 
-<MultiCodeBlock
-  title="TypeScript Project Setup"
-  options={[
-    { label: "npm", code: "npm install helper.db\nnpm install -D typescript @types/node" },
-    { label: "yarn", code: "yarn add helper.db\nyarn add -D typescript @types/node" },
-    { label: "pnpm", code: "pnpm add helper.db\npnpm add -D typescript @types/node" },
-    { label: "bun", code: "bun add helper.db\nbun add -D typescript @types/node" }
-  ]}
-  language="bash"
-/>
+<Tabs>
+  <TabItem label="npm">
+  ```bash
+  npm install helper.db
+  npm install -D typescript @types/node
+  ```
+  </TabItem>
+  <TabItem label="yarn">
+  ```bash
+  yarn add helper.db
+  yarn add -D typescript @types/node
+  ```
+  </TabItem>
+  <TabItem label="pnpm">
+  ```bash
+  pnpm add helper.db
+  pnpm add -D typescript @types/node
+  ```
+  </TabItem>
+  <TabItem label="bun">
+  ```bash
+  bun add helper.db
+  bun add -D typescript @types/node
+  ```
+  </TabItem>
+</Tabs>
 
 ## Verification
 
@@ -61,16 +89,28 @@ console.log('Helper.db installed successfully!');
 
 Run the test file:
 
-<MultiCodeBlock
-  title="Run Test"
-  options={[
-    { label: "npm", code: "node test.js" },
-    { label: "yarn", code: "yarn node test.js" },
-    { label: "pnpm", code: "pnpm node test.js" },
-    { label: "bun", code: "bun test.js" }
-  ]}
-  language="bash"
-/>
+<Tabs>
+  <TabItem label="npm">
+  ```bash
+  node test.js
+  ```
+  </TabItem>
+  <TabItem label="yarn">
+  ```bash
+  yarn node test.js
+  ```
+  </TabItem>
+  <TabItem label="pnpm">
+  ```bash
+  pnpm node test.js
+  ```
+  </TabItem>
+  <TabItem label="bun">
+  ```bash
+  bun test.js
+  ```
+  </TabItem>
+</Tabs>
 
 If you see "Helper.db installed successfully!" in your console, the installation was successful.
 

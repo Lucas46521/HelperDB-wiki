@@ -4,7 +4,7 @@ description: Get started with Helper.db in minutes with this comprehensive guide
 ---
 
 import { MethodSignature } from '../../../components/MethodSignature.tsx';
-import MultiCodeBlock from '../../../components/MultiCodeBlock.astro';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 # Quick Start Guide
 
@@ -14,16 +14,28 @@ This guide will help you get up and running with Helper.db quickly. We'll cover 
 
 First, make sure you have Helper.db installed:
 
-<MultiCodeBlock
-  title="Install Helper.db"
-  options={[
-    { label: "npm", code: "npm install helper.db" },
-    { label: "yarn", code: "yarn add helper.db" },
-    { label: "pnpm", code: "pnpm add helper.db" },
-    { label: "bun", code: "bun add helper.db" }
-  ]}
-  language="bash"
-/>
+<Tabs>
+  <TabItem label="npm">
+  ```bash
+  npm install helper.db
+  ```
+  </TabItem>
+  <TabItem label="yarn">
+  ```bash
+  yarn add helper.db
+  ```
+  </TabItem>
+  <TabItem label="pnpm">
+  ```bash
+  pnpm add helper.db
+  ```
+  </TabItem>
+  <TabItem label="bun">
+  ```bash
+  bun add helper.db
+  ```
+  </TabItem>
+</Tabs>
 
 ## Basic Setup
 
@@ -159,16 +171,28 @@ console.log('Operations completed successfully!');
 
 Save your code to a file and run it:
 
-<MultiCodeBlock
-  title="Run Your App"
-  options={[
-    { label: "npm", code: "node app.js" },
-    { label: "yarn", code: "yarn node app.js" },
-    { label: "pnpm", code: "pnpm node app.js" },
-    { label: "bun", code: "bun app.js" }
-  ]}
-  language="bash"
-/>
+<Tabs>
+  <TabItem label="npm">
+  ```bash
+  node app.js
+  ```
+  </TabItem>
+  <TabItem label="yarn">
+  ```bash
+  yarn node app.js
+  ```
+  </TabItem>
+  <TabItem label="pnpm">
+  ```bash
+  pnpm node app.js
+  ```
+  </TabItem>
+  <TabItem label="bun">
+  ```bash
+  bun app.js
+  ```
+  </TabItem>
+</Tabs>
 
 ## Method Reference
 
