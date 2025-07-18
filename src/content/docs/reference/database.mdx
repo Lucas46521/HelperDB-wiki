@@ -1,3 +1,4 @@
+
 ---
 title: 'Database Reference'
 description: 'Complete reference for the Database class'
@@ -5,9 +6,11 @@ description: 'Complete reference for the Database class'
 
 # Database Class Reference
 
+The Database class is the main interface for interacting with Helper.db. It provides methods for storing, retrieving, and managing data in your application.
+
 ## Constructor
 
-```javascript
+```javascript title="Constructor"
 const db = new Database(name, options);
 ```
 
@@ -16,34 +19,72 @@ const db = new Database(name, options);
 - `name` (string): Nome do banco de dados
 - `options` (object): Opções de configuração
 
+### Example
+
+```javascript title="Creating Database Instance"
+const { Database } = require('helper.db');
+
+// Basic database
+const db = new Database('myapp.db');
+
+// Database with options
+const dbWithOptions = new Database('myapp.db', {
+  autoSave: true,
+  saveInterval: 5000,
+  encryption: true
+});
+```
+
 ## Methods
 
 ### set(key, value)
 
 Define um valor para uma chave específica.
 
-```javascript
+```javascript title="set() method"
 db.set('user.name', 'Maria');
 db.set('config.theme', 'dark');
+db.set('users', [
+  { id: 1, name: 'João' },
+  { id: 2, name: 'Ana' }
+]);
 ```
 
-### get(key)
+**Parameters:**
+- `key` (string): A chave para armazenar o valor
+- `value` (any): O valor a ser armazenado
+
+**Returns:** Database instance (for chaining)
+
+### get(key, defaultValue)
 
 Recupera o valor de uma chave.
 
-```javascript
+```javascript title="get() method"
 const name = db.get('user.name');
 const user = db.get('user'); // Retorna objeto completo
+const theme = db.get('config.theme', 'light'); // Com valor padrão
 ```
+
+**Parameters:**
+- `key` (string): A chave para recuperar o valor
+- `defaultValue` (any, optional): Valor padrão se a chave não existir
+
+**Returns:** O valor armazenado ou defaultValue
 
 ### delete(key)
 
 Remove uma chave do banco de dados.
 
-```javascript
+```javascript title="delete() method"
 db.delete('user.name');
 db.delete('user'); // Remove objeto completo
 ```
+
+**Parameters:**
+- `key` (string): A chave a ser removida
+
+**Returns:** boolean - true se a chave existia e foi removida
 
 ### has(key)
 
@@ -53,4 +94,73 @@ Verifica se uma chave existe.
 if (db.has('user.name')) {
   console.log('User has a name');
 }
+
+if (db.has('user.profile.avatar')) {
+  console.log('User has an avatar');
+}
+```
+
+**Parameters:**
+- `key` (string): A chave para verificar
+
+**Returns:** boolean - true se a chave existe
+
+### all()
+
+Retorna todos os dados do banco.
+
+```javascript title="all() method"
+const allData = db.all();
+console.log(allData);
+```
+
+**Returns:** Object contendo todos os dados
+
+### clear()
+
+Remove todos os dados do banco.
+
+```javascript title="clear() method"
+db.clear();
+console.log('Database cleared');
+```
+
+**Returns:** Database instance
+
+### size()
+
+Retorna o número de chaves no nível raiz.
+
+```javascript title="size() method"
+const keyCount = db.size();
+console.log(`Database has ${keyCount} keys`);
+```
+
+**Returns:** number - quantidade de chaves
+
+## Advanced Methods
+
+### backup(filename)
+
+Cria um backup do banco de dados.
+
+```javascript title="backup() method"
+await db.backup('backup-2024-01-01.db');
+```
+
+### restore(filename)
+
+Restaura o banco de dados de um backup.
+
+```javascript title="restore() method"
+await db.restore('backup-2024-01-01.db');
+```
+
+### export(format)
+
+Exporta os dados em diferentes formatos.
+
+```javascript title="export() method"
+const jsonData = db.export('json');
+const csvData = db.export('csv');
 ```

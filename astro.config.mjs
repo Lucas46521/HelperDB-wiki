@@ -78,6 +78,9 @@ export default defineConfig({
           showLineNumbers: false,
           wrap: true,
         },
+        frames: {
+          showCopyToClipboardButton: true,
+        },
         plugins: [],
         useDarkModeMediaQuery: false,
       },

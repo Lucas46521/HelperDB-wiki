@@ -1,3 +1,4 @@
+
 ---
 title: 'Introduction'
 description: 'Getting started with Helper.db - A simple and powerful database library'
@@ -75,3 +76,66 @@ const results = await db.query()
 const backup = new Backup(db);
 await backup.create('backup_20240101.db');
 await backup.restore('backup_20240101.db');
+```
+
+## Why Choose Helper.db?
+
+- **Easy to learn**: Intuitive API that follows JavaScript best practices
+- **Flexible**: Works with various database engines
+- **Reliable**: Extensively tested and battle-proven
+- **Well documented**: Comprehensive guides and examples
+
+## Exemplo de uso múltiplo
+
+import { MultiCodeBlock } from '../../../components/MultiCodeBlock.tsx';
+
+<MultiCodeBlock
+  title="Instalação"
+  options={[
+    {
+      label: "npm",
+      code: "npm install helper.db",
+      filename: "package.json"
+    },
+    {
+      label: "yarn", 
+      code: "yarn add helper.db",
+      filename: "package.json"
+    }
+  ]}
+/>
+
+<MultiCodeBlock
+  title="Configuração inicial"
+  language="javascript"
+  options={[
+    {
+      label: "CommonJS",
+      code: `const { Database } = require('helper.db');
+
+const db = new Database('./database.json');
+
+// Configurar dados iniciais
+db.set('users', []);
+db.set('settings', { theme: 'dark' });`,
+      filename: "index.js"
+    },
+    {
+      label: "ES Modules", 
+      code: `import { Database } from 'helper.db';
+
+const db = new Database('./database.json');
+
+// Configurar dados iniciais
+db.set('users', []);
+db.set('settings', { theme: 'dark' });`,
+      filename: "index.mjs"
+    }
+  ]}
+/>
+
+## Next Steps
+
+Ready to get started? Check out our [Installation Guide](/guides/installation/) to begin using Helper.db in your project.
+
+Or jump straight to the [Quick Start Guide](/guides/quick-start/) to see Helper.db in action!

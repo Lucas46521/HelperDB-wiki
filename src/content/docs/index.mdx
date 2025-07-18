@@ -1,11 +1,11 @@
 ---
-title: Welcome to Helper.db
-description: A powerful and flexible database management library for Node.js applications.
+title: 'Helper.db Documentation'
+description: 'Complete documentation for Helper.db - A simple and powerful database library for Node.js'
 template: splash
 hero:
-  tagline: A powerful and flexible database management library for Node.js applications. Built for performance, designed for simplicity.
+  tagline: A simple and powerful database library for Node.js applications
   image:
-    file: ../../assets/logo-with-text.png
+    file: ../../assets/logo.png
   actions:
     - text: Get Started
       link: /guides/introduction/
@@ -19,120 +19,53 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-<div class="not-content">
-  <div class="flex flex-wrap items-center justify-center gap-2 mb-8">
-    <img src="https://img.shields.io/npm/v/helper.db?color=5865f2&style=for-the-badge" alt="Versão no npm" />
-    <img src="https://img.shields.io/npm/dt/helper.db?color=5865f2&style=for-the-badge" alt="Downloads no npm" />
-    <img src="https://img.shields.io/github/stars/Lucas46521/Helper-db?color=5865f2&style=for-the-badge" alt="Estrelas no GitHub" />
-    <img src="https://img.shields.io/badge/Node.js-16.9.0+-green?style=for-the-badge" alt="Versão mínima do Node.js" />
-  </div>
-</div>
+## Quick Start
 
-## 🚀 Visão Geral
+Get up and running with Helper.db in minutes:
 
-Helper.DB é uma **biblioteca de gerenciamento de banco de dados em JavaScript** que permite interagir com dados de forma simples e intuitiva. Ideal para aplicações Node.js.
-
-### ✨ Características
-
-- ✅ **API orientada a objetos** — Simples, intuitiva e moderna
-- ⚙️ **Abstrações previsíveis** — Métodos consistentes e reutilizáveis
-- ⚡ **Performática** — Otimizada para velocidade
-- ✅ **Cobertura completa** — Suporte a todas as operações essenciais de banco de dados
-
-## 📦 Instalação
-
-⚠️ Requer **Node.js versão 16.9.0 ou superior**.
-
-```bash title="Instalar via NPM"
-npm install helper.db
-```
-yarn add helper.db
-
-pnpm add helper.db
-
-bun add helper.db
-
-🔧 Uso Rápido
-
+```javascript title="Quick Example"
 const { Database } = require('helper.db');
+const db = new Database('myapp');
 
-// Criar uma nova instância do banco de dados
-const db = new Database('./meu-banco.db');
+// Store data
+db.set('user.name', 'João');
+db.set('user.preferences.theme', 'dark');
 
-// Armazenar dados do usuário
-await db.set('usuarios.123456789', {
-  nome: 'João Silva',
-  nivel: 1,
-  moedas: 100
-});
+// Retrieve data
+console.log(db.get('user.name')); // João
+console.log(db.get('user.preferences')); // { theme: 'dark' }
+```
 
-// Recuperar dados do usuário
-const usuario = await db.get('usuarios.123456789');
-console.log(usuario); // { nome: 'João Silva', nivel: 1, moedas: 100 }
-
-// Atualizar propriedades específicas
-await db.add('usuarios.123456789.moedas', 50);
-await db.set('usuarios.123456789.nivel', 2);
-
-// Trabalhar com arrays
-await db.push('usuarios.123456789.inventario', ['espada', 'escudo']);
-
-// Verificar se os dados existem
-const temUsuario = await db.has('usuarios.123456789');
-console.log(temUsuario); // true
+## Core Features
 
 <CardGrid>
-  <Card title="📖 Guias" icon="document">
-    Aprenda a usar o Helper.DB com nossos guias passo a passo.
-    <a href="/guides/introduction/" class="inline-flex items-center gap-1 text-primary hover:underline mt-2">
-      Começar agora →
-    </a>
-  </Card>  <Card title="🔍 Referência da API" icon="laptop">
-    Documentação completa de todos os métodos disponíveis.
-    <a href="/reference/database/" class="inline-flex items-center gap-1 text-primary hover:underline mt-2">
-      Ver API →
-    </a>
-  </Card>  <Card title="💬 Suporte" icon="external">
-    Precisa de ajuda? Junte-se à nossa comunidade no Discord.
-    <a href="https://discord.gg/helper-db" class="inline-flex items-center gap-1 text-primary hover:underline mt-2">
-      Discord →
-    </a>
-  </Card>  <Card title="🐛 Issues" icon="github">
-    Encontrou um bug ou tem uma sugestão? Abra uma issue no GitHub.
-    <a href="https://github.com/Lucas46521/Helper-db/issues" class="inline-flex items-center gap-1 text-primary hover:underline mt-2">
-      GitHub Issues →
-    </a>
+  <Card title="Simple API" icon="rocket">
+    Easy-to-use methods for storing and retrieving data with dot notation support for nested objects.
   </Card>
-</CardGrid>🔗 Links Úteis
+  <Card title="Fast Performance" icon="lightning">
+    Optimized for speed with efficient data storage and retrieval mechanisms.
+  </Card>
+  <Card title="Type Safe" icon="approve-check">
+    Built-in TypeScript support with comprehensive type definitions.
+  </Card>
+  <Card title="Backup System" icon="backup">
+    Built-in backup and restore functionality to protect your data.
+  </Card>
+</CardGrid>
 
-Website - Site oficial
+## Getting Started
 
-Documentação - Documentação completa
-
-GitHub - Código fonte
-
-npm - Pacote no npm
-
-Discord - Servidor da comunidade
-
-
-🤝 Contribuindo
-
-Antes de criar uma issue, verifique se ela já não foi reportada e consulte a documentação.
-
-Se você não entende algo na documentação, está enfrentando problemas ou apenas precisa de uma orientação, não hesite em se juntar ao nosso Servidor Discord oficial.
-
-
----
-
-<div class="not-content text-center mt-12 p-6 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg border border-border">
-  <h3 class="text-xl font-semibold mb-4">Pronto para começar?</h3>
-  <div class="flex flex-col sm:flex-row gap-4 items-center justify-center">
-    <a href="/guides/introduction/" class="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">
-      📚 Ler a documentação
-    </a>
-    <a href="https://github.com/Lucas46521/Helper-db" class="inline-flex items-center gap-2 bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-medium hover:bg-secondary/90 transition-colors">
-      ⭐ Dar uma estrela no GitHub
-    </a>
-  </div>
-</div>
+<CardGrid>
+  <Card title="Installation" icon="add-document">
+    Learn how to install Helper.db in your Node.js project.
+    [Get started →](/guides/installation/)
+  </Card>
+  <Card title="Quick Start" icon="rocket">
+    Follow our quick start guide to begin using Helper.db immediately.
+    [Quick start →](/guides/quick-start/)
+  </Card>
+  <Card title="API Reference" icon="open-book">
+    Explore the complete API documentation for all available methods.
+    [API docs →](/reference/database/)
+  </Card>
+</CardGrid>
