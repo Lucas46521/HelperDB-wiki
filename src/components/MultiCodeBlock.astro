@@ -1,0 +1,66 @@
+
+---
+interface Option {
+  label: string;
+  code: string;
+  filename?: string;
+  language?: string;
+}
+
+interface Props {
+  title?: string;
+  language?: string;
+  options: Option[];
+}
+
+const { title, language = 'bash', options } = Astro.props;
+---
+
+<div class="multi-codeblock-astro" data-component="multi-codeblock">
+  <div class="multi-codeblock-header">
+    {title && <span class="multi-codeblock-title">{title}</span>}
+    <div class="multi-codeblock-nav">
+      {options.map((opt, index) => (
+        <button
+          class="multi-codeblock-tab"
+          data-tab={index}
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  {options.map((opt, index) => (
+    <div
+      class="multi-codeblock-panel"
+      data-panel={index}
+    >
+      {opt.filename && <div class="multi-codeblock-filename">{opt.filename}</div>}
+      <pre class={`language-${opt.language || language}`}>
+<code>{opt.code}</code>
+</pre>
+    </div>
+  ))}
+
+  <script type="module" is:inline>
+    const container = document.currentScript.closest('[data-component="multi-codeblock"]');
+    const tabs = container.querySelectorAll('[data-tab]');
+    const panels = container.querySelectorAll('[data-panel]');
+
+    function activateTab(index) {
+      tabs.forEach((t, i) => {
+        t.classList.toggle('active', i === index);
+      });
+      panels.forEach((p, i) => {
+        p.classList.toggle('active', i === index);
+      });
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => activateTab(index));
+    });
+
+    activateTab(0); // ativa o primeiro por padrão
+  </script>
+</div>

@@ -197,6 +197,16 @@ body {
   position: relative;
 }
 
+/* Astro MultiCodeBlock Styling */
+.multi-codeblock-astro {
+  margin: 1.5rem 0;
+  border: 1px solid rgb(var(--border));
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  background-color: rgb(var(--card));
+}
+
 .multi-codeblock-header {
   background-color: rgb(var(--muted));
   padding: 0.5rem 1rem;
@@ -204,6 +214,16 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.multi-codeblock-astro .multi-codeblock-header {
+  background-color: rgb(var(--muted));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgb(var(--border));
 }
 
 .multi-codeblock-title-nav {
@@ -244,6 +264,65 @@ body {
   background: rgb(var(--primary));
   color: rgb(var(--primary-foreground));
   border-color: rgb(var(--primary));
+}
+
+.multi-codeblock-astro .multi-codeblock-tab {
+  background: transparent;
+  border: none;
+  color: rgb(var(--muted-foreground));
+  font-size: 0.85rem;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+  font-family: inherit;
+}
+
+.multi-codeblock-astro .multi-codeblock-tab.active {
+  background: rgb(var(--accent));
+  color: rgb(var(--accent-foreground));
+}
+
+.multi-codeblock-astro .multi-codeblock-tab:hover {
+  background: rgba(var(--accent), 0.1);
+  color: rgb(var(--foreground));
+}
+
+.multi-codeblock-astro .multi-codeblock-panel {
+  display: none;
+}
+
+.multi-codeblock-astro .multi-codeblock-panel.active {
+  display: block;
+}
+
+.multi-codeblock-astro .multi-codeblock-filename {
+  background: rgb(var(--muted));
+  padding: 0.25rem 1rem;
+  font-size: 0.75rem;
+  color: rgb(var(--muted-foreground));
+  font-family: inherit;
+  border-bottom: 1px solid rgb(var(--border));
+}
+
+.multi-codeblock-astro pre {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: rgb(var(--foreground));
+}
+
+.multi-codeblock-astro pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
 }
 
 .multi-codeblock-filename {
