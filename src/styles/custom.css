@@ -147,36 +147,6 @@ body {
   align-items: center;
 }
 
-/* Copy button (hidden by default, shows on hover) */
-.expressive-code .copy-button {
-  background: rgba(var(--muted-foreground), 0.1);
-  border: 1px solid rgba(var(--border), 0.5);
-  color: rgb(var(--muted-foreground));
-  border-radius: 4px;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  opacity: 0;
-  visibility: hidden;
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-}
-
-.expressive-code:hover .copy-button {
-  opacity: 1;
-  visibility: visible;
-}
-
-.expressive-code .copy-button:hover {
-  background: rgba(var(--muted-foreground), 0.2);
-  color: rgb(var(--foreground));
-}
-
 /* Multi CodeBlock Styling */
 .multi-codeblock {
   margin: 1.5rem 0;
@@ -237,33 +207,14 @@ body {
   border-color: rgb(var(--primary));
 }
 
-/* Copy button hidden by default in multi block */
-.multi-codeblock-copy {
-  background: rgba(var(--muted-foreground), 0.1);
-  border: 1px solid rgba(var(--border), 0.5);
+.multi-codeblock-filename {
+  background-color: rgb(var(--muted));
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
   color: rgb(var(--muted-foreground));
-  border-radius: 4px;
-  padding: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  opacity: 0;
-  visibility: hidden;
-}
-
-.multi-codeblock:hover .multi-codeblock-copy {
-  opacity: 1;
-  visibility: visible;
-}
-
-.multi-codeblock-copy:hover {
-  background: rgba(var(--muted-foreground), 0.2);
-  color: rgb(var(--foreground));
+  border-bottom: 1px solid rgb(var(--border));
+  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
 }
 
 .multi-codeblock-content {

@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 
 interface CodeOption {
   label: string;
   code: string;
+  filename?: string;
 }
 
 interface MultiCodeBlockProps {
@@ -14,14 +14,6 @@ interface MultiCodeBlockProps {
 
 export function MultiCodeBlock({ title, options, language = 'bash' }: MultiCodeBlockProps) {
   const [activeTab, setActiveTab] = useState(0);
-
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
-    }
-  };
 
   return (
     <div className="multi-codeblock">
@@ -40,18 +32,12 @@ export function MultiCodeBlock({ title, options, language = 'bash' }: MultiCodeB
             ))}
           </div>
         </div>
-        <button
-          className="multi-codeblock-copy"
-          onClick={() => copyToClipboard(options[activeTab].code)}
-          title="Copy to clipboard"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="m5 15-4-4a2 2 0 0 1 0-2.83l0 0a2 2 0 0 1 2.83 0l4 4"></path>
-            <path d="m12 8 4-4a2 2 0 0 1 2.83 0l0 0a2 2 0 0 1 0 2.83l-4 4"></path>
-          </svg>
-        </button>
       </div>
+      {options[activeTab].filename && (
+        <div className="multi-codeblock-filename">
+          {options[activeTab].filename}
+        </div>
+      )}
       <div className="multi-codeblock-content">
         <pre className="multi-codeblock-pre">
           <code className={`language-${language}`}>

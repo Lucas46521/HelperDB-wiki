@@ -1,3 +1,7 @@
+Refactored MDX content to remove copy button references, enhanced MultiCodeBlock with filename support, and added usage examples.
+```
+
+```
 ---
 title: 'Introduction'
 description: 'Getting started with Helper.db - A simple and powerful database library'
@@ -84,8 +88,121 @@ await backup.restore('backup_20240101.db');
 - **Reliable**: Extensively tested and battle-proven
 - **Well documented**: Comprehensive guides and examples
 
+## Exemplo de uso múltiplo
+
+<MultiCodeBlock
+  title="Instalação"
+  options={[
+    {
+      label: "npm",
+      code: "npm install helper.db",
+      filename: "package.json"
+    },
+    {
+      label: "yarn", 
+      code: "yarn add helper.db",
+      filename: "package.json"
+    }
+  ]}
+/>
+
+<MultiCodeBlock
+  title="Configuração inicial"
+  language="javascript"
+  options={[
+    {
+      label: "CommonJS",
+      code: `const { Database } = require('helper.db');
+
+const db = new Database('./database.json');
+
+// Configurar dados iniciais
+db.set('users', []);
+db.set('settings', { theme: 'dark' });`,
+      filename: "index.js"
+    },
+    {
+      label: "ES Modules", 
+      code: `import { Database } from 'helper.db';
+
+const db = new Database('./database.json');
+
+// Configurar dados iniciais
+db.set('users', []);
+db.set('settings', { theme: 'dark' });`,
+      filename: "index.mjs"
+    }
+  ]}
+/>
+
 ## Next Steps
 
 Ready to get started? Check out our [Installation Guide](/guides/installation/) to begin using Helper.db in your project.
 
 Or jump straight to the [Quick Start Guide](/guides/quick-start/) to see Helper.db in action!
+```javascript title="app.js"
+const { Database } = require('helper.db');
+const db = new Database('myapp');
+
+// Set data
+db.set('user.name', 'João');
+db.set('user.age', 25);
+
+// Get data
+console.log(db.get('user.name')); // João
+```
+
+## Features
+
+- Simple key-value storage
+- Nested object support
+- Fast and lightweight
+- Easy to use API
+
+## What is Helper.db?
+
+Helper.db is designed to simplify database operations while providing:
+
+- **Object-oriented approach**: Clean, readable code patterns
+- **Predictable abstractions**: Consistent API across different operations  
+- **High performance**: Optimized for speed and efficiency
+- **100% coverage**: Complete database operation support
+
+## Key Features
+
+### Simple Database Operations
+
+```javascript title="database-operations.js"
+const { Database } = require('helper.db');
+const db = new Database('myDatabase.db');
+
+// Insert data
+await db.insert('users', { name: 'John', age: 30 });
+
+// Query data
+const users = await db.find('users', { age: { $gt: 25 } });
+
+// Update data
+await db.update('users', { name: 'John' }, { age: 31 });
+```
+
+### Advanced Querying
+
+```javascript title="advanced-query.js"
+// Complex queries made simple
+const results = await db.query()
+  .from('users')
+  .where('age', '>', 18)
+  .and('status', '=', 'active')
+  .orderBy('created_at', 'desc')
+  .limit(10)
+  .execute();
+```
+
+### Built-in Backup System
+
+```javascript title="backup.js"
+// Automatic backups
+const backup = new Backup(db);
+await backup.create('backup_20240101.db');
+await backup.restore('backup_20240101.db');
