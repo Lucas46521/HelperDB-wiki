@@ -34,7 +34,7 @@ const transaction = await db.transaction();
 try {
     await transaction.set('user:1', { name: 'João', balance: 1000 });
     await transaction.set('user:2', { name: 'Maria', balance: 500 });
-    
+
     // Confirmar alterações
     await transaction.commit();
     console.log('✅ Transação concluída');
@@ -50,13 +50,13 @@ try {
 await db.transaction(async (tx) => {
     await tx.set('user:1', { name: 'João', balance: 1000 });
     await tx.set('user:2', { name: 'Maria', balance: 500 });
-    
+
     // Se qualquer erro ocorrer, rollback automático
     const user1 = await tx.get('user:1');
     if (user1.balance < 0) {
         throw new Error('Saldo não pode ser negativo');
     }
-    
+
     // Commit automático se não houver erros
 });
 ```
@@ -108,23 +108,23 @@ async function transferMoney(fromUserId, toUserId, amount) {
         // Obter saldos atuais
         const fromUser = await tx.get(`user:${fromUserId}`);
         const toUser = await tx.get(`user:${toUserId}`);
-        
+
         // Validações
         if (!fromUser || !toUser) {
             throw new Error('Usuário não encontrado');
         }
-        
+
         if (fromUser.balance < amount) {
             throw new Error('Saldo insuficiente');
         }
-        
+
         // Atualizar saldos
         fromUser.balance -= amount;
         toUser.balance += amount;
-        
+
         await tx.set(`user:${fromUserId}`, fromUser);
         await tx.set(`user:${toUserId}`, toUser);
-        
+
         // Registrar transação
         await tx.set(`transaction:${Date.now()}`, {
             from: fromUserId,
@@ -132,7 +132,7 @@ async function transferMoney(fromUserId, toUserId, amount) {
             amount,
             timestamp: new Date().toISOString()
         });
-        
+
         return { success: true, newBalance: fromUser.balance };
     });
 }
@@ -151,15 +151,15 @@ try {
 ```javascript
 await db.transaction(async (tx) => {
     await tx.set('user:1', { name: 'João' });
-    
+
     // Criar savepoint
     const savepoint = await tx.savepoint('user_creation');
-    
+
     try {
         // Operações que podem falhar
         await tx.set('user:2', { name: 'Maria', invalidField: null });
         await tx.set('profile:2', { userId: 2, avatar: 'large_file.jpg' });
-        
+
         // Commit do savepoint
         await savepoint.release();
     } catch (error) {
@@ -167,7 +167,7 @@ await db.transaction(async (tx) => {
         await savepoint.rollback();
         console.log('Rollback parcial realizado');
     }
-    
+
     // user:1 ainda será commitado
 });
 ```
@@ -179,11 +179,11 @@ await db.transaction(async (tx) => {
 await db.transaction(async (tx) => {
     // Lock exclusivo
     const user = await tx.get('user:1', { lock: 'exclusive' });
-    
+
     // Operações críticas
     user.balance += 100;
     await tx.set('user:1', user);
-    
+
     // Lock será liberado automaticamente no commit
 });
 ```
@@ -193,10 +193,10 @@ await db.transaction(async (tx) => {
 await db.transaction(async (tx) => {
     // Lock compartilhado (múltiplas leituras, sem escrita)
     const users = await tx.search('user:*', { lock: 'shared' });
-    
+
     // Processar dados sem modificá-los
     const totalBalance = users.reduce((sum, [_, user]) => sum + user.balance, 0);
-    
+
     await tx.set('stats:total_balance', totalBalance);
 });
 ```
@@ -211,28 +211,28 @@ const db = new HelperDB({
         isolation: 'READ_COMMITTED',
         timeout: 30000,
         maxRetries: 3,
-        
+
         // Configurações de performance
         maxConnections: 10,
         connectionTimeout: 5000,
-        
+
         // Deadlock detection
         deadlockDetection: true,
         deadlockTimeout: 10000,
-        
+
         // Callbacks
         onBegin: (txId) => {
             console.log(`🔄 Transação iniciada: ${txId}`);
         },
-        
+
         onCommit: (txId, duration) => {
             console.log(`✅ Transação commitada: ${txId} (${duration}ms)`);
         },
-        
+
         onRollback: (txId, reason) => {
             console.log(`❌ Transação revertida: ${txId} - ${reason}`);
         },
-        
+
         onDeadlock: (txId, conflictingTxId) => {
             console.warn(`⚠️ Deadlock detectado: ${txId} vs ${conflictingTxId}`);
         }
@@ -297,7 +297,7 @@ class OrderService {
     constructor(db) {
         this.db = db;
     }
-    
+
     async createOrder(userId, items) {
         return await this.db.transaction(async (tx) => {
             // Verificar usuário
@@ -305,28 +305,28 @@ class OrderService {
             if (!user) {
                 throw new Error('Usuário não encontrado');
             }
-            
+
             // Calcular total e verificar estoque
             let total = 0;
             const reservedItems = [];
-            
+
             for (const item of items) {
                 const product = await tx.get(`product:${item.productId}`, { 
                     lock: 'exclusive' 
                 });
-                
+
                 if (!product) {
                     throw new Error(`Produto ${item.productId} não encontrado`);
                 }
-                
+
                 if (product.stock < item.quantity) {
                     throw new Error(`Estoque insuficiente para ${product.name}`);
                 }
-                
+
                 // Reservar estoque
                 product.stock -= item.quantity;
                 await tx.set(`product:${item.productId}`, product);
-                
+
                 total += product.price * item.quantity;
                 reservedItems.push({
                     productId: item.productId,
@@ -335,12 +335,12 @@ class OrderService {
                     quantity: item.quantity
                 });
             }
-            
+
             // Verificar saldo
             if (user.balance < total) {
                 throw new Error('Saldo insuficiente');
             }
-            
+
             // Criar pedido
             const orderId = `order:${Date.now()}`;
             const order = {
@@ -351,17 +351,17 @@ class OrderService {
                 status: 'pending',
                 createdAt: new Date().toISOString()
             };
-            
+
             await tx.set(orderId, order);
-            
+
             // Debitar do usuário
             user.balance -= total;
             await tx.set(`user:${userId}`, user);
-            
+
             // Atualizar estatísticas
             await tx.add('stats:total_orders', 1);
             await tx.add('stats:revenue', total);
-            
+
             return order;
         });
     }
@@ -375,9 +375,8 @@ try {
         { productId: 'prod:1', quantity: 2 },
         { productId: 'prod:2', quantity: 1 }
     ]);
-    
+
     console.log('✅ Pedido criado:', order.id);
 } catch (error) {
     console.error('❌ Falha ao criar pedido:', error.message);
 }
-```

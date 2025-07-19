@@ -45,7 +45,7 @@ const driver = new SqliteDriver('database.sqlite', {
     fileMustExist: false,
     timeout: 5000,
     verbose: console.log, // Log SQL para debug
-    
+
     // Configurações de performance
     pragma: {
         journal_mode: 'WAL',
@@ -121,16 +121,16 @@ const driver = new SqliteDriver('database.sqlite', {
     pragma: {
         // Write-Ahead Logging para melhor concorrência
         journal_mode: 'WAL',
-        
+
         // Reduzir sincronização para velocidade
         synchronous: 'NORMAL',
-        
+
         // Aumentar cache
         cache_size: -128000, // 128MB
-        
+
         // Usar memória para operações temporárias
         temp_store: 'MEMORY',
-        
+
         // Otimizar para aplicações
         optimize: true
     }
@@ -195,20 +195,20 @@ async function estatisticasBase(driver) {
     const stats = {
         // Tamanho do arquivo
         tamanhoArquivo: require('fs').statSync(driver.filePath).size,
-        
+
         // Informações do SQLite
         pageCount: driver.db.pragma('page_count'),
         pageSize: driver.db.pragma('page_size'),
-        
+
         // Status WAL
         walMode: driver.db.pragma('journal_mode'),
-        
+
         // Cache
         cacheSize: driver.db.pragma('cache_size')
     };
-    
+
     stats.tamanhoEstimado = stats.pageCount * stats.pageSize;
-    
+
     return stats;
 }
 
@@ -228,17 +228,17 @@ class SQLiteMonitor {
             operacoesLentas: []
         };
     }
-    
+
     medirOperacao(operacao, ...args) {
         const inicio = Date.now();
-        
+
         try {
             const resultado = operacao.call(this.driver, ...args);
             const tempo = Date.now() - inicio;
-            
+
             this.metricas.consultas++;
             this.metricas.tempoTotal += tempo;
-            
+
             if (tempo > 100) { // Operações > 100ms
                 this.metricas.operacoesLentas.push({
                     tempo,
@@ -246,14 +246,14 @@ class SQLiteMonitor {
                     timestamp: new Date()
                 });
             }
-            
+
             return resultado;
         } catch (error) {
             console.error('Erro na operação:', error);
             throw error;
         }
     }
-    
+
     obterEstatisticas() {
         return {
             ...this.metricas,
@@ -304,20 +304,20 @@ const driver = new SqliteDriver('database.sqlite', {
 ```javascript
 async function migrarJsonParaSQLite(jsonFile, sqliteFile) {
     const fs = require('fs').promises;
-    
+
     // Ler dados JSON
     const dados = JSON.parse(await fs.readFile(jsonFile, 'utf8'));
-    
+
     // Criar nova base SQLite
     const db = new HelperDB({
         driver: new SqliteDriver(sqliteFile)
     });
-    
+
     // Migrar dados
     for (const [chave, valor] of Object.entries(dados)) {
         await db.set(chave, valor);
     }
-    
+
     console.log(`✅ Migração concluída: ${Object.keys(dados).length} registros`);
 }
 
@@ -330,4 +330,3 @@ await migrarJsonParaSQLite('dados.json', 'dados.sqlite');
 - [JSON Driver](./json.mdx) - Driver para arquivos JSON
 - [Memory Driver](./memory.mdx) - Driver em memória
 - [Configurações](../config/config.mdx) - Configurações gerais
-

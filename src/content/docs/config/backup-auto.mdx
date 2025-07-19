@@ -101,25 +101,25 @@ const db = new HelperDB({
         maxBackups: 10,
         path: './backups',
         compression: true,
-        
+
         // Configurações avançadas
         naming: 'timestamp', // 'timestamp' | 'sequential' | 'custom'
         format: 'json', // 'json' | 'sql' | 'binary'
-        
+
         // Backup incremental
         incremental: true,
-        
+
         // Verificação de integridade
         checksum: true,
-        
+
         // Callback personalizado
         onBackup: async (info) => {
             console.log(`Backup criado: ${info.path}`);
-            
+
             // Enviar para cloud storage
             await uploadToCloud(info.path);
         },
-        
+
         // Filtros
         include: ['user:*', 'config:*'],
         exclude: ['temp:*', 'cache:*']
@@ -223,11 +223,11 @@ const db = new HelperDB({
         path: './backups',
         compression: true,
         incremental: true,
-        
+
         onBackup: async (info) => {
             // Log do backup
             console.log(`✅ Backup criado: ${info.id}`);
-            
+
             // Notificar administradores se backup for muito grande
             if (info.size > 100 * 1024 * 1024) { // 100MB
                 await notifyAdmins(`Backup grande detectado: ${info.size} bytes`);
@@ -245,4 +245,3 @@ setInterval(async () => {
         console.warn('⚠️ Taxa de sucesso do backup baixa:', stats.successRate);
     }
 }, 300000); // A cada 5 minutos
-```

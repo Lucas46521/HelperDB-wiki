@@ -17,7 +17,7 @@ const db = new HelperDB({
     driver: 'sqlite',           // Tipo de driver
     filePath: 'database.sqlite', // Caminho do arquivo
     table: 'dados',             // Nome da tabela/coleção
-    
+
     // Configurações avançadas
     enableCache: true,          // Habilitar cache
     enableBackup: false,        // Backup automático
@@ -150,14 +150,14 @@ const db = new HelperDB({
         autoIndex: true,        // Criar índices automaticamente
         indexedFields: ['id', 'name', 'email']
     },
-    
+
     // Configurações de conexão
     connectionOptions: {
         poolSize: 10,           // Tamanho do pool de conexões
         timeout: 10000,         // Timeout de conexão
         retryAttempts: 3        // Tentativas de reconexão
     },
-    
+
     // Configurações de memória
     memoryOptions: {
         maxMemoryUsage: '512MB', // Limite de memória
@@ -194,7 +194,7 @@ const db = new HelperDB({
             algorithm: 'aes-256-gcm',
             key: process.env.DB_ENCRYPTION_KEY
         },
-        
+
         access: {
             readonly: false,
             allowedOperations: ['get', 'set', 'delete'],
@@ -204,7 +204,7 @@ const db = new HelperDB({
                 window: 60000 // 1 minuto
             }
         },
-        
+
         validation: {
             sanitizeInput: true,
             preventInjection: true,
@@ -228,7 +228,7 @@ const db = new HelperDB({
         enableValidation: true,
         validationOptions: { strict: true }
     }),
-    
+
     // Configurações específicas para produção
     ...(!isDevelopment && {
         enableCache: true,
@@ -280,7 +280,7 @@ const db = new HelperDB({
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    
+
     enableCache: process.env.ENABLE_CACHE === 'true',
     enableBackup: process.env.ENABLE_BACKUP === 'true'
 });
@@ -291,13 +291,13 @@ const db = new HelperDB({
 ```javascript
 function validarConfiguracao(config) {
     const erros = [];
-    
+
     // Validar driver
     const driversValidos = ['sqlite', 'mysql', 'mariadb', 'mongodb', 'json', 'memory'];
     if (!driversValidos.includes(config.driver)) {
         erros.push(`Driver inválido: ${config.driver}`);
     }
-    
+
     // Validar configurações de cache
     if (config.enableCache && config.cacheOptions) {
         if (config.cacheOptions.size <= 0) {
@@ -307,18 +307,18 @@ function validarConfiguracao(config) {
             erros.push('TTL do cache deve ser positivo');
         }
     }
-    
+
     // Validar backup
     if (config.enableBackup && config.backupOptions) {
         if (config.backupOptions.interval <= 0) {
             erros.push('Intervalo de backup deve ser positivo');
         }
     }
-    
+
     if (erros.length > 0) {
         throw new Error(`Configuração inválida: ${erros.join(', ')}`);
     }
-    
+
     return true;
 }
 
@@ -350,17 +350,17 @@ const db = new HelperDB({
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    
+
     enableCache: true,
     cacheOptions: { size: 5000, ttl: 600000 },
-    
+
     enableBackup: true,
     backupOptions: {
         interval: 3600000,
         maxBackups: 24,
         compression: true
     },
-    
+
     enableLogging: true,
     logOptions: {
         level: 'warn',
@@ -381,10 +381,10 @@ const db = new HelperDB({
             temp_store: 'MEMORY'
         }
     },
-    
+
     enableCache: true,
     cacheOptions: { size: 10000, ttl: 1800000 },
-    
+
     enableIndexing: true,
     indexOptions: { autoIndex: true }
 });
@@ -396,4 +396,3 @@ const db = new HelperDB({
 - [Backup](./backup-auto.mdx) - Backup automático
 - [Validation](./validation.mdx) - Validação de schema
 - [Transactions](./transactions.mdx) - Sistema de transações
-

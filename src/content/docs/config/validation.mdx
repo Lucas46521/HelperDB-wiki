@@ -293,7 +293,7 @@ const db = new HelperDB({
         enabled: true,
         strict: false,
         autoTransform: true,
-        
+
         // Validadores personalizados
         validators: {
             strongPassword: (password) => {
@@ -302,7 +302,7 @@ const db = new HelperDB({
                        /[0-9]/.test(password);
             }
         },
-        
+
         // Schemas
         schemas: {
             'user:*': {
@@ -336,7 +336,7 @@ const db = new HelperDB({
                     }
                 }
             },
-            
+
             'session:*': {
                 type: 'object',
                 properties: {
@@ -350,12 +350,12 @@ const db = new HelperDB({
                 }
             }
         },
-        
+
         // Callbacks
         onValidationError: (error, key, value) => {
             console.warn(`❌ Validação falhou para ${key}:`, error.message);
         },
-        
+
         onTransform: (key, oldValue, newValue) => {
             console.log(`🔄 Transformado ${key}:`, { oldValue, newValue });
         }
@@ -376,4 +376,3 @@ try {
 } catch (error) {
     console.error('❌ Erro de validação:', error.message);
 }
-```

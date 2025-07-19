@@ -129,7 +129,7 @@ const db = new HelperDB({
         maxSize: 2000,
         ttl: 600000, // 10 minutos
         strategy: 'lru',
-        
+
         // Configurações avançadas
         updateOnWrite: true,
         prefetch: ['user:*', 'config:*'],

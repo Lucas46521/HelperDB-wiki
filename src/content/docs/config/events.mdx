@@ -181,17 +181,17 @@ class UserService {
     constructor(db) {
         this.db = db;
     }
-    
+
     async createUser(userData) {
         // Emitir evento antes da criação
         this.db.emit('user:creating', userData);
-        
+
         const userId = `user:${Date.now()}`;
         await this.db.set(userId, userData);
-        
+
         // Emitir evento após criação
         this.db.emit('user:created', userId, userData);
-        
+
         return userId;
     }
 }
@@ -203,7 +203,7 @@ db.on('user:creating', (userData) => {
 
 db.on('user:created', (userId, userData) => {
     console.log(`✅ Usuário criado: ${userId}`);
-    
+
     // Ações pós-criação
     sendWelcomeEmail(userData.email);
     logUserCreation(userId);
@@ -217,7 +217,7 @@ db.on('user:created', (userId, userData) => {
 // Middleware para log de todas as operações
 db.on('*', (eventName, ...args) => {
     if (eventName.startsWith('performance')) return;
-    
+
     console.log(`📋 Evento: ${eventName}`, args);
 });
 
@@ -227,12 +227,12 @@ db.addFilter('set', async (key, value, options) => {
     if (key.startsWith('user:') && !value.email) {
         throw new Error('Email é obrigatório para usuários');
     }
-    
+
     // Transformação de dados
     if (typeof value === 'object') {
         value.lastModified = new Date().toISOString();
     }
-    
+
     return { key, value, options };
 });
 ```
@@ -250,36 +250,36 @@ class EventAggregator {
             cacheHits: 0,
             cacheMisses: 0
         };
-        
+
         this.setupListeners();
     }
-    
+
     setupListeners() {
         // Contar operações
         ['set', 'get', 'delete', 'has'].forEach(op => {
             this.db.on(op, () => this.stats.operations++);
         });
-        
+
         // Contar erros
         this.db.on('error', () => this.stats.errors++);
-        
+
         // Estatísticas de cache
         this.db.on('cache:hit', () => this.stats.cacheHits++);
         this.db.on('cache:miss', () => this.stats.cacheMisses++);
-        
+
         // Relatório periódico
         setInterval(() => this.report(), 60000); // 1 minuto
     }
-    
+
     report() {
         const cacheHitRate = this.stats.cacheHits / 
             (this.stats.cacheHits + this.stats.cacheMisses);
-            
+
         console.log('📊 Relatório de 1 minuto:', {
             ...this.stats,
             cacheHitRate: (cacheHitRate * 100).toFixed(2) + '%'
         });
-        
+
         // Reset stats
         Object.keys(this.stats).forEach(key => this.stats[key] = 0);
     }
@@ -297,7 +297,7 @@ const db = new HelperDB({
         enabled: true,
         maxListeners: 50,
         async: true,
-        
+
         // Buffer de eventos para alta performance
         buffer: {
             enabled: true,
@@ -308,20 +308,20 @@ const db = new HelperDB({
                 processEventsBatch(events);
             }
         },
-        
+
         // Filtros globais
         filters: {
             // Filtrar eventos de sistema em produção
             production: (eventName) => {
                 return !eventName.startsWith('performance');
             },
-            
+
             // Filtrar por chaves sensíveis
             security: (eventName, key) => {
                 return !key?.includes('password');
             }
         },
-        
+
         // Rate limiting
         rateLimit: {
             enabled: true,
@@ -346,10 +346,10 @@ class DatabaseMonitor {
             slowQueries: [],
             cacheStats: { hits: 0, misses: 0 }
         };
-        
+
         this.setupMonitoring();
     }
-    
+
     setupMonitoring() {
         // Monitorar todas as operações
         ['set', 'get', 'delete', 'has', 'add', 'sub'].forEach(op => {
@@ -357,66 +357,66 @@ class DatabaseMonitor {
                 this.recordOperation(op, args);
             });
         });
-        
+
         // Monitorar performance
         this.db.on('performance', (stats) => {
             if (stats.duration > 100) { // > 100ms é lento
                 this.recordSlowQuery(stats);
             }
         });
-        
+
         // Monitorar erros
         this.db.on('error', (error) => {
             this.recordError(error);
         });
-        
+
         // Monitorar cache
         this.db.on('cache:hit', () => this.metrics.cacheStats.hits++);
         this.db.on('cache:miss', () => this.metrics.cacheStats.misses++);
-        
+
         // Monitorar transações
         this.db.on('transaction:rollback', (txInfo) => {
             console.warn(`⚠️ Transação revertida: ${txInfo.reason}`);
         });
-        
+
         // Relatório periódico
         setInterval(() => this.generateReport(), 300000); // 5 minutos
     }
-    
+
     recordOperation(operation, args) {
         const count = this.metrics.operations.get(operation) || 0;
         this.metrics.operations.set(operation, count + 1);
     }
-    
+
     recordSlowQuery(stats) {
         this.metrics.slowQueries.push({
             ...stats,
             timestamp: new Date().toISOString()
         });
-        
+
         // Manter apenas os últimos 100
         if (this.metrics.slowQueries.length > 100) {
             this.metrics.slowQueries.shift();
         }
     }
-    
+
     recordError(error) {
         this.metrics.errors.push({
             message: error.message,
             stack: error.stack,
             timestamp: new Date().toISOString()
         });
-        
+
         // Manter apenas os últimos 50 erros
         if (this.metrics.errors.length > 50) {
             this.metrics.errors.shift();
         }
     }
-    
+
     generateReport() {
         const { hits, misses } = this.metrics.cacheStats;
         const cacheHitRate = hits / (hits + misses) || 0;
-        
+
         const report = {
             timestamp: new Date().toISOString(),
             operations: Object.fromEntries(this.metrics.operations),
@@ -430,18 +430,18 @@ class DatabaseMonitor {
                 .sort((a, b) => b.duration - a.duration)
                 .slice(0, 5)
         };
-        
+
         console.log('📊 Relatório do Database:', report);
-        
+
         // Alertas
         if (cacheHitRate < 0.8) {
             console.warn('⚠️ Taxa de cache hit baixa:', cacheHitRate);
         }
-        
+
         if (this.metrics.errors.length > 10) {
             console.error('🚨 Muitos erros detectados:', this.metrics.errors.length);
         }
-        
+
         // Reset metrics
         this.metrics.operations.clear();
         this.metrics.cacheStats = { hits: 0, misses: 0 };
@@ -450,4 +450,3 @@ class DatabaseMonitor {
 
 // Inicializar monitoramento
 const monitor = new DatabaseMonitor(db);
-```
