@@ -43,15 +43,6 @@ export default defineConfig({
             ],
           },
           {
-            label: 'Operações em Lote',
-            items: [
-              { label: 'getMany', slug: 'batch/getMany' },
-              { label: 'setMany', slug: 'batch/setMany' },
-              { label: 'updateMany', slug: 'batch/updateMany' },
-              { label: 'deleteMany', slug: 'batch/deleteMany' },
-            ],
-          },
-          {
             label: 'Operações em Arrays',
             items: [
               { label: 'push', slug: 'arrays/push' },
