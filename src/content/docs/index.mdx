@@ -1,17 +1,17 @@
 ---
-title: 'Helper.db Documentation'
-description: 'Complete documentation for Helper.db - A simple and powerful database library for Node.js'
+title: 'Doumentação da Helper.db'
+description: 'Uma biblioteca de banco de dados leve, rápida e intuitiva para Node.js'
 template: splash
 hero:
   tagline: A simple and powerful database library for Node.js applications
   image:
     file: ../../assets/logo.png
   actions:
-    - text: Get Started
+    - text: Começar
       link: /guides/introduction/
       icon: right-arrow
       variant: primary
-    - text: View on GitHub
+    - text: Visitar Repositório 
       link: https://github.com/Lucas46521/Helper-db
       icon: external
       variant: minimal
@@ -19,53 +19,87 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Quick Start
+## Início rápido
 
-Get up and running with Helper.db in minutes:
+Configure o Helper.db em seu projeto Node.js em poucos minutos. Siga os passos abaixo para começar a armazenar e recuperar dados facilmente.
 
-```javascript title="Quick Example"
+### Pré-requisitos
+- Node.js (versão 14 ou superior)
+- npm ou yarn instalado
+
+### Instalação
+
+<Tabs>
+  <TabItem label="npm">
+  ```bash
+  npm install helper.db
+  ```
+  </TabItem>
+  <TabItem label="yarn">
+  ```bash
+  yarn add helper.db
+  ```
+  </TabItem>
+  <TabItem label="pnpm">
+  ```bash
+  pnpm add helper.db
+  ```
+  </TabItem>
+  <TabItem label="bun">
+  ```bash
+  bun add helper.db
+  ```
+  </TabItem>
+</Tabs>
+
+##Exemplo:
+```javascript title="Exemplo Simples"
 const { Database } = require('helper.db');
 const db = new Database('myapp');
 
-// Store data
+// Armazenar dados
 db.set('user.name', 'João');
 db.set('user.preferences.theme', 'dark');
 
-// Retrieve data
+// Recuperar dados
 console.log(db.get('user.name')); // João
 console.log(db.get('user.preferences')); // { theme: 'dark' }
 ```
 
-## Core Features
+### Próximos Passos
+- Aprenda a instalar o Helper.db: [Guia de Instalação →](/guias/instalacao/)
+- Explore todos os métodos disponíveis: [Referência da API →](/referencia/banco-de-dados/)
 
+## Por que Escolher o Helper.db?
+
+A Helper.db foi projetado para simplificar o gerenciamento de dados em aplicações Node.js. Veja seus principais recursos:
 <CardGrid>
-  <Card title="Simple API" icon="rocket">
-    Easy-to-use methods for storing and retrieving data with dot notation support for nested objects.
+  <Card title="API Simples" icon="code">
+    Use métodos intuitivos como `set` e `get` com notação de ponto para lidar com objetos aninhados sem esforço. [Saiba mais →](/referencia/banco-de-dados/#set)
   </Card>
-  <Card title="Fast Performance" icon="lightning">
-    Optimized for speed with efficient data storage and retrieval mechanisms.
+  <Card title="Alta Performance" icon="lightning">
+    Otimizado para velocidade com mecanismos eficientes de armazenamento em memória e disco. [Veja benchmarks →](/guias/performance/)
   </Card>
-  <Card title="Type Safe" icon="approve-check">
-    Built-in TypeScript support with comprehensive type definitions.
+  <Card title="Segurança de Tipos" icon="shield-check">
+    Suporte completo ao TypeScript com definições de tipo detalhadas para uma experiência de codificação mais segura. [Guia TypeScript →](/guias/typescript/)
   </Card>
-  <Card title="Backup System" icon="backup">
-    Built-in backup and restore functionality to protect your data.
+  <Card title="Backup e Restauração" icon="cloud-upload">
+    Ferramentas integradas para criar e restaurar backups, garantindo a segurança dos seus dados. [Guia de Backup →](/guias/backup/)
   </Card>
 </CardGrid>
 
-## Getting Started
+## Primeiros Passos com o Helper.db
+
+Pronto para começar? Escolha um ponto de partida abaixo para explorar os recursos do Helper.db e integrá-lo ao seu projeto.
 
 <CardGrid>
-  <Card title="Installation" icon="add-document">
-    Learn how to install Helper.db in your Node.js project.
-    [Get started →](/guides/installation/)
+  <Card title="Instalar o Helper.db" icon="download">
+    Instale o Helper.db em seu projeto Node.js com um único comando. [Instalar agora →](/guides/installation/)
   </Card>
-  <Card title="Quick Start" icon="rocket">
-    Follow our quick start guide to begin using Helper.db immediately.
-    [Quick start →](/guides/quick-start/)
+  <Card title="Guia de Início Rápido" icon="rocket">
+    Aprenda o básico do Helper.db com nosso guia de início rápido. [Experimente agora →](/guides/quick-start/)
   </Card>
-  <Card title="API Reference" icon="open-book">
-    Explore the complete API documentation for all available methods.
-    [API docs →](/reference/database/)
+  <Card title="Referência da API" icon="book-open">
+    Explore todos os métodos disponíveis e seus usos na documentação detalhada da API. [Leia a documentação →](/reference/database/)
   </Card>
 </CardGrid>
