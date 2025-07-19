@@ -157,7 +157,7 @@ body {
   background: rgba(var(--background), 0.8);
   border: 1px solid rgb(var(--border));
   border-radius: 0.375rem;
-  padding: 0.25rem 0.5rem;
+  /*padding: 0.25rem 0.5rem;*/
   font-size: 0.75rem;
   color: rgb(var(--muted-foreground));
   backdrop-filter: blur(4px);
