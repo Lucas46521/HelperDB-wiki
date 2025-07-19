@@ -45,10 +45,10 @@ export default defineConfig({
           {
             label: 'Operações em Lote',
             items: [
-              { label: 'getMany', slug: 'batch/getMany' },
-              { label: 'setMany', slug: 'batch/setMany' },
-              { label: 'updateMany', slug: 'batch/updateMany' },
-              { label: 'deleteMany', slug: 'batch/deleteMany' },
+              { label: 'getMany', slug: 'batch/getmany' },
+              { label: 'setMany', slug: 'batch/setmany' },
+              { label: 'updateMany', slug: 'batch/updatemany' },
+              { label: 'deleteMany', slug: 'batch/deletemany' },
             ],
           },
           {
@@ -64,7 +64,7 @@ export default defineConfig({
               { label: 'filter', slug: 'arrays/filter' },
               { label: 'reduce', slug: 'arrays/reduce' },
               { label: 'includes', slug: 'arrays/includes' },
-              { label: 'indexOf', slug: 'arrays/indexOf' },
+              { label: 'indexOf', slug: 'arrays/indexof' },
             ],
           },
           {
@@ -78,8 +78,8 @@ export default defineConfig({
             label: 'Busca e Filtros',
             items: [
               { label: 'search', slug: 'search/search' },
-              { label: 'startsWith', slug: 'search/startsWith' },
-              { label: 'endsWith', slug: 'search/endsWith' },
+              { label: 'startsWith', slug: 'search/startswith' },
+              { label: 'endsWith', slug: 'search/endswith' },
               { label: 'regex', slug: 'search/regex' },
               { label: 'between', slug: 'search/between' },
               { label: 'in', slug: 'search/in' },
