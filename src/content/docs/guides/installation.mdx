@@ -1,28 +1,39 @@
 ---
-title: Installation
-description: Learn how to install Helper.db in your Node.js project.
+title: 'Instalação do Helper.db'
+description: 'Guia passo a passo para instalar o Helper.db em seu projeto Node.js de forma rápida e fácil.'
 ---
 
 import { Badge } from '../../../components/ui/badge.tsx';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-# Installation
+# Instalação do Helper.db
 
-Helper.db is available as an npm package and can be installed using your preferred package manager.
+Configure o Helper.db em seu projeto Node.js em poucos minutos. Este guia cobre tudo o que você precisa para começar.
 
-## Requirements
+## Sumário
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação do Pacote](#instalação-do-pacote)
+- [Suporte ao TypeScript](#suporte-ao-typescript)
+- [Verificação da Instalação](#verificação-da-instalação)
+- [Próximos Passos](#próximos-passos)
 
-<Badge variant="default">Node.js 16+</Badge>
-<Badge variant="default">npm/yarn/pnpm</Badge>
+## Pré-requisitos
 
-- Node.js version 16 or higher
-- npm, yarn, pnpm, or bun package manager
+Antes de instalar o Helper.db, certifique-se de ter o seguinte:
 
-## Package Installation
+<Badge variant="default" aria-label="Versão mínima do Node.js">Node.js 16+</Badge>
+<Badge variant="default" aria-label="Gerenciadores de pacotes suportados">npm/yarn/pnpm/bun</Badge>
 
-Install Helper.db using your preferred package manager:
+- **Node.js**: Versão 16 ou superior (recomendamos a versão 18 para melhor compatibilidade).
+- **Gerenciador de Pacotes**: npm, yarn, pnpm ou bun instalado.
 
-<Tabs>
+> **Dica**: Verifique sua versão do Node.js com `node -v` e do gerenciador de pacotes com `npm -v`, `yarn -v`, `pnpm -v` ou `bun -v`.
+
+## Instalação do Pacote
+
+Instale o Helper.db usando seu gerenciador de pacotes preferido:
+
+<Tabs aria-label="Opções de instalação do Helper.db com diferentes gerenciadores de pacotes">
   <TabItem label="npm">
   ```bash
   npm install helper.db
@@ -45,51 +56,58 @@ Install Helper.db using your preferred package manager:
   </TabItem>
 </Tabs>
 
-## TypeScript Support
+## Suporte ao TypeScript
 
-Helper.db includes built-in TypeScript definitions. No additional @types packages are required.
+O Helper.db inclui definições de tipo integradas para TypeScript, sem necessidade de pacotes adicionais como `@types`. Para projetos TypeScript, instale também o TypeScript e os tipos do Node.js:
 
-<Tabs>
+<Tabs aria-label="Instalação do Helper.db com suporte ao TypeScript">
   <TabItem label="npm">
   ```bash
   npm install helper.db
-  npm install -D typescript @types/node
+  npm install --save-dev typescript @types/node
   ```
   </TabItem>
   <TabItem label="yarn">
   ```bash
   yarn add helper.db
-  yarn add -D typescript @types/node
+  yarn add --dev typescript @types/node
   ```
   </TabItem>
   <TabItem label="pnpm">
   ```bash
   pnpm add helper.db
-  pnpm add -D typescript @types/node
+  pnpm add --save-dev typescript @types/node
   ```
   </TabItem>
   <TabItem label="bun">
   ```bash
   bun add helper.db
-  bun add -D typescript @types/node
+  bun add --dev typescript @types/node
   ```
   </TabItem>
 </Tabs>
 
-## Verification
+> **Nota**: Certifique-se de ter um arquivo `tsconfig.json` configurado no seu projeto. Use `tsc --init` para criar um, se necessário.
 
-After installation, verify that Helper.db is working correctly:
+## Verificação da Instalação
+
+Após a instalação, teste se o Helper.db está funcionando corretamente com o exemplo abaixo:
 
 ```javascript title="test.js"
+// Importa a classe Database do Helper.db
 const { Database } = require('helper.db');
 
+// Inicializa uma instância do banco de dados
 const db = new Database('test.db');
-console.log('Helper.db installed successfully!');
+
+// Testa a funcionalidade básica
+db.set('test.key', 'Hello, Helper.db!');
+console.log(db.get('test.key')); // Saída: Hello, Helper.db!
 ```
 
-Run the test file:
+Execute o arquivo de teste com o comando correspondente ao seu gerenciador de pacotes:
 
-<Tabs>
+<Tabs aria-label="Comandos para executar o arquivo de teste">
   <TabItem label="npm">
   ```bash
   node test.js
@@ -112,12 +130,19 @@ Run the test file:
   </TabItem>
 </Tabs>
 
-If you see "Helper.db installed successfully!" in your console, the installation was successful.
+Se você vir `"Hello, Helper.db!"` no console, a instalação foi bem-sucedida!
 
-## Next Steps
+### Solução de Problemas
+- **Erro de módulo não encontrado**: Verifique se o pacote foi instalado corretamente com `npm ls helper.db` ou equivalente.
+- **Permissões**: Se houver erros de permissão, tente executar os comandos como administrador ou use `sudo` (no Linux/macOS).
+- **Node.js incompatível**: Confirme que está usando a versão 16 ou superior do Node.js.
 
-Now that you have Helper.db installed, you can:
+## Próximos Passos
 
-- Read the [Quick Start Guide](/guides/quick-start/) to learn the basics
-- Explore the [Database Reference](/reference/database/) for detailed API documentation
-- Check out [Examples](/examples/) for real-world use cases
+Parabéns, você instalou o Helper.db! Agora, explore mais recursos:
+
+- Leia o [Guia de Início Rápido](/guides/quick-start/) para aprender os conceitos básicos.
+- Consulte a [Referência da API](/guides/database/) para documentação detalhada dos métodos.
+- Veja [Exemplos Práticos](/guides/examples/) para casos de uso reais.
+
+Pronto para construir algo incrível com o Helper.db? 🚀
