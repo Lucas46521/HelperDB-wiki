@@ -42,7 +42,8 @@
   margin-bottom: 1rem;
 }
 
-.mdx-article ul, .mdx-article ol {
+.mdx-article ul,
+.mdx-article ol {
   color: rgb(var(--muted-foreground));
   line-height: 1.7;
   margin-bottom: 1rem;
@@ -74,54 +75,6 @@
 .mdx-article pre code {
   background: transparent;
   padding: 0;
-}
-
-/* Standard code blocks styling */
-.mdx-article .expressive-code {
-  margin: 1.5rem 0;
-  border-radius: 8px;
-  border: 1px solid rgb(var(--border));
-  background-color: rgb(var(--card));
-  overflow: hidden;
-  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-}
-
-.mdx-article .expressive-code .header,
-.mdx-article .expressive-code .title {
-  padding: 0.5rem 1rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: rgb(var(--muted-foreground));
-  border-bottom: 1px solid rgb(var(--border));
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.mdx-article .expressive-code pre {
-  margin: 0;
-  background: transparent;
-  border: none;
-  padding: 1rem;
-  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: rgb(var(--foreground));
-  overflow-x: auto;
-}
-
-.mdx-article .expressive-code code {
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
-}
-
-/* Multi codeblock integration in MDX */
-.mdx-article .multi-codeblock {
-  margin: 1.5rem 0;
 }
 
 .mdx-article blockquote {
@@ -165,4 +118,9 @@
 
 .mdx-article a:hover {
   text-decoration: underline;
+}
+
+/* Multi-codeblock container only (without expressive-code block duplication) */
+.mdx-article .multi-codeblock {
+  margin: 1.5rem 0;
 }
