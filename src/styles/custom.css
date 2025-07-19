@@ -116,9 +116,6 @@ body {
   font-family: inherit;
   font-size: 0.875rem;
   line-height: 1.5;
-  padding: 1rem;
-  margin: 0;
-  background: transparent;
   overflow-x: auto;
   color: rgb(var(--foreground));
 }
