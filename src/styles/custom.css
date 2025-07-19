@@ -135,7 +135,7 @@ body {
 }
 
 /* Enhanced title bar styling */
-.expressive-code .header,
+/* .expressive-code .header,
 .expressive-code .title {
   background-color: rgb(var(--muted));
   padding: 0.5rem 1rem;
@@ -147,7 +147,7 @@ body {
   justify-content: space-between;
   align-items: center;
   position: relative;
-}
+} */
 
 /* Copy button styling 
 *.expressive-code .copy {
