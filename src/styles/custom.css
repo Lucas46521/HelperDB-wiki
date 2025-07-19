@@ -123,8 +123,6 @@ body {
 .expressive-code code {
   font-family: inherit;
   font-size: inherit;
-  background: transparent;
-  padding: 0;
   border-radius: 0;
   color: inherit;
 }
