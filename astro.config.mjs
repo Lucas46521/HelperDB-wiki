@@ -148,9 +148,6 @@ export default defineConfig({
         './src/styles/mdx.css',
       ],
 
-      editLink: {
-        baseUrl: 'https://github.com/your-username/helper.db-docs/edit/main/',
-      },
       lastUpdated: true,
       pagination: true,
       expressiveCode: {
