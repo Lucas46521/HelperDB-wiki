@@ -15,7 +15,7 @@ export default defineConfig({
         {
           icon: 'github',
           label: 'GitHub',
-          href: 'https://github.com/your-username/helper.db',
+          href: 'https://github.com/Lucas46521/Helper-db',
         },
         {
           icon: 'discord',
