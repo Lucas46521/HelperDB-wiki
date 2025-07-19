@@ -175,18 +175,6 @@ body {
   transform: scale(0.95);
 }
 
-/* Ensure copy button is properly positioned in code blocks with titles
-*.expressive-code:has(.header) .copy,
-.expressive-code:has(.title) .copy {
-  top: 3rem;
-}*/
-
-/* Copy button for code blocks without titles 
-*.expressive-code:not(:has(.header)):not(:has(.title)) .copy {
-*  top: 0.5rem;
-}
-*/
-
 /* Multi CodeBlock Styling */
 .multi-codeblock {
   margin: 1.5rem 0;
