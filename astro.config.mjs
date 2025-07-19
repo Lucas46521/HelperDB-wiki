@@ -24,45 +24,130 @@ export default defineConfig({
         },
       ],
       sidebar: [
-        {
-          label: 'Getting Started',
-          items: [
-            { label: 'Introduction', link: '/guides/introduction/' },
-            { label: 'Installation', link: '/guides/installation/' },
-            { label: 'Quick Start', link: '/guides/quick-start/' },
-          ],
-        },
-        {
-          label: 'Classes',
-          items: [
-            { label: 'Database', link: '/reference/database/' },
-            { label: 'Query', link: '/reference/query/' },
-            { label: 'Backup', link: '/reference/backup/' },
-          ],
-        },
-        {
-          label: 'Examples',
-          items: [
-            { label: 'Discord Bot', link: '/examples/discord-bot/' },
-            { label: 'Web Application', link: '/examples/web-app/' },
-            { label: 'API Server', link: '/examples/api-server/' },
-          ],
-        },
-        {
-          label: 'Advanced',
-          items: [
-            { label: 'Configuration', link: '/advanced/configuration/' },
-            { label: 'Performance', link: '/advanced/performance/' },
-            { label: 'Troubleshooting', link: '/advanced/troubleshooting/' },
-          ],
-        },
-      ],
+          {
+            label: 'Guias',
+            items: [
+              { label: 'Introdução', slug: 'guides/introduction' },
+              { label: 'Instalação', slug: 'guides/installation' },
+              { label: 'Início Rápido', slug: 'guides/quick-start' },
+            ],
+          },
+          {
+            label: 'Operações Básicas',
+            items: [
+              { label: 'get', slug: 'basic/get' },
+              { label: 'set', slug: 'basic/set' },
+              { label: 'has', slug: 'basic/has' },
+              { label: 'delete', slug: 'basic/delete' },
+              { label: 'all', slug: 'basic/all' },
+            ],
+          },
+          {
+            label: 'Operações em Lote',
+            items: [
+              { label: 'getMany', slug: 'batch/getMany' },
+              { label: 'setMany', slug: 'batch/setMany' },
+              { label: 'updateMany', slug: 'batch/updateMany' },
+              { label: 'deleteMany', slug: 'batch/deleteMany' },
+            ],
+          },
+          {
+            label: 'Operações em Arrays',
+            items: [
+              { label: 'push', slug: 'arrays/push' },
+              { label: 'pop', slug: 'arrays/pop' },
+              { label: 'unshift', slug: 'arrays/unshift' },
+              { label: 'shift', slug: 'arrays/shift' },
+              { label: 'splice', slug: 'arrays/splice' },
+              { label: 'pull', slug: 'arrays/pull' },
+              { label: 'map', slug: 'arrays/map' },
+              { label: 'filter', slug: 'arrays/filter' },
+              { label: 'reduce', slug: 'arrays/reduce' },
+              { label: 'includes', slug: 'arrays/includes' },
+              { label: 'indexOf', slug: 'arrays/indexOf' },
+            ],
+          },
+          {
+            label: 'Operações Matemáticas',
+            items: [
+              { label: 'add', slug: 'math/add' },
+              { label: 'sub', slug: 'math/sub' },
+            ],
+          },
+          {
+            label: 'Busca e Filtros',
+            items: [
+              { label: 'search', slug: 'search/search' },
+              { label: 'startsWith', slug: 'search/startsWith' },
+              { label: 'endsWith', slug: 'search/endsWith' },
+              { label: 'regex', slug: 'search/regex' },
+              { label: 'between', slug: 'search/between' },
+              { label: 'in', slug: 'search/in' },
+              { label: 'compare', slug: 'search/compare' },
+              { label: 'custom', slug: 'search/custom' },
+            ],
+          },
+          {
+            label: 'Estatísticas',
+            items: [
+              { label: 'count', slug: 'stats/count' },
+              { label: 'sum', slug: 'stats/sum' },
+              { label: 'avg', slug: 'stats/avg' },
+              { label: 'min', slug: 'stats/min' },
+              { label: 'max', slug: 'stats/max' },
+              { label: 'aggregate', slug: 'stats/aggregate' },
+            ],
+          },
+          {
+            label: 'Backup e Restauração',
+            items: [
+              { label: 'backup', slug: 'backup/backup' },
+              { label: 'restore', slug: 'backup/restore' },
+              { label: 'export', slug: 'backup/export' },
+              { label: 'import', slug: 'backup/import' },
+            ],
+          },
+          {
+            label: 'Drivers',
+            items: [
+              { label: 'JSON', slug: 'drivers/json' },
+              { label: 'SQLite', slug: 'drivers/sqlite' },
+              { label: 'MySQL', slug: 'drivers/mysql' },
+              { label: 'MariaDB', slug: 'drivers/mariadb' },
+              { label: 'MongoDB', slug: 'drivers/mongodb' },
+              { label: 'Memory', slug: 'drivers/memory' },
+            ],
+          },
+          {
+            label: 'Configuração',
+            items: [
+              { label: 'config', slug: 'config/config' },
+              { label: 'cache', slug: 'config/cache' },
+              { label: 'events', slug: 'config/events' },
+              { label: 'transactions', slug: 'config/transactions' },
+              { label: 'validation', slug: 'config/validation' },
+              { label: 'backup-auto', slug: 'config/backup-auto' },
+            ],
+          },
+          {
+            label: 'Monitoramento',
+            items: [
+              { label: 'ping', slug: 'monitoring/ping' },
+            ],
+          },
+          {
+            label: 'Referência',
+            items: [
+              { label: 'Database', slug: 'reference/database' },
+            ],
+          },
+        ],
       customCss: [
         './src/styles/global.css',
         './src/styles/custom.css',
         './src/styles/mdx.css',
       ],
-      
+
       editLink: {
         baseUrl: 'https://github.com/your-username/helper.db-docs/edit/main/',
       },
@@ -89,7 +174,7 @@ export default defineConfig({
       },
     }),
     react(),
-    
+
   ],
   vite: {
     plugins: [tailwindcss()],
