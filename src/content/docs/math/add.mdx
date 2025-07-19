@@ -1,3 +1,9 @@
+---
+title: add()
+description: Adiciona um valor numérico a uma chave
+sidebar:
+  order: 1
+---
 
 # add() - Somar Valores
 
@@ -79,7 +85,7 @@ console.log(totalViews); // 5
 async function addPoints(userId, points, reason) {
     const userKey = `user:${userId}:points`;
     const newTotal = await db.add(userKey, points);
-    
+
     // Registrar histórico
     await db.push(`user:${userId}:history`, {
         action: 'add_points',
@@ -88,7 +94,7 @@ async function addPoints(userId, points, reason) {
         newTotal,
         timestamp: new Date().toISOString()
     });
-    
+
     return newTotal;
 }
 
@@ -105,15 +111,15 @@ async function processTransaction(fromUserId, toUserId, amount) {
     if (fromBalance < amount) {
         throw new Error('Saldo insuficiente');
     }
-    
+
     // Executar transferência
     await db.add(`user:${fromUserId}:balance`, -amount);
     await db.add(`user:${toUserId}:balance`, amount);
-    
+
     // Registrar transação
     await db.add('stats:total_transactions', 1);
     await db.add('stats:total_volume', amount);
-    
+
     return {
         fromBalance: await db.get(`user:${fromUserId}:balance`),
         toBalance: await db.get(`user:${toUserId}:balance`)
@@ -127,16 +133,16 @@ async function processTransaction(fromUserId, toUserId, amount) {
 async function trackRequest(req, res, next) {
     const endpoint = req.path;
     const method = req.method;
-    
+
     // Contar requests totais
     await db.add('metrics:total_requests', 1);
-    
+
     // Contar por endpoint
     await db.add(`metrics:endpoints:${endpoint}`, 1);
-    
+
     // Contar por método
     await db.add(`metrics:methods:${method}`, 1);
-    
+
     next();
 }
 ```
@@ -146,16 +152,16 @@ async function trackRequest(req, res, next) {
 async function addExperience(playerId, exp, source) {
     const playerKey = `player:${playerId}`;
     const player = await db.get(playerKey) || { level: 1, exp: 0 };
-    
+
     // Adicionar experiência
     const newExp = await db.add(`${playerKey}:exp`, exp);
-    
+
     // Verificar level up
     const expRequired = player.level * 100;
     if (newExp >= expRequired) {
         await db.add(`${playerKey}:level`, 1);
         await db.set(`${playerKey}:exp`, newExp - expRequired);
-        
+
         // Evento de level up
         await db.push(`${playerKey}:events`, {
             type: 'level_up',
@@ -163,7 +169,7 @@ async function addExperience(playerId, exp, source) {
             timestamp: new Date().toISOString()
         });
     }
-    
+
     return {
         exp: newExp,
         level: await db.get(`${playerKey}:level`),
@@ -178,26 +184,26 @@ class RealTimeAnalytics {
     constructor(db) {
         this.db = db;
     }
-    
+
     async trackEvent(event, userId = null) {
         const timestamp = new Date();
         const hour = timestamp.getHours();
         const date = timestamp.toISOString().split('T')[0];
-        
+
         // Contadores gerais
         await this.db.add(`analytics:${event}:total`, 1);
         await this.db.add(`analytics:${event}:today`, 1);
         await this.db.add(`analytics:${event}:hour:${hour}`, 1);
-        
+
         // Contadores por usuário
         if (userId) {
             await this.db.add(`analytics:${event}:user:${userId}`, 1);
         }
-        
+
         // Contadores por data
         await this.db.add(`analytics:${event}:date:${date}`, 1);
     }
-    
+
     async getStats(event) {
         return {
             total: await this.db.get(`analytics:${event}:total`) || 0,
@@ -205,7 +211,7 @@ class RealTimeAnalytics {
             hourly: await this.getHourlyStats(event)
         };
     }
-    
+
     async getHourlyStats(event) {
         const stats = {};
         for (let hour = 0; hour < 24; hour++) {
@@ -237,13 +243,13 @@ async function safeAdd(key, value) {
     if (typeof value !== 'number' || isNaN(value)) {
         throw new Error('Valor deve ser um número válido');
     }
-    
+
     // Verificar se a chave existe e é número
     const current = await db.get(key);
     if (current !== undefined && typeof current !== 'number') {
         throw new Error('Chave existe mas não é numérica');
     }
-    
+
     return await db.add(key, value);
 }
 ```
@@ -255,7 +261,7 @@ async function addCurrency(key, amount) {
     // Trabalhar com centavos para evitar problemas de float
     const centavos = Math.round(amount * 100);
     const result = await db.add(key, centavos);
-    
+
     // Retornar em reais
     return result / 100;
 }

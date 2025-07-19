@@ -1,4 +1,9 @@
-
+---
+title: push()
+description: Adiciona elementos ao final de um array
+sidebar:
+  order: 1
+---
 
 # push(key, ...values)
 
@@ -133,7 +138,7 @@ async function adicionarLog(tipo, mensagem) {
         tipo,
         mensagem
     };
-    
+
     return await db.push('logs', entrada);
 }
 
@@ -151,7 +156,7 @@ async function adicionarTarefa(titulo, prioridade = 'normal') {
         concluida: false,
         criadaEm: new Date()
     };
-    
+
     return await db.push('tarefas', tarefa);
 }
 
@@ -170,7 +175,7 @@ async function registrarTransacao(tipo, valor, descricao) {
         data: new Date(),
         saldo: await calcularSaldoAtual()
     };
-    
+
     await db.push('transacoes', transacao);
     return transacao;
 }
@@ -219,4 +224,3 @@ db.on('push', (data) => {
 - [unshift](./unshift.mdx) - Adicionar ao início
 - [splice](./splice.mdx) - Operações de posição
 - [pull](./pull.mdx) - Remover por valor
-

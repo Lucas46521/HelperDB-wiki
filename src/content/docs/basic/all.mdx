@@ -1,3 +1,9 @@
+---
+title: all()
+description: Recupera todos os dados do banco de dados
+sidebar:
+  order: 5
+---
 
 # all() - Listar Todos os Dados
 
@@ -76,10 +82,10 @@ async function backupDatabase() {
         data: allData,
         count: allData.length
     };
-    
+
     // Salvar backup
     await db.set('backup:latest', backup);
-    
+
     return backup;
 }
 ```
@@ -90,27 +96,27 @@ async function backupDatabase() {
 ```javascript
 async function getDatabaseStats() {
     const allData = await db.all();
-    
+
     const stats = {
         totalEntries: allData.length,
         categories: {},
         dataTypes: {},
         totalSize: 0
     };
-    
+
     for (const [key, value] of allData) {
         // Categorizar por prefixo
         const category = key.split(':')[0];
         stats.categories[category] = (stats.categories[category] || 0) + 1;
-        
+
         // Tipo de dados
         const dataType = typeof value;
         stats.dataTypes[dataType] = (stats.dataTypes[dataType] || 0) + 1;
-        
+
         // Tamanho aproximado
         stats.totalSize += JSON.stringify(value).length;
     }
-    
+
     return stats;
 }
 ```
@@ -119,7 +125,7 @@ async function getDatabaseStats() {
 ```javascript
 async function migrateData() {
     const allData = await db.all();
-    
+
     for (const [key, value] of allData) {
         // Migrar estrutura antiga para nova
         if (key.startsWith('user:') && !value.createdAt) {
@@ -127,7 +133,7 @@ async function migrateData() {
             await db.set(key, value);
         }
     }
-    
+
     console.log('Migração concluída');
 }
 ```
@@ -138,7 +144,7 @@ async function cleanupOldData() {
     const allData = await db.all();
     const oneMonthAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
     let cleaned = 0;
-    
+
     for (const [key, value] of allData) {
         // Remover dados temporários antigos
         if (key.startsWith('temp:') && value.timestamp < oneMonthAgo) {
@@ -146,7 +152,7 @@ async function cleanupOldData() {
             cleaned++;
         }
     }
-    
+
     console.log(`${cleaned} itens antigos removidos`);
 }
 ```
@@ -155,23 +161,23 @@ async function cleanupOldData() {
 ```javascript
 async function exportData(format = 'json') {
     const allData = await db.all();
-    
+
     switch (format) {
         case 'json':
             return JSON.stringify(Object.fromEntries(allData), null, 2);
-        
+
         case 'csv':
             const csvRows = allData.map(([key, value]) => 
                 `${key},${JSON.stringify(value)}`
             );
             return ['Key,Value', ...csvRows].join('\n');
-        
+
         case 'xml':
             const xmlData = allData.map(([key, value]) => 
                 `<entry key="${key}">${JSON.stringify(value)}</entry>`
             ).join('\n');
             return `<database>\n${xmlData}\n</database>`;
-        
+
         default:
             throw new Error('Formato não suportado');
     }
@@ -182,28 +188,28 @@ async function exportData(format = 'json') {
 ```javascript
 async function complexSearch(criteria) {
     const allData = await db.all();
-    
+
     return allData.filter(([key, value]) => {
         // Busca por chave
         if (criteria.keyPattern && !key.match(criteria.keyPattern)) {
             return false;
         }
-        
+
         // Busca por tipo
         if (criteria.valueType && typeof value !== criteria.valueType) {
             return false;
         }
-        
+
         // Busca por propriedade
         if (criteria.property && typeof value === 'object') {
             const propValue = value[criteria.property];
             if (propValue === undefined) return false;
-            
+
             if (criteria.propertyValue && propValue !== criteria.propertyValue) {
                 return false;
             }
         }
-        
+
         return true;
     });
 }
@@ -231,11 +237,11 @@ const activeUsers = await complexSearch({
 async function getAllPaginated(pageSize = 1000) {
     const allData = await db.all();
     const pages = [];
-    
+
     for (let i = 0; i < allData.length; i += pageSize) {
         pages.push(allData.slice(i, i + pageSize));
     }
-    
+
     return pages;
 }
 ```
@@ -246,13 +252,13 @@ async function monitoredAll() {
     const start = Date.now();
     const data = await db.all();
     const duration = Date.now() - start;
-    
+
     console.log(`all() executado em ${duration}ms, ${data.length} itens`);
-    
+
     if (duration > 1000) {
         console.warn('⚠️ Operação all() demorada detectada');
     }
-    
+
     return data;
 }
 ```

@@ -1,3 +1,9 @@
+---
+title: shift()
+description: Remove e retorna o primeiro elemento de um array
+sidebar:
+  order: 4
+---
 
 # shift()
 
@@ -72,29 +78,29 @@ class Fila {
         this.db = db;
         this.chave = chave;
     }
-    
+
     // Adicionar ao final da fila
     async enqueue(elemento) {
         return await this.db.push(this.chave, elemento);
     }
-    
+
     // Remover do início da fila
     async dequeue() {
         return await this.db.shift(this.chave);
     }
-    
+
     // Ver próximo elemento sem remover
     async peek() {
         const array = await this.db.get(this.chave) || [];
         return array[0];
     }
-    
+
     // Verificar se fila está vazia
     async isEmpty() {
         const array = await this.db.get(this.chave) || [];
         return array.length === 0;
     }
-    
+
     // Tamanho da fila
     async size() {
         const array = await this.db.get(this.chave) || [];
@@ -123,7 +129,7 @@ class ProcessadorMensagens {
         this.db = db;
         this.processando = false;
     }
-    
+
     async adicionarMensagem(mensagem) {
         await this.db.push('filaMensagens', {
             id: Date.now(),
@@ -131,30 +137,30 @@ class ProcessadorMensagens {
             timestamp: new Date(),
             tentativas: 0
         });
-        
+
         // Iniciar processamento se não estiver rodando
         if (!this.processando) {
             this.iniciarProcessamento();
         }
     }
-    
+
     async iniciarProcessamento() {
         this.processando = true;
-        
+
         while (true) {
             const mensagem = await this.db.shift('filaMensagens');
-            
+
             if (!mensagem) {
                 console.log('Fila vazia, parando processamento');
                 break;
             }
-            
+
             try {
                 await this.processarMensagem(mensagem);
                 console.log(`Mensagem ${mensagem.id} processada com sucesso`);
             } catch (error) {
                 console.error(`Erro ao processar mensagem ${mensagem.id}:`, error);
-                
+
                 // Recolocar na fila se tentativas < 3
                 mensagem.tentativas++;
                 if (mensagem.tentativas < 3) {
@@ -164,10 +170,10 @@ class ProcessadorMensagens {
                 }
             }
         }
-        
+
         this.processando = false;
     }
-    
+
     async processarMensagem(mensagem) {
         // Simular processamento
         console.log(`Processando: ${mensagem.conteudo}`);
@@ -191,28 +197,28 @@ class SistemaTurnos {
         this.db = db;
         this.chaveJogadores = chaveJogadores;
     }
-    
+
     async adicionarJogador(jogador) {
         await this.db.push(this.chaveJogadores, jogador);
     }
-    
+
     async proximoTurno() {
         // Remove jogador do início
         const jogadorAtual = await this.db.shift(this.chaveJogadores);
-        
+
         if (jogadorAtual) {
             // Recoloca no final da fila para próxima rodada
             await this.db.push(this.chaveJogadores, jogadorAtual);
         }
-        
+
         return jogadorAtual;
     }
-    
+
     async verProximoJogador() {
         const jogadores = await this.db.get(this.chaveJogadores) || [];
         return jogadores[0];
     }
-    
+
     async removerJogador(nomeJogador) {
         await this.db.pull(this.chaveJogadores, nomeJogador);
     }
@@ -240,26 +246,26 @@ class BufferCircular {
         this.chave = chave;
         this.tamanhoMaximo = tamanhoMaximo;
     }
-    
+
     async adicionar(elemento) {
         // Adicionar ao final
         await this.db.push(this.chave, elemento);
-        
+
         // Verificar se excedeu tamanho máximo
         const buffer = await this.db.get(this.chave) || [];
-        
+
         if (buffer.length > this.tamanhoMaximo) {
             // Remove do início se exceder
             await this.db.shift(this.chave);
         }
-        
+
         return await this.db.get(this.chave);
     }
-    
+
     async obterMaisAntigo() {
         return await this.db.shift(this.chave);
     }
-    
+
     async obterTodos() {
         return await this.db.get(this.chave) || [];
     }

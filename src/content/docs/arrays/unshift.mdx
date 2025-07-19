@@ -1,3 +1,9 @@
+---
+title: unshift()
+description: Adiciona elementos ao início de um array
+sidebar:
+  order: 3
+---
 
 # unshift()
 
@@ -80,22 +86,22 @@ class FilaPrioridade {
         this.db = db;
         this.chave = chave;
     }
-    
+
     // Adicionar tarefa normal (no final)
     async adicionarTarefa(tarefa) {
         return await this.db.push(this.chave, tarefa);
     }
-    
+
     // Adicionar tarefa prioritária (no início)
     async adicionarPrioridade(tarefa) {
         return await this.db.unshift(this.chave, { ...tarefa, prioridade: true });
     }
-    
+
     // Processar próxima tarefa
     async processarProxima() {
         return await this.db.shift(this.chave);
     }
-    
+
     // Ver todas as tarefas
     async listarTarefas() {
         return await this.db.get(this.chave) || [];
@@ -129,7 +135,7 @@ class BreadcrumbManager {
         this.chave = `navegacao.${userId}`;
         this.maxItens = 10;
     }
-    
+
     async adicionarPagina(pagina) {
         // Adicionar no início (página mais recente)
         await this.db.unshift(this.chave, {
@@ -137,7 +143,7 @@ class BreadcrumbManager {
             titulo: pagina.titulo,
             timestamp: new Date()
         });
-        
+
         // Manter apenas os últimos 10 itens
         const navegacao = await this.db.get(this.chave) || [];
         if (navegacao.length > this.maxItens) {
@@ -145,11 +151,11 @@ class BreadcrumbManager {
             await this.db.set(this.chave, navegacao.slice(0, this.maxItens));
         }
     }
-    
+
     async obterHistorico() {
         return await this.db.get(this.chave) || [];
     }
-    
+
     async voltarPagina() {
         // Remove a página atual (primeira)
         return await this.db.shift(this.chave);
@@ -175,7 +181,7 @@ class GerenciadorNotificacoes {
         this.db = db;
         this.chave = `notificacoes.${userId}`;
     }
-    
+
     async adicionarNotificacao(notificacao, urgente = false) {
         const item = {
             id: Date.now(),
@@ -183,7 +189,7 @@ class GerenciadorNotificacoes {
             timestamp: new Date(),
             lida: false
         };
-        
+
         if (urgente) {
             // Notificações urgentes vão para o início
             await this.db.unshift(this.chave, item);
@@ -191,25 +197,25 @@ class GerenciadorNotificacoes {
             // Notificações normais vão para o final
             await this.db.push(this.chave, item);
         }
-        
+
         return item.id;
     }
-    
+
     async marcarComoLida(notificacaoId) {
         const notificacoes = await this.db.get(this.chave) || [];
         const index = notificacoes.findIndex(n => n.id === notificacaoId);
-        
+
         if (index !== -1) {
             notificacoes[index].lida = true;
             await this.db.set(this.chave, notificacoes);
         }
     }
-    
+
     async obterNaoLidas() {
         const notificacoes = await this.db.get(this.chave) || [];
         return notificacoes.filter(n => !n.lida);
     }
-    
+
     async obterTodas() {
         return await this.db.get(this.chave) || [];
     }
@@ -243,47 +249,47 @@ class CachePrioritario {
         this.chave = chave;
         this.tamanhoMax = tamanhoMax;
     }
-    
+
     async adicionar(item, prioridade = false) {
         const entrada = {
             ...item,
             timestamp: new Date(),
             acessos: 0
         };
-        
+
         if (prioridade) {
             await this.db.unshift(this.chave, entrada);
         } else {
             await this.db.push(this.chave, entrada);
         }
-        
+
         // Manter tamanho do cache
         await this.limitarTamanho();
     }
-    
+
     async acessar(id) {
         const cache = await this.db.get(this.chave) || [];
         const index = cache.findIndex(item => item.id === id);
-        
+
         if (index !== -1) {
             const item = cache[index];
             item.acessos++;
             item.ultimoAcesso = new Date();
-            
+
             // Mover para o início (mais usado)
             cache.splice(index, 1);
             cache.unshift(item);
-            
+
             await this.db.set(this.chave, cache);
             return item;
         }
-        
+
         return null;
     }
-    
+
     async limitarTamanho() {
         const cache = await this.db.get(this.chave) || [];
-        
+
         if (cache.length > this.tamanhoMax) {
             // Remover itens menos usados (do final)
             const cacheReduzido = cache.slice(0, this.tamanhoMax);
@@ -342,4 +348,3 @@ await db.shift('lista'); // [2, 3]
 // pop() - remove do final
 await db.set('lista', [1, 2, 3]);
 await db.pop('lista'); // [1, 2]
-```

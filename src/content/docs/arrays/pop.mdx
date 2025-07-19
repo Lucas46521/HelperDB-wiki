@@ -1,3 +1,9 @@
+---
+title: pop()
+description: Remove e retorna o último elemento de um array
+sidebar:
+  order: 2
+---
 
 # pop() - Remover do Final
 
@@ -83,25 +89,25 @@ class Stack {
         this.db = db;
         this.key = key;
     }
-    
+
     async push(item) {
         return await this.db.push(this.key, item);
     }
-    
+
     async pop() {
         return await this.db.pop(this.key);
     }
-    
+
     async peek() {
         const items = await this.db.get(this.key) || [];
         return items[items.length - 1];
     }
-    
+
     async isEmpty() {
         const items = await this.db.get(this.key) || [];
         return items.length === 0;
     }
-    
+
     async size() {
         const items = await this.db.get(this.key) || [];
         return items.length;
@@ -119,31 +125,31 @@ const item = await stack.pop(); // 'item2'
 ```javascript
 async function processJobs() {
     const jobQueue = 'jobs:pending';
-    
+
     while (true) {
         const job = await db.pop(jobQueue);
-        
+
         if (!job) {
             console.log('Nenhum trabalho pendente');
             await new Promise(resolve => setTimeout(resolve, 1000));
             continue;
         }
-        
+
         try {
             console.log(`Processando trabalho: ${job.id}`);
-            
+
             // Processar trabalho
             await processJob(job);
-            
+
             // Marcar como concluído
             await db.push('jobs:completed', {
                 ...job,
                 completedAt: new Date().toISOString()
             });
-            
+
         } catch (error) {
             console.error(`Erro no trabalho ${job.id}:`, error);
-            
+
             // Recolocar na fila ou marcar como falhou
             if (job.retries < 3) {
                 job.retries = (job.retries || 0) + 1;
@@ -168,34 +174,34 @@ class UndoManager {
         this.historyKey = `user:${userId}:history`;
         this.maxHistory = 50;
     }
-    
+
     async recordAction(action) {
         // Adicionar ação ao histórico
         await this.db.push(this.historyKey, {
             ...action,
             timestamp: new Date().toISOString()
         });
-        
+
         // Limitar tamanho do histórico
         const history = await this.db.get(this.historyKey) || [];
         if (history.length > this.maxHistory) {
             await this.db.shift(this.historyKey);
         }
     }
-    
+
     async undo() {
         const lastAction = await this.db.pop(this.historyKey);
-        
+
         if (!lastAction) {
             throw new Error('Nenhuma ação para desfazer');
         }
-        
+
         // Executar ação reversa
         await this.executeReverse(lastAction);
-        
+
         return lastAction;
     }
-    
+
     async executeReverse(action) {
         switch (action.type) {
             case 'set':
@@ -205,15 +211,15 @@ class UndoManager {
                     await this.db.delete(action.key);
                 }
                 break;
-            
+
             case 'delete':
                 await this.db.set(action.key, action.previousValue);
                 break;
-            
+
             case 'push':
                 await this.db.pop(action.key);
                 break;
-            
+
             case 'pop':
                 await this.db.push(action.key, action.value);
                 break;
@@ -226,7 +232,7 @@ class UndoManager {
 ```javascript
 async function recordMove(gameId, move) {
     const movesKey = `game:${gameId}:moves`;
-    
+
     // Registrar movimento
     await db.push(movesKey, {
         ...move,
@@ -238,21 +244,21 @@ async function recordMove(gameId, move) {
 async function undoMove(gameId) {
     const movesKey = `game:${gameId}:moves`;
     const lastMove = await db.pop(movesKey);
-    
+
     if (!lastMove) {
         throw new Error('Nenhum movimento para desfazer');
     }
-    
+
     // Reverter estado do jogo
     await revertGameState(gameId, lastMove);
-    
+
     return lastMove;
 }
 
 async function revertGameState(gameId, move) {
     const gameKey = `game:${gameId}:state`;
     const currentState = await db.get(gameKey);
-    
+
     // Aplicar movimento reverso
     const newState = applyReverseMove(currentState, move);
     await db.set(gameKey, newState);
@@ -264,15 +270,15 @@ async function revertGameState(gameId, move) {
 async function analyzeUserActivity(userId) {
     const activityKey = `user:${userId}:activity`;
     const recentActivity = [];
-    
+
     // Extrair últimas 10 atividades
     for (let i = 0; i < 10; i++) {
         const activity = await db.pop(activityKey);
         if (!activity) break;
-        
+
         recentActivity.push(activity);
     }
-    
+
     // Analisar padrões
     const analysis = {
         totalActivities: recentActivity.length,
@@ -280,12 +286,12 @@ async function analyzeUserActivity(userId) {
         mostCommonAction: getMostCommonAction(recentActivity),
         averageInterval: getAverageInterval(recentActivity)
     };
-    
+
     // Restaurar atividades (se necessário)
     for (const activity of recentActivity.reverse()) {
         await db.push(activityKey, activity);
     }
-    
+
     return analysis;
 }
 ```
@@ -303,15 +309,15 @@ async function analyzeUserActivity(userId) {
 ```javascript
 async function safePop(key) {
     const current = await db.get(key);
-    
+
     if (current === undefined) {
         throw new Error('Chave não existe');
     }
-    
+
     if (!Array.isArray(current)) {
         throw new Error('Valor não é um array');
     }
-    
+
     return await db.pop(key);
 }
 ```
@@ -320,17 +326,17 @@ async function safePop(key) {
 ```javascript
 async function conditionalPop(key, condition) {
     const current = await db.get(key) || [];
-    
+
     if (current.length === 0) {
         return undefined;
     }
-    
+
     const lastItem = current[current.length - 1];
-    
+
     if (condition && !condition(lastItem)) {
         return undefined;
     }
-    
+
     return await db.pop(key);
 }
 

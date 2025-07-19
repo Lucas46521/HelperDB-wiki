@@ -1,3 +1,9 @@
+---
+title: has()
+description: Verifica se uma chave existe no banco de dados
+sidebar:
+  order: 3
+---
 
 # has() - Verificar Existência
 
@@ -63,11 +69,11 @@ console.log(results);
 ```javascript
 async function updateUser(userId, data) {
     const userKey = `user:${userId}`;
-    
+
     if (!(await db.has(userKey))) {
         throw new Error('Usuário não encontrado');
     }
-    
+
     // Prosseguir com atualização
     await db.set(userKey, data);
 }
@@ -81,7 +87,7 @@ async function deleteUser(userId) {
     if (!(await db.has(`user:${userId}`))) {
         return { error: 'Usuário não encontrado' };
     }
-    
+
     await db.delete(`user:${userId}`);
     return { success: true };
 }
@@ -92,14 +98,14 @@ async function deleteUser(userId) {
 async function getUserStats() {
     const totalUsers = await db.count('user:*');
     const activeUsers = 0;
-    
+
     for (let i = 1; i <= totalUsers; i++) {
         if (await db.has(`user:${i}`)) {
             const user = await db.get(`user:${i}`);
             if (user.status === 'active') activeUsers++;
         }
     }
-    
+
     return { total: totalUsers, active: activeUsers };
 }
 ```
@@ -108,15 +114,15 @@ async function getUserStats() {
 ```javascript
 async function getCachedData(key) {
     const cacheKey = `cache:${key}`;
-    
+
     if (await db.has(cacheKey)) {
         return await db.get(cacheKey);
     }
-    
+
     // Buscar dados da fonte
     const data = await fetchFromAPI(key);
     await db.set(cacheKey, data);
-    
+
     return data;
 }
 ```

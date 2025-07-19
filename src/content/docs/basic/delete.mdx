@@ -1,3 +1,9 @@
+---
+title: delete()
+description: Remove uma chave do banco de dados
+sidebar:
+  order: 4
+---
 
 # delete() - Remover Dados
 
@@ -75,14 +81,14 @@ console.log(results);
 async function cleanupExpiredSessions() {
     const sessions = await db.search('session:*');
     let cleaned = 0;
-    
+
     for (const [key, session] of sessions) {
         if (Date.now() > session.expiresAt) {
             await db.delete(key);
             cleaned++;
         }
     }
-    
+
     console.log(`${cleaned} sessões expiradas removidas`);
 }
 ```
@@ -93,11 +99,11 @@ async function cleanupExpiredSessions() {
 ```javascript
 async function clearCache(pattern) {
     const cacheKeys = await db.search(`cache:${pattern}`);
-    
+
     for (const [key] of cacheKeys) {
         await db.delete(key);
     }
-    
+
     console.log(`Cache limpo: ${cacheKeys.length} itens removidos`);
 }
 ```
@@ -106,20 +112,20 @@ async function clearCache(pattern) {
 ```javascript
 async function deleteUser(userId) {
     const userKey = `user:${userId}`;
-    
+
     // Verificar se usuário existe
     if (!(await db.has(userKey))) {
         throw new Error('Usuário não encontrado');
     }
-    
+
     // Remover dados relacionados
     await db.delete(userKey);
     await db.delete(`profile:${userId}`);
     await db.delete(`settings:${userId}`);
-    
+
     // Remover de listas
     await db.pull('users:active', userId);
-    
+
     return { success: true, message: 'Usuário removido completamente' };
 }
 ```
@@ -129,7 +135,7 @@ async function deleteUser(userId) {
 async function rotateLogs() {
     const logs = await db.search('log:*');
     const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
-    
+
     for (const [key, log] of logs) {
         if (log.timestamp < oneWeekAgo) {
             await db.delete(key);
@@ -142,33 +148,33 @@ async function rotateLogs() {
 ```javascript
 async function transferWithRollback(fromId, toId, amount) {
     const transaction = await db.transaction();
-    
+
     try {
         const fromUser = await transaction.get(`user:${fromId}`);
         const toUser = await transaction.get(`user:${toId}`);
-        
+
         // Validações
         if (!fromUser || !toUser) {
             throw new Error('Usuário não encontrado');
         }
-        
+
         if (fromUser.balance < amount) {
             throw new Error('Saldo insuficiente');
         }
-        
+
         // Transferir
         fromUser.balance -= amount;
         toUser.balance += amount;
-        
+
         await transaction.set(`user:${fromId}`, fromUser);
         await transaction.set(`user:${toId}`, toUser);
-        
+
         await transaction.commit();
-        
+
         // Limpar cache após sucesso
         await db.delete(`cache:user:${fromId}`);
         await db.delete(`cache:user:${toId}`);
-        
+
     } catch (error) {
         await transaction.rollback();
         throw error;

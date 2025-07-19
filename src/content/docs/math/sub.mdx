@@ -1,3 +1,9 @@
+---
+title: sub()
+description: Subtrai um valor numérico de uma chave
+sidebar:
+  order: 2
+---
 
 # sub() - Subtrair Valores
 
@@ -78,15 +84,15 @@ console.log(remainingLives); // 1
 async function processPurchase(userId, productId, price) {
     const userKey = `user:${userId}:balance`;
     const currentBalance = await db.get(userKey) || 0;
-    
+
     // Validar saldo
     if (currentBalance < price) {
         throw new Error('Saldo insuficiente');
     }
-    
+
     // Debitar valor
     const newBalance = await db.sub(userKey, price);
-    
+
     // Registrar compra
     await db.push(`user:${userId}:purchases`, {
         productId,
@@ -94,11 +100,11 @@ async function processPurchase(userId, productId, price) {
         timestamp: new Date().toISOString(),
         balanceAfter: newBalance
     });
-    
+
     // Atualizar estatísticas
     await db.add('stats:total_sales', 1);
     await db.add('stats:revenue', price);
-    
+
     return {
         success: true,
         newBalance,
@@ -112,15 +118,15 @@ async function processPurchase(userId, productId, price) {
 async function sellProduct(productId, quantity) {
     const stockKey = `product:${productId}:stock`;
     const currentStock = await db.get(stockKey) || 0;
-    
+
     // Validar estoque
     if (currentStock < quantity) {
         throw new Error('Estoque insuficiente');
     }
-    
+
     // Reduzir estoque
     const newStock = await db.sub(stockKey, quantity);
-    
+
     // Alertar se estoque baixo
     if (newStock < 10) {
         await db.push('alerts:low_stock', {
@@ -129,14 +135,14 @@ async function sellProduct(productId, quantity) {
             timestamp: new Date().toISOString()
         });
     }
-    
+
     // Registrar venda
     await db.push(`product:${productId}:sales`, {
         quantity,
         timestamp: new Date().toISOString(),
         stockAfter: newStock
     });
-    
+
     return { success: true, newStock };
 }
 ```
@@ -146,15 +152,15 @@ async function sellProduct(productId, quantity) {
 async function useEnergy(playerId, amount, action) {
     const energyKey = `player:${playerId}:energy`;
     const currentEnergy = await db.get(energyKey) || 100;
-    
+
     // Verificar energia suficiente
     if (currentEnergy < amount) {
         throw new Error('Energia insuficiente');
     }
-    
+
     // Consumir energia
     const newEnergy = await db.sub(energyKey, amount);
-    
+
     // Registrar ação
     await db.push(`player:${playerId}:actions`, {
         action,
@@ -162,12 +168,12 @@ async function useEnergy(playerId, amount, action) {
         energyAfter: newEnergy,
         timestamp: new Date().toISOString()
     });
-    
+
     // Programar regeneração
     if (newEnergy < 100) {
         await scheduleEnergyRegen(playerId);
     }
-    
+
     return { newEnergy, canContinue: newEnergy > 0 };
 }
 
@@ -175,7 +181,7 @@ async function scheduleEnergyRegen(playerId) {
     const regenKey = `player:${playerId}:regen`;
     const lastRegen = await db.get(regenKey) || 0;
     const now = Date.now();
-    
+
     // Regenerar 1 energia por minuto
     if (now - lastRegen > 60000) {
         await db.add(`player:${playerId}:energy`, 1);
@@ -190,17 +196,17 @@ class QuotaManager {
     constructor(db) {
         this.db = db;
     }
-    
+
     async useQuota(userId, quotaType, amount) {
         const quotaKey = `quota:${userId}:${quotaType}`;
         const currentQuota = await this.db.get(quotaKey) || 0;
-        
+
         if (currentQuota < amount) {
             throw new Error(`Cota ${quotaType} insuficiente`);
         }
-        
+
         const newQuota = await this.db.sub(quotaKey, amount);
-        
+
         // Log de uso
         await this.db.push(`quota:${userId}:usage`, {
             type: quotaType,
@@ -208,39 +214,39 @@ class QuotaManager {
             remaining: newQuota,
             timestamp: new Date().toISOString()
         });
-        
+
         return { remaining: newQuota, used: amount };
     }
-    
+
     async refillQuota(userId, quotaType, amount) {
         const quotaKey = `quota:${userId}:${quotaType}`;
         const newQuota = await this.db.add(quotaKey, amount);
-        
+
         await this.db.push(`quota:${userId}:refills`, {
             type: quotaType,
             added: amount,
             total: newQuota,
             timestamp: new Date().toISOString()
         });
-        
+
         return newQuota;
     }
-    
+
     async getQuotaStatus(userId) {
         const quotaTypes = ['api_calls', 'storage', 'bandwidth'];
         const status = {};
-        
+
         for (const type of quotaTypes) {
             const current = await this.db.get(`quota:${userId}:${type}`) || 0;
             const limit = await this.db.get(`quota:${userId}:${type}:limit`) || 1000;
-            
+
             status[type] = {
                 current,
                 limit,
                 percentage: (current / limit) * 100
             };
         }
-        
+
         return status;
     }
 }
@@ -254,18 +260,18 @@ async function applyPenalty(userId, penaltyType, amount) {
         'warning': { field: 'reputation', multiplier: 0.5 },
         'ban': { field: 'reputation', multiplier: 2 }
     };
-    
+
     const penalty = penalties[penaltyType];
     if (!penalty) {
         throw new Error('Tipo de penalidade inválido');
     }
-    
+
     const adjustedAmount = amount * penalty.multiplier;
     const userKey = `user:${userId}:${penalty.field}`;
-    
+
     // Aplicar penalidade
     const newValue = await db.sub(userKey, adjustedAmount);
-    
+
     // Registrar penalidade
     await db.push(`user:${userId}:penalties`, {
         type: penaltyType,
@@ -274,7 +280,7 @@ async function applyPenalty(userId, penaltyType, amount) {
         newValue,
         timestamp: new Date().toISOString()
     });
-    
+
     // Verificar se precisa de ações adicionais
     if (newValue < 0) {
         await db.set(`user:${userId}:status`, 'suspended');
@@ -285,7 +291,7 @@ async function applyPenalty(userId, penaltyType, amount) {
             timestamp: new Date().toISOString()
         });
     }
-    
+
     return { newValue, suspended: newValue < 0 };
 }
 ```
@@ -303,11 +309,11 @@ async function applyPenalty(userId, penaltyType, amount) {
 ```javascript
 async function safeSub(key, value, minValue = 0) {
     const current = await db.get(key) || 0;
-    
+
     if (current - value < minValue) {
         throw new Error(`Operação resultaria em valor abaixo do mínimo (${minValue})`);
     }
-    
+
     return await db.sub(key, value);
 }
 ```
@@ -316,12 +322,12 @@ async function safeSub(key, value, minValue = 0) {
 ```javascript
 async function conditionalSub(key, value, condition) {
     const current = await db.get(key) || 0;
-    
+
     // Verificar condição
     if (typeof condition === 'function' && !condition(current)) {
         throw new Error('Condição não atendida para subtração');
     }
-    
+
     return await db.sub(key, value);
 }
 
