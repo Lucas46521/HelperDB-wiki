@@ -92,6 +92,14 @@ export default defineConfig({
             ],
           },
           {
+            label: 'Ordenação e Limitação',
+            items: [
+              { label: 'sort', slug: 'sorting/sort' },
+              { label: 'limit', slug: 'sorting/limit' },
+              { label: 'skip', slug: 'sorting/skip' },
+            ],
+          },
+          {
             label: 'Estatísticas',
             items: [
               { label: 'count', slug: 'stats/count' },
@@ -101,6 +109,14 @@ export default defineConfig({
               { label: 'max', slug: 'stats/max' },
               { label: 'aggregate', slug: 'stats/aggregate' },
               { label: 'distinct', slug: 'stats/distinct' },
+            ],
+          },
+          {
+            label: 'Utilitários',
+            items: [
+              { label: 'deleteAll', slug: 'utils/deleteall' },
+              { label: 'type', slug: 'utils/type' },
+              { label: 'size', slug: 'utils/size' },
             ],
           },
           {
