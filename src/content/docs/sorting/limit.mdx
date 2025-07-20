@@ -1,0 +1,310 @@
+
+---
+title: limit
+description: Limita o número de resultados retornados de uma consulta
+---
+
+# limit()
+
+Limita o número de resultados retornados, útil para implementar paginação, criar listas "Top N" e otimizar performance ao trabalhar com grandes conjuntos de dados.
+
+## Sintaxe
+
+```typescript
+await db.limit(count: number, key?: string): Promise<any[]>
+```
+
+## Parâmetros
+
+- `count` (obrigatório): Número máximo de resultados a retornar
+- `key` (opcional): Chave específica para limitar. Se vazio (""), limita todos os dados
+
+## Retorno
+
+Array limitado com no máximo `count` elementos.
+
+## Exemplos
+
+### Limitando Lista de Usuários
+
+```javascript
+await db.set('user.123', { name: 'João', age: 25, points: 1500 });
+await db.set('user.456', { name: 'Maria', age: 30, points: 2300 });
+await db.set('user.789', { name: 'Pedro', age: 22, points: 1800 });
+await db.set('user.101', { name: 'Ana', age: 35, points: 2100 });
+await db.set('user.202', { name: 'Carlos', age: 28, points: 1200 });
+
+// Obter apenas os primeiros 3 usuários
+const first3Users = await db.limit(3, '');
+console.log(`Primeiros 3 usuários: ${first3Users.length} registros`);
+first3Users.forEach(user => {
+  console.log(`${user.value.name}: ${user.value.points} pontos`);
+});
+
+// Obter apenas 1 usuário
+const firstUser = await db.limit(1, '');
+console.log('Primeiro usuário:', firstUser[0].value.name);
+```
+
+### Top 10 com Ordenação
+
+```javascript
+await db.set('products', [
+  { id: 1, name: 'Notebook', sales: 150 },
+  { id: 2, name: 'Mouse', sales: 320 },
+  { id: 3, name: 'Keyboard', sales: 280 },
+  { id: 4, name: 'Monitor', sales: 95 },
+  { id: 5, name: 'Headphones', sales: 210 },
+  { id: 6, name: 'Webcam', sales: 180 },
+  { id: 7, name: 'Speaker', sales: 140 },
+  { id: 8, name: 'Tablet', sales: 85 }
+]);
+
+// Top 5 produtos mais vendidos
+const sortedProducts = await db.sort('products', 'sales', 'desc');
+const top5Products = await db.limit(5, '');
+
+console.log('🏆 Top 5 Produtos Mais Vendidos:');
+top5Products.forEach((product, index) => {
+  console.log(`${index + 1}º ${product.name}: ${product.sales} vendas`);
+});
+// 1º Mouse: 320 vendas
+// 2º Keyboard: 280 vendas
+// 3º Headphones: 210 vendas
+// 4º Webcam: 180 vendas
+// 5º Notebook: 150 vendas
+```
+
+### Limitando Array Específico
+
+```javascript
+await db.set('recentOrders', [
+  { id: 'ORD-001', customer: 'João', amount: 150.00, date: '2024-01-20' },
+  { id: 'ORD-002', customer: 'Maria', amount: 320.50, date: '2024-01-20' },
+  { id: 'ORD-003', customer: 'Pedro', amount: 89.90, date: '2024-01-19' },
+  { id: 'ORD-004', customer: 'Ana', amount: 450.00, date: '2024-01-19' },
+  { id: 'ORD-005', customer: 'Carlos', amount: 275.30, date: '2024-01-18' }
+]);
+
+// Obter apenas os 3 pedidos mais recentes
+const latest3Orders = await db.limit(3, 'recentOrders');
+console.log('📦 Últimos 3 Pedidos:');
+latest3Orders.forEach(order => {
+  console.log(`${order.id}: ${order.customer} - R$ ${order.amount}`);
+});
+```
+
+### Paginação de Dados
+
+```javascript
+// Simular lista de 20 comentários
+for (let i = 1; i <= 20; i++) {
+  await db.set(`comment.${i}`, {
+    id: i,
+    author: `User${i}`,
+    text: `Este é o comentário número ${i}`,
+    date: new Date(2024, 0, i).toISOString()
+  });
+}
+
+// Implementar paginação (5 itens por página)
+const pageSize = 5;
+
+// Página 1 (primeiros 5)
+const page1 = await db.limit(pageSize, '');
+console.log('📄 Página 1:');
+page1.forEach(comment => {
+  console.log(`${comment.value.author}: ${comment.value.text}`);
+});
+
+// Para próximas páginas, combine com skip()
+// Página 2 seria: skip(5) + limit(5)
+// Página 3 seria: skip(10) + limit(5)
+```
+
+### Dashboard com Limites
+
+```javascript
+// Dados para dashboard administrativo
+await db.set('analytics', {
+  recentSales: [
+    { date: '2024-01-20', amount: 1500 },
+    { date: '2024-01-19', amount: 2300 },
+    { date: '2024-01-18', amount: 1800 },
+    { date: '2024-01-17', amount: 2100 },
+    { date: '2024-01-16', amount: 1200 }
+  ],
+  topCustomers: [
+    { name: 'Empresa ABC', totalSpent: 15000 },
+    { name: 'João Silva', totalSpent: 8500 },
+    { name: 'Maria Santos', totalSpent: 7200 },
+    { name: 'Tech Corp', totalSpent: 12000 }
+  ]
+});
+
+// Resumo do dashboard - apenas elementos essenciais
+const recentSales = await db.limit(3, 'analytics.recentSales');
+const topCustomers = await db.limit(3, 'analytics.topCustomers');
+
+console.log('📊 Dashboard - Resumo:');
+console.log('Vendas Recentes (últimas 3):');
+recentSales.forEach(sale => {
+  console.log(`  ${sale.date}: R$ ${sale.amount}`);
+});
+
+console.log('Top Clientes (top 3):');
+topCustomers.forEach(customer => {
+  console.log(`  ${customer.name}: R$ ${customer.totalSpent}`);
+});
+```
+
+## Casos de Uso
+
+### 📱 **Mobile e Performance**
+```javascript
+// Carregar apenas dados essenciais para mobile
+const essentialData = await db.limit(10, 'products');
+
+// Preview de conteúdo
+const preview = await db.limit(3, 'articles');
+```
+
+### 🎯 **Rankings e Leaderboards**
+```javascript
+// Top 10 jogadores
+const leaderboard = await db.sort('', 'score', 'desc')
+  .then(sorted => db.limit(10, ''));
+
+// Melhores vendedores do mês
+const topSellers = await db.limit(5, 'salespeople');
+```
+
+### 📋 **Listas de Resumo**
+```javascript
+// Últimas atividades
+const recentActivity = await db.limit(5, 'activityLog');
+
+// Produtos em destaque
+const featuredProducts = await db.limit(6, 'products');
+```
+
+### 🔄 **API Responses**
+```javascript
+// Endpoint de listagem com limite padrão
+const productList = await db.limit(20, 'products');
+
+// Quick preview para autocomplete
+const suggestions = await db.limit(8, 'searchSuggestions');
+```
+
+## Características Importantes
+
+### ⚡ **Performance Otimizada**
+- Para a busca assim que atinge o limite
+- Reduz uso de memória
+- Ideal para grandes conjuntos de dados
+
+### 🔢 **Validação de Limites**
+- Aceita apenas números positivos
+- Limite 0 retorna array vazio
+- Limite maior que total disponível retorna todos
+
+### 🎯 **Flexibilidade de Uso**
+- Funciona com dados globais (key vazio)
+- Suporte a arrays específicos
+- Combina perfeitamente com sort() e skip()
+
+## Validação e Erros
+
+```javascript
+// ❌ Erro: Count deve ser número
+try {
+  await db.limit('invalid');
+} catch (error) {
+  console.log(error.message); // "Count parameter must be a number"
+}
+
+// ❌ Erro: Count deve ser positivo
+try {
+  await db.limit(-5);
+} catch (error) {
+  console.log(error.message); // "Count must be a positive number"
+}
+
+// ✅ Limite maior que dados disponíveis
+await db.set('smallList', [1, 2, 3]);
+const result = await db.limit(10, 'smallList');
+console.log(result.length); // 3 (retorna todos disponíveis)
+
+// ✅ Limite zero
+const empty = await db.limit(0, 'data');
+console.log(empty.length); // 0
+```
+
+## Métodos Relacionados
+
+- [`skip()`](./skip.mdx) - Pula registros (para paginação)
+- [`sort()`](./sort.mdx) - Ordena dados antes de limitar
+- [`filter()`](./filter.mdx) - Filtra dados antes de limitar
+- [`search()`](./search.mdx) - Busca dados antes de limitar
+- [`count()`](./count.mdx) - Conta total de registros
+
+## Implementando Paginação Completa
+
+```javascript
+async function getPaginatedData(page = 1, pageSize = 10) {
+  // Calcular skip baseado na página
+  const skipCount = (page - 1) * pageSize;
+  
+  // Obter dados com paginação
+  const allData = await db.sort('products', 'name', 'asc');
+  const skippedData = await db.skip(skipCount, '');
+  const pageData = await db.limit(pageSize, '');
+  
+  // Informações de paginação
+  const totalItems = await db.count('products');
+  const totalPages = Math.ceil(totalItems / pageSize);
+  
+  return {
+    data: pageData,
+    pagination: {
+      currentPage: page,
+      pageSize,
+      totalItems,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1
+    }
+  };
+}
+
+// Uso da paginação
+const page1 = await getPaginatedData(1, 5);
+const page2 = await getPaginatedData(2, 5);
+
+console.log(`Página ${page1.pagination.currentPage} de ${page1.pagination.totalPages}`);
+console.log(`${page1.data.length} itens de ${page1.pagination.totalItems} totais`);
+```
+
+## Dicas de Performance
+
+```javascript
+// ✅ Use limit para otimizar carregamento inicial
+const initialData = await db.limit(20, 'products');
+
+// ✅ Combine com sort para Top N eficiente
+const topSales = await db.sort('sales', 'amount', 'desc')
+  .then(sorted => db.limit(10, ''));
+
+// ✅ Use para previews rápidos
+const preview = await db.limit(3, 'news');
+
+// ✅ Ideal para infinite scroll
+async function loadMore(offset, batchSize = 10) {
+  const skipped = await db.skip(offset, 'posts');
+  return await db.limit(batchSize, '');
+}
+
+// ❌ Evite limits muito grandes
+// const tooMuch = await db.limit(10000, 'data'); // Pode impactar performance
+```
