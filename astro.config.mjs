@@ -97,6 +97,7 @@ export default defineConfig({
               { label: 'min', slug: 'stats/min' },
               { label: 'max', slug: 'stats/max' },
               { label: 'aggregate', slug: 'stats/aggregate' },
+              { label: 'distinct', slug: 'stats/distinct' },
             ],
           },
           {
