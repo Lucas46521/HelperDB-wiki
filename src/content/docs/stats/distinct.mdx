@@ -1,0 +1,211 @@
+
+---
+title: distinct
+description: Retorna valores únicos de um campo específico
+---
+
+# distinct()
+
+Retorna uma lista de valores únicos encontrados em um campo específico, eliminando duplicatas e fornecendo uma visão clara dos dados únicos armazenados.
+
+## Sintaxe
+
+```typescript
+await db.distinct(field: string, key?: string): Promise<any[]>
+```
+
+## Parâmetros
+
+- `field` (obrigatório): Nome do campo para buscar valores únicos
+- `key` (opcional): Chave específica para buscar em array ou objeto
+
+## Retorno
+
+Array contendo todos os valores únicos encontrados no campo especificado.
+
+## Exemplos
+
+### Valores Únicos em Dados de Usuários
+
+```javascript
+await db.set('user.123', { name: 'João', age: 25, city: 'São Paulo', role: 'admin' });
+await db.set('user.456', { name: 'Maria', age: 30, city: 'Rio de Janeiro', role: 'user' });
+await db.set('user.789', { name: 'Pedro', age: 25, city: 'São Paulo', role: 'user' });
+await db.set('user.101', { name: 'Ana', age: 35, city: 'Belo Horizonte', role: 'admin' });
+
+// Buscar todas as cidades únicas
+const cities = await db.distinct('city');
+console.log(cities);
+// ['São Paulo', 'Rio de Janeiro', 'Belo Horizonte']
+
+// Buscar todas as idades únicas
+const ages = await db.distinct('age');
+console.log(ages);
+// [25, 30, 35]
+
+// Buscar todos os roles únicos
+const roles = await db.distinct('role');
+console.log(roles);
+// ['admin', 'user']
+```
+
+### Distinct em Array Específico
+
+```javascript
+await db.set('products', [
+  { id: 1, name: 'Notebook', category: 'Electronics', brand: 'Dell' },
+  { id: 2, name: 'Mouse', category: 'Electronics', brand: 'Logitech' },
+  { id: 3, name: 'Chair', category: 'Furniture', brand: 'IKEA' },
+  { id: 4, name: 'Keyboard', category: 'Electronics', brand: 'Dell' },
+  { id: 5, name: 'Desk', category: 'Furniture', brand: 'IKEA' }
+]);
+
+// Buscar categorias únicas nos produtos
+const categories = await db.distinct('category', 'products');
+console.log(categories);
+// ['Electronics', 'Furniture']
+
+// Buscar marcas únicas nos produtos
+const brands = await db.distinct('brand', 'products');
+console.log(brands);
+// ['Dell', 'Logitech', 'IKEA']
+```
+
+### Análise de Dados de E-commerce
+
+```javascript
+await db.set('orders', [
+  { orderId: '001', status: 'delivered', paymentMethod: 'credit_card', amount: 150.00 },
+  { orderId: '002', status: 'pending', paymentMethod: 'pix', amount: 75.50 },
+  { orderId: '003', status: 'delivered', paymentMethod: 'credit_card', amount: 200.00 },
+  { orderId: '004', status: 'cancelled', paymentMethod: 'debit_card', amount: 99.90 },
+  { orderId: '005', status: 'delivered', paymentMethod: 'pix', amount: 300.00 }
+]);
+
+// Analisar status únicos dos pedidos
+const orderStatuses = await db.distinct('status', 'orders');
+console.log('Status disponíveis:', orderStatuses);
+// ['delivered', 'pending', 'cancelled']
+
+// Métodos de pagamento únicos
+const paymentMethods = await db.distinct('paymentMethod', 'orders');
+console.log('Métodos de pagamento:', paymentMethods);
+// ['credit_card', 'pix', 'debit_card']
+```
+
+### Combinando com Outros Métodos
+
+```javascript
+// Primeiro, obter valores únicos
+const uniqueRoles = await db.distinct('role');
+console.log('Roles únicos:', uniqueRoles);
+
+// Depois, contar quantos usuários têm cada role
+for (const role of uniqueRoles) {
+  const count = await db.compare('role', '==', role);
+  console.log(`${role}: ${count.length} usuários`);
+}
+
+// Ou usar agregação para análise completa
+const roleStats = await db.aggregate([
+  { type: 'distinct', field: 'role' },
+  { type: 'count' }
+]);
+console.log('Estatísticas de roles:', roleStats);
+```
+
+## Casos de Uso
+
+### 📊 **Análise de Dados**
+```javascript
+// Dashboard de vendas - categorias de produtos
+const productCategories = await db.distinct('category', 'inventory');
+
+// Relatório de clientes - países únicos
+const countries = await db.distinct('country', 'customers');
+```
+
+### 🎯 **Filtros Dinâmicos**
+```javascript
+// Criar filtros para interface de usuário
+const availableFilters = {
+  brands: await db.distinct('brand', 'products'),
+  sizes: await db.distinct('size', 'products'),
+  colors: await db.distinct('color', 'products')
+};
+```
+
+### 📈 **Relatórios Estatísticos**
+```javascript
+// Análise de comportamento de usuários
+const uniqueDevices = await db.distinct('device', 'userSessions');
+const uniqueLocations = await db.distinct('location', 'userSessions');
+
+console.log(`Acessos de ${uniqueDevices.length} tipos de dispositivos diferentes`);
+console.log(`Usuários de ${uniqueLocations.length} localizações diferentes`);
+```
+
+## Características Importantes
+
+### ✅ **Eliminação de Duplicatas**
+- Remove automaticamente valores duplicados
+- Preserva a ordem de primeira ocorrência
+- Funciona com qualquer tipo de dados
+
+### 🚀 **Performance Otimizada**
+- Processamento eficiente para grandes conjuntos de dados
+- Utiliza estruturas de dados otimizadas internamente
+- Cache inteligente para consultas repetidas
+
+### 🔍 **Flexibilidade de Busca**
+- Suporta busca em objetos globais ou arrays específicos
+- Funciona com campos aninhados usando notação de ponto
+- Compatível com qualquer tipo de valor
+
+## Validação e Erros
+
+```javascript
+// ❌ Erro: Campo obrigatório não fornecido
+try {
+  await db.distinct();
+} catch (error) {
+  console.log(error.message); // "Field parameter is required"
+}
+
+// ❌ Erro: Chave não existe
+const result = await db.distinct('nonexistent', 'invalidKey');
+console.log(result); // []
+
+// ✅ Campo não existe em alguns registros
+await db.set('mixed.1', { name: 'João', age: 25 });
+await db.set('mixed.2', { name: 'Maria' }); // sem campo 'age'
+
+const ages = await db.distinct('age');
+console.log(ages); // [25] - ignora registros sem o campo
+```
+
+## Métodos Relacionados
+
+- [`count()`](/stats/count/) - Conta registros específicos
+- [`sum()`](/stats/sum/) - Soma valores numéricos
+- [`avg()`](/stats/avg/) - Calcula média dos valores
+- [`min()`](/stats/min/) - Encontra o menor valor
+- [`max()`](/stats/max/) - Encontra o maior valor
+- [`aggregate()`](/stats/aggregate/) - Operações estatísticas incluindo distinct
+
+## Dicas de Performance
+
+```javascript
+// ✅ Use distinct para análises rápidas
+const quickAnalysis = await db.distinct('category');
+
+// ✅ Combine com agregação para dados completos
+const fullAnalysis = await db.aggregate([
+  { type: 'distinct', field: 'category' },
+  { type: 'count' }
+]);
+
+// ✅ Cache resultados para uso repetido
+const categories = await db.distinct('category');
+// Use 'categories' múltiplas vezes sem re-consultar
+```
