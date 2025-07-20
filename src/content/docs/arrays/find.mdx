@@ -1,0 +1,184 @@
+
+---
+title: find
+description: Encontra o primeiro elemento em um array que satisfaz uma condição
+---
+
+# find()
+
+Encontra e retorna o primeiro elemento em um array que satisfaz a função de teste fornecida. Se nenhum elemento satisfizer a condição, retorna `undefined`.
+
+## Sintaxe
+
+```typescript
+await db.find(key: string, callback: function): Promise<any>
+```
+
+## Parâmetros
+
+- `key` (obrigatório): Chave do array onde buscar
+- `callback` (obrigatório): Função de teste que recebe (element, index, array)
+
+## Retorno
+
+O primeiro elemento que satisfaz a condição ou `undefined` se nenhum for encontrado.
+
+## Exemplos
+
+### Buscar em Array de Objetos
+
+```javascript
+await db.set('users', [
+  { id: 1, name: 'João', age: 25, active: true },
+  { id: 2, name: 'Maria', age: 30, active: false },
+  { id: 3, name: 'Pedro', age: 35, active: true }
+]);
+
+// Encontrar primeiro usuário ativo
+const activeUser = await db.find('users', user => user.active);
+console.log(activeUser);
+// { id: 1, name: 'João', age: 25, active: true }
+
+// Encontrar usuário por ID
+const userById = await db.find('users', user => user.id === 2);
+console.log(userById);
+// { id: 2, name: 'Maria', age: 30, active: false }
+
+// Encontrar usuário maior que 30 anos
+const olderUser = await db.find('users', user => user.age > 30);
+console.log(olderUser);
+// { id: 3, name: 'Pedro', age: 35, active: true }
+```
+
+### Buscar em Array de Números
+
+```javascript
+await db.set('numbers', [1, 5, 8, 12, 15, 20]);
+
+// Encontrar primeiro número par
+const firstEven = await db.find('numbers', num => num % 2 === 0);
+console.log(firstEven); // 8
+
+// Encontrar primeiro número maior que 10
+const firstLarge = await db.find('numbers', num => num > 10);
+console.log(firstLarge); // 12
+
+// Buscar número que não existe
+const notFound = await db.find('numbers', num => num > 100);
+console.log(notFound); // undefined
+```
+
+### Buscar Produto por Critérios
+
+```javascript
+await db.set('products', [
+  { id: 1, name: 'Notebook', price: 2500, category: 'Electronics', inStock: true },
+  { id: 2, name: 'Mouse', price: 50, category: 'Electronics', inStock: false },
+  { id: 3, name: 'Chair', price: 300, category: 'Furniture', inStock: true }
+]);
+
+// Encontrar produto disponível em estoque
+const availableProduct = await db.find('products', product => product.inStock);
+console.log(availableProduct.name); // 'Notebook'
+
+// Encontrar produto da categoria Furniture
+const furniture = await db.find('products', product => product.category === 'Furniture');
+console.log(furniture.name); // 'Chair'
+
+// Encontrar produto em faixa de preço
+const affordableProduct = await db.find('products', product => 
+  product.price >= 100 && product.price <= 500
+);
+console.log(affordableProduct.name); // 'Chair'
+```
+
+## Casos de Uso
+
+### 🔍 **Busca de Registros**
+```javascript
+// Encontrar pedido por status
+const pendingOrder = await db.find('orders', order => order.status === 'pending');
+
+// Encontrar primeiro erro crítico
+const criticalError = await db.find('logs', log => log.level === 'error');
+```
+
+### 🎯 **Validação de Dados**
+```javascript
+// Verificar se existe usuário com email específico
+const existingUser = await db.find('users', user => user.email === 'joao@email.com');
+if (existingUser) {
+  console.log('Email já cadastrado');
+}
+```
+
+### 📋 **Busca em Configurações**
+```javascript
+// Encontrar configuração ativa
+const activeConfig = await db.find('configs', config => config.active);
+
+// Encontrar primeiro item expirado
+const expiredItem = await db.find('cache', item => item.expiry < Date.now());
+```
+
+## Características Importantes
+
+### ✅ **Busca Eficiente**
+- Para na primeira ocorrência encontrada
+- Não processa o array inteiro desnecessariamente
+- Ideal para busca de registros únicos
+
+### 🔄 **Função de Callback Flexível**
+- Acesso completo ao elemento, índice e array
+- Suporta qualquer lógica de comparação
+- Pode usar funções arrow ou tradicionais
+
+### 🛡️ **Tratamento Seguro**
+- Retorna `undefined` se nada for encontrado
+- Validação de tipos dos parâmetros
+- Não modifica o array original
+
+## Validação e Erros
+
+```javascript
+// ❌ Erro: Chave deve ser string
+try {
+  await db.find(123, item => item.active);
+} catch (error) {
+  console.log(error.message); // "First argument (key) needs to be a string"
+}
+
+// ❌ Erro: Callback deve ser função
+try {
+  await db.find('users', 'not a function');
+} catch (error) {
+  console.log(error.message); // "Second argument (callback) needs to be a function"
+}
+
+// ✅ Array não existe - retorna undefined
+const result = await db.find('nonexistent', item => true);
+console.log(result); // undefined
+```
+
+## Métodos Relacionados
+
+- [`filter()`](./filter.mdx) - Encontra todos os elementos que satisfazem a condição
+- [`every()`](./every.mdx) - Verifica se todos os elementos satisfazem a condição  
+- [`some()`](./some.mdx) - Verifica se algum elemento satisfaz a condição
+- [`includes()`](./includes.mdx) - Verifica se array contém um valor específico
+- [`indexOf()`](./indexof.mdx) - Encontra o índice de um elemento
+
+## Dicas de Performance
+
+```javascript
+// ✅ Use find para buscar registros únicos
+const user = await db.find('users', u => u.id === targetId);
+
+// ✅ Combine com outras operações
+if (await db.find('users', u => u.email === email)) {
+  // Email já existe, não cadastrar
+}
+
+// ✅ Use para validações rápidas
+const hasActiveSession = await db.find('sessions', s => s.active && s.userId === userId);
+```
