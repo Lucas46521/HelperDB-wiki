@@ -66,6 +66,9 @@ export default defineConfig({
               { label: 'reduce', slug: 'arrays/reduce' },
               { label: 'includes', slug: 'arrays/includes' },
               { label: 'indexOf', slug: 'arrays/indexof' },
+              { label: 'find', slug: 'arrays/find' },
+              { label: 'every', slug: 'arrays/every' },
+              { label: 'some', slug: 'arrays/some' },
             ],
           },
           {
