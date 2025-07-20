@@ -1,0 +1,412 @@
+
+---
+title: deleteAll
+description: Remove todos os dados armazenados no banco, realizando limpeza completa
+---
+
+# deleteAll()
+
+Remove todos os dados armazenados no banco de dados, proporcionando uma forma rápida e segura de limpar completamente o armazenamento. Útil para reset de dados, limpeza de cache e testes.
+
+## Sintaxe
+
+```typescript
+await db.deleteAll(): Promise<boolean>
+```
+
+## Parâmetros
+
+Nenhum parâmetro é necessário.
+
+## Retorno
+
+`true` se a operação foi bem-sucedida, `false` caso contrário.
+
+## Exemplos
+
+### Limpeza Completa do Banco
+
+```javascript
+// Adicionar alguns dados de teste
+await db.set('user.123', { name: 'João', age: 25 });
+await db.set('user.456', { name: 'Maria', age: 30 });
+await db.set('config.theme', 'dark');
+await db.set('cache.data', { lastUpdate: Date.now() });
+
+// Verificar dados existentes
+const beforeDelete = await db.all();
+console.log(`Dados antes da limpeza: ${beforeDelete.length} registros`);
+
+// Executar limpeza completa
+const success = await db.deleteAll();
+console.log(`Limpeza executada: ${success}`); // true
+
+// Verificar que não há mais dados
+const afterDelete = await db.all();
+console.log(`Dados após limpeza: ${afterDelete.length} registros`); // 0
+```
+
+### Reset de Sistema
+
+```javascript
+// Simular dados de um sistema em produção
+await db.set('sessions.user123', { token: 'abc123', expires: Date.now() + 3600000 });
+await db.set('sessions.user456', { token: 'def456', expires: Date.now() + 3600000 });
+await db.set('cache.products', [{ id: 1, name: 'Product 1' }]);
+await db.set('logs.error', [{ message: 'Error occurred', timestamp: Date.now() }]);
+await db.set('settings.app', { version: '1.0.0', debug: true });
+
+console.log('🔄 Iniciando reset do sistema...');
+
+// Backup antes da limpeza (opcional)
+const backupResult = await db.backup('./backup-before-reset.json');
+console.log(`📦 Backup criado: ${backupResult.recordCount} registros salvos`);
+
+// Executar reset completo
+const resetSuccess = await db.deleteAll();
+
+if (resetSuccess) {
+  console.log('✅ Reset do sistema concluído com sucesso');
+  console.log('🗂️ Banco de dados limpo completamente');
+  
+  // Recriar configurações básicas
+  await db.set('settings.app', { 
+    version: '1.0.0', 
+    debug: false,
+    installedAt: new Date().toISOString()
+  });
+  
+  console.log('⚙️ Configurações básicas restauradas');
+} else {
+  console.log('❌ Falha no reset do sistema');
+}
+```
+
+### Limpeza de Cache
+
+```javascript
+// Simular cache com vários tipos de dados
+await db.set('cache.users.123', { name: 'João', lastFetch: Date.now() });
+await db.set('cache.products.page1', [{ id: 1, name: 'Product 1' }]);
+await db.set('cache.api.weather', { temp: 25, humidity: 60 });
+await db.set('cache.search.results', ['result1', 'result2']);
+
+// Verificar tamanho do cache
+const cacheSize = await db.count('');
+console.log(`📊 Cache contém ${cacheSize} itens`);
+
+// Limpar todo o cache
+console.log('🧹 Limpando cache...');
+const cacheCleared = await db.deleteAll();
+
+if (cacheCleared) {
+  console.log('✅ Cache limpo com sucesso');
+  
+  // Verificar que cache está vazio
+  const newCacheSize = await db.count('');
+  console.log(`📊 Cache agora contém ${newCacheSize} itens`);
+} else {
+  console.log('❌ Erro ao limpar cache');
+}
+```
+
+### Preparação para Testes
+
+```javascript
+// Função auxiliar para limpar dados antes de cada teste
+async function setupTestEnvironment() {
+  console.log('🧪 Preparando ambiente de teste...');
+  
+  // Limpar todos os dados existentes
+  await db.deleteAll();
+  
+  // Configurar dados de teste
+  await db.set('test.config', {
+    environment: 'test',
+    startTime: Date.now(),
+    testRunner: 'jest'
+  });
+  
+  // Dados básicos para testes
+  await db.set('test.users', [
+    { id: 1, name: 'Test User 1', email: 'test1@example.com' },
+    { id: 2, name: 'Test User 2', email: 'test2@example.com' }
+  ]);
+  
+  console.log('✅ Ambiente de teste preparado');
+}
+
+// Executar antes de cada teste
+async function runTest() {
+  await setupTestEnvironment();
+  
+  // Seus testes aqui...
+  const users = await db.get('test.users');
+  console.log(`Testando com ${users.length} usuários`);
+  
+  // Limpeza após teste
+  await db.deleteAll();
+  console.log('🧹 Dados de teste limpos');
+}
+
+await runTest();
+```
+
+### Manutenção Periódica
+
+```javascript
+// Sistema de limpeza automática com verificações
+async function performMaintenance() {
+  console.log('🔧 Iniciando manutenção do sistema...');
+  
+  // Verificar tamanho atual dos dados
+  const currentData = await db.all();
+  const dataSize = currentData.length;
+  
+  console.log(`📊 Dados atuais: ${dataSize} registros`);
+  
+  // Criar backup antes da manutenção
+  if (dataSize > 0) {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const backupPath = `./maintenance-backup-${timestamp}.json`;
+    
+    const backup = await db.backup(backupPath);
+    console.log(`💾 Backup criado: ${backup.recordCount} registros em ${backupPath}`);
+  }
+  
+  // Executar limpeza
+  const cleanupSuccess = await db.deleteAll();
+  
+  if (cleanupSuccess) {
+    console.log('✅ Limpeza de manutenção concluída');
+    
+    // Restaurar apenas dados essenciais
+    await db.set('system.maintenance', {
+      lastCleanup: new Date().toISOString(),
+      recordsCleaned: dataSize,
+      status: 'completed'
+    });
+    
+    console.log('📝 Log de manutenção registrado');
+  } else {
+    console.log('❌ Falha na limpeza de manutenção');
+  }
+}
+
+// Executar manutenção
+await performMaintenance();
+```
+
+## Casos de Uso
+
+### 🧪 **Ambiente de Testes**
+```javascript
+// Limpar dados entre testes
+beforeEach(async () => {
+  await db.deleteAll();
+});
+
+// Setup de dados limpos para cada teste
+afterAll(async () => {
+  await db.deleteAll();
+});
+```
+
+### 🔄 **Reset de Aplicação**
+```javascript
+// Reset completo da aplicação
+async function resetApplication() {
+  const backup = await db.backup('./pre-reset-backup.json');
+  await db.deleteAll();
+  
+  // Reconfigurar estado inicial
+  await initializeDefaultData();
+}
+```
+
+### 🗑️ **Limpeza de Cache**
+```javascript
+// Limpeza periódica de cache
+setInterval(async () => {
+  await db.deleteAll();
+  console.log('Cache limpo automaticamente');
+}, 24 * 60 * 60 * 1000); // A cada 24 horas
+```
+
+### 🔧 **Manutenção de Sistema**
+```javascript
+// Manutenção programada
+async function scheduledMaintenance() {
+  const backup = await db.backup('./scheduled-backup.json');
+  await db.deleteAll();
+  
+  // Otimizar banco após limpeza
+  await db.init(); // Reinicializar estruturas
+}
+```
+
+## Características Importantes
+
+### ⚡ **Operação Atômica**
+- Remove todos os dados em uma única operação
+- Transação segura que não deixa dados parciais
+- Rollback automático em caso de erro
+
+### 🛡️ **Segurança**
+- Operação irreversível - use com cuidado
+- Recomendado fazer backup antes da execução
+- Validação interna para prevenir execução acidental
+
+### 🚀 **Performance**
+- Muito mais rápido que deletar item por item
+- Otimizado para limpeza de grandes volumes
+- Não carrega dados na memória durante remoção
+
+## Validação e Segurança
+
+```javascript
+// ✅ Verificar se há dados antes de limpar
+const hasData = await db.count('');
+if (hasData > 0) {
+  console.log(`⚠️ Atenção: ${hasData} registros serão removidos`);
+  
+  // Criar backup automático
+  const backup = await db.backup('./auto-backup.json');
+  console.log(`💾 Backup automático criado: ${backup.recordCount} registros`);
+  
+  // Executar limpeza
+  await db.deleteAll();
+}
+
+// ✅ Verificar sucesso da operação
+const success = await db.deleteAll();
+if (!success) {
+  console.error('❌ Falha na operação de limpeza');
+  // Implementar recuperação ou notificação
+}
+
+// ✅ Validar que limpeza foi completa
+const remainingData = await db.all();
+if (remainingData.length === 0) {
+  console.log('✅ Limpeza verificada - banco completamente limpo');
+} else {
+  console.warn(`⚠️ Ainda restam ${remainingData.length} registros`);
+}
+```
+
+## Métodos Relacionados
+
+- [`backup()`](./backup.mdx) - Criar backup antes da limpeza
+- [`restore()`](./restore.mdx) - Restaurar dados após limpeza
+- [`all()`](./all.mdx) - Verificar dados existentes
+- [`count()`](./count.mdx) - Contar registros antes da limpeza
+- [`delete()`](./delete.mdx) - Remover registros específicos
+
+## Padrão de Uso Seguro
+
+```javascript
+class SafeDeleteAll {
+  constructor(db) {
+    this.db = db;
+  }
+  
+  async deleteAllWithBackup(backupPath = null) {
+    try {
+      // 1. Contar dados existentes
+      const dataCount = await this.db.count('');
+      
+      if (dataCount === 0) {
+        console.log('ℹ️ Banco já está vazio');
+        return { success: true, deletedCount: 0 };
+      }
+      
+      // 2. Criar backup automático
+      if (!backupPath) {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        backupPath = `./backup-${timestamp}.json`;
+      }
+      
+      const backup = await this.db.backup(backupPath);
+      console.log(`💾 Backup criado: ${backup.recordCount} registros`);
+      
+      // 3. Executar limpeza
+      const success = await this.db.deleteAll();
+      
+      if (success) {
+        // 4. Verificar limpeza
+        const remainingCount = await this.db.count('');
+        
+        return {
+          success: true,
+          deletedCount: dataCount,
+          backupPath,
+          verified: remainingCount === 0
+        };
+      } else {
+        throw new Error('Falha na operação deleteAll');
+      }
+      
+    } catch (error) {
+      console.error('❌ Erro na limpeza segura:', error.message);
+      return { success: false, error: error.message };
+    }
+  }
+  
+  async deleteAllWithConfirmation(confirmationText = 'DELETE') {
+    console.log(`⚠️ Esta operação irá remover TODOS os dados!`);
+    console.log(`Digite "${confirmationText}" para confirmar:`);
+    
+    // Em ambiente real, usar readline ou prompt do usuário
+    const userInput = confirmationText; // Simular confirmação
+    
+    if (userInput === confirmationText) {
+      return await this.deleteAllWithBackup();
+    } else {
+      console.log('❌ Operação cancelada - confirmação incorreta');
+      return { success: false, error: 'Operação cancelada pelo usuário' };
+    }
+  }
+}
+
+// Uso da classe segura
+const safeDelete = new SafeDeleteAll(db);
+
+// Limpeza com backup automático
+const result = await safeDelete.deleteAllWithBackup();
+console.log(`Resultado: ${result.success ? 'Sucesso' : 'Falha'}`);
+
+// Limpeza com confirmação
+const confirmedResult = await safeDelete.deleteAllWithConfirmation('DELETE');
+```
+
+## Dicas de Segurança
+
+```javascript
+// ✅ SEMPRE fazer backup antes de deleteAll em produção
+const backup = await db.backup(`./backup-${Date.now()}.json`);
+await db.deleteAll();
+
+// ✅ Implementar confirmação em ambientes críticos
+const isProduction = process.env.NODE_ENV === 'production';
+if (isProduction) {
+  console.log('⚠️ ATENÇÃO: Operação em ambiente de produção!');
+  // Implementar confirmação adicional
+}
+
+// ✅ Usar em transações quando disponível
+if (db.enableTransactions) {
+  const transaction = await db.beginTransaction();
+  try {
+    await db.deleteAll();
+    await db.commitTransaction(transaction);
+  } catch (error) {
+    await db.rollbackTransaction(transaction);
+  }
+}
+
+// ❌ NUNCA usar deleteAll sem backup em produção
+// await db.deleteAll(); // Perigoso em produção
+
+// ❌ NUNCA usar em scripts automatizados sem validação
+// setInterval(() => db.deleteAll(), 1000); // Extremamente perigoso
+```
