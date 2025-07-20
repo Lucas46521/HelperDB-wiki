@@ -1,131 +1,154 @@
+
 ---
 title: aggregate
-description: Executa operações de agregação em dados do banco
+description: Executa operações de agregação customizadas em dados do banco
 ---
 
 # aggregate()
 
-Executa múltiplas operações estatísticas (count, sum, avg, min, max) em uma única chamada, otimizada para performance.
+Executa múltiplas operações estatísticas customizadas (count, sum, avg, min, max, distinct) em uma única chamada, otimizada para performance.
 
 ## Sintaxe
 
 ```typescript
-await db.aggregate(key?: string): Promise<AggregateResult>
+await db.aggregate(operations: AggregateOperation[]): Promise<AggregateResult>
 ```
 
 ## Parâmetros
 
-- `key` (opcional): Chave específica para análise de array
+- `operations`: Array de operações de agregação
+
+### Estrutura de Operação:
+```typescript
+{
+  type: 'count' | 'sum' | 'avg' | 'min' | 'max' | 'distinct',
+  field?: string,  // Obrigatório para sum, avg, min, max, distinct
+  key?: string     // Opcional: chave específica para análise
+}
+```
 
 ## Retorno
 
-Objeto com todas as estatísticas:
+Objeto com chaves nomeadas baseadas no tipo e campo:
 ```typescript
 {
-  count: number,
-  sum: number,
-  avg: number,
-  min: number,
-  max: number
+  [operationType_field]: any
 }
 ```
 
 ## Exemplos
 
-### Agregação Geral
+### Agregação Completa com Dados de Usuários
 
 ```javascript
-await db.set('score1', 85);
-await db.set('score2', 92);
-await db.set('score3', 78);
+await db.set('user.123', { name: 'João', age: 25, money: 1000 });
+await db.set('user.456', { name: 'Maria', age: 30, money: 1500 });
+await db.set('user.789', { name: 'Pedro', age: 35, money: 2000 });
 
-const stats = await db.aggregate();
+const stats = await db.aggregate([
+  { type: 'count' },
+  { type: 'sum', field: 'money' },
+  { type: 'avg', field: 'age' },
+  { type: 'min', field: 'money' },
+  { type: 'max', field: 'money' },
+  { type: 'distinct', field: 'name' }
+]);
+
 console.log(stats);
-// { count: 3, sum: 255, avg: 85, min: 78, max: 92 }
+// {
+//   count_all: 3,
+//   sum_money: 4500,
+//   avg_age: 30,
+//   min_money: 1000,
+//   max_money: 2000,
+//   distinct_name: ['João', 'Maria', 'Pedro']
+// }
 ```
 
-### Agregação de Array
+### Agregação de Array Específico
 
 ```javascript
-await db.set('numbers', [10, 20, 30, 40, 50]);
+await db.set('scores', [
+  { id: '1', value: { points: 85, level: 1 } },
+  { id: '2', value: { points: 92, level: 2 } },
+  { id: '3', value: { points: 78, level: 1 } }
+]);
 
-const stats = await db.aggregate('numbers');
-console.log(stats);
-// { count: 5, sum: 150, avg: 30, min: 10, max: 50 }
+const arrayStats = await db.aggregate([
+  { type: 'count', key: 'scores' },
+  { type: 'sum', field: 'points', key: 'scores' },
+  { type: 'avg', field: 'points', key: 'scores' }
+]);
+
+console.log(arrayStats);
+// {
+//   count_all: 3,
+//   sum_points: 255,
+//   avg_points: 85
+// }
 ```
+
+### Operações Mínimas
+
+```javascript
+// Apenas contar registros
+const countOnly = await db.aggregate([
+  { type: 'count' }
+]);
+// { count_all: 10 }
+
+// Soma específica
+const sumOnly = await db.aggregate([
+  { type: 'sum', field: 'price' }
+]);
+// { sum_price: 1250.50 }
+```
+
+## Tipos de Operação
+
+| Tipo | Descrição | Requer Field | Exemplo |
+|------|-----------|--------------|---------|
+| `count` | Conta registros | ❌ | `{ type: 'count' }` |
+| `sum` | Soma valores numéricos | ✅ | `{ type: 'sum', field: 'price' }` |
+| `avg` | Calcula média | ✅ | `{ type: 'avg', field: 'age' }` |
+| `min` | Valor mínimo | ✅ | `{ type: 'min', field: 'score' }` |
+| `max` | Valor máximo | ✅ | `{ type: 'max', field: 'score' }` |
+| `distinct` | Valores únicos | ✅ | `{ type: 'distinct', field: 'category' }` |
 
 ## Casos de Uso
 
-- Dashboard com múltiplas métricas
-- Relatórios estatísticos completos
-- Análise de performance em uma chamada
-- Otimização de queries múltiplas
+- Dashboards com múltiplas métricas customizáveis
+- Relatórios estatísticos flexíveis
+- Análise de dados específicos por campo
+- Otimização de múltiplas consultas em uma só
+
+## Validação e Erros
+
+```javascript
+// ❌ Erro: Operação sem field obrigatório
+await db.aggregate([
+  { type: 'sum' } // Faltando field
+]);
+// Error: Operation 'sum' requires a field parameter
+
+// ❌ Erro: Tipo de operação inválido
+await db.aggregate([
+  { type: 'invalid' }
+]);
+// Error: Unsupported aggregation operation: invalid
+```
 
 ## Comportamento
 
-- **Performance**: Alta eficiência em operações com grandes conjuntos
-- **Versatilidade**: Suporta análise de propriedades específicas ou global
+- **Performance**: Alta eficiência para múltiplas operações
+- **Flexibilidade**: Combine diferentes tipos de análise
+- **Validação**: Verificação automática de parâmetros obrigatórios
+- **Chaves Dinâmicas**: Resultado com nomes baseados na operação
 
 ## Métodos Relacionados
 
-- [`count()`](./count.mdx) - Conta registros
-- [`sum()`](./sum.mdx) - Soma valores numéricos
-- [`avg()`](./avg.mdx) - Calcula média dos valores
-- [`min()`](./min.mdx) - Encontra o menor valor
-- [`max()`](./max.mdx) - Encontra o maior valor
-
-# aggregate()
-
-Executa múltiplas operações estatísticas (count, sum, avg, min, max) em uma única chamada, otimizada para performance.
-
-## Sintaxe
-
-```typescript
-await db.aggregate(key?: string): Promise<AggregateResult>
-```
-
-## Parâmetros
-
-- `key` (opcional): Chave específica para análise de array
-
-## Retorno
-
-Objeto com todas as estatísticas:
-```typescript
-{
-  count: number,
-  sum: number,
-  avg: number,
-  min: number,
-  max: number
-}
-```
-
-## Exemplos
-
-### Agregação Geral
-```javascript
-await db.set('score1', 85);
-await db.set('score2', 92);
-await db.set('score3', 78);
-
-const stats = await db.aggregate();
-console.log(stats);
-// { count: 3, sum: 255, avg: 85, min: 78, max: 92 }
-```
-
-### Agregação de Array
-```javascript
-await db.set('numbers', [10, 20, 30, 40, 50]);
-
-const stats = await db.aggregate('numbers');
-console.log(stats);
-// { count: 5, sum: 150, avg: 30, min: 10, max: 50 }
-```
-
-## Casos de Uso
-
-- Dashboard com múltiplas métricas
-- Relatórios estatísticos completos
-- Análise de performance em uma chamada
-- Otimização de queries múltiplas
+- [`count()`](/stats/count/) - Conta registros específicos
+- [`sum()`](/stats/sum) - Soma valores numéricos
+- [`avg()`](/stats/avg) - Calcula média dos valores
+- [`min()`](/stats/min) - Encontra o menor valor
+- [`max()`](/stats/max) - Encontra o maior valor
