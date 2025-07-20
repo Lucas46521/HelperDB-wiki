@@ -1,0 +1,374 @@
+
+---
+title: skip
+description: Pula um número específico de registros, essencial para implementar paginação
+---
+
+# skip()
+
+Pula um número específico de registros no conjunto de dados, permitindo implementar paginação eficiente e navegar através de grandes conjuntos de dados de forma organizada.
+
+## Sintaxe
+
+```typescript
+await db.skip(count: number, key?: string): Promise<any[]>
+```
+
+## Parâmetros
+
+- `count` (obrigatório): Número de registros para pular
+- `key` (opcional): Chave específica para aplicar skip. Se vazio (""), aplica a todos os dados
+
+## Retorno
+
+Array com os dados restantes após pular os primeiros `count` registros.
+
+## Exemplos
+
+### Paginação Básica
+
+```javascript
+await db.set('user.001', { name: 'João', age: 25, role: 'admin' });
+await db.set('user.002', { name: 'Maria', age: 30, role: 'user' });
+await db.set('user.003', { name: 'Pedro', age: 22, role: 'user' });
+await db.set('user.004', { name: 'Ana', age: 35, role: 'admin' });
+await db.set('user.005', { name: 'Carlos', age: 28, role: 'user' });
+await db.set('user.006', { name: 'Beatriz', age: 32, role: 'admin' });
+
+// Página 1: primeiros 2 registros (sem skip)
+const page1 = await db.limit(2, '');
+console.log('📄 Página 1:');
+page1.forEach(user => console.log(`- ${user.value.name}`));
+
+// Página 2: pular 2, pegar próximos 2
+const page2Data = await db.skip(2, '');
+const page2 = await db.limit(2, '');
+console.log('📄 Página 2:');
+page2.forEach(user => console.log(`- ${user.value.name}`));
+
+// Página 3: pular 4, pegar próximos 2
+const page3Data = await db.skip(4, '');
+const page3 = await db.limit(2, '');
+console.log('📄 Página 3:');
+page3.forEach(user => console.log(`- ${user.value.name}`));
+```
+
+### Skip em Array Específico
+
+```javascript
+await db.set('products', [
+  { id: 1, name: 'Notebook', price: 2500, category: 'Electronics' },
+  { id: 2, name: 'Mouse', price: 50, category: 'Electronics' },
+  { id: 3, name: 'Chair', price: 300, category: 'Furniture' },
+  { id: 4, name: 'Desk', price: 500, category: 'Furniture' },
+  { id: 5, name: 'Monitor', price: 800, category: 'Electronics' },
+  { id: 6, name: 'Lamp', price: 120, category: 'Furniture' }
+]);
+
+// Pular os primeiros 2 produtos
+const afterSkip2 = await db.skip(2, 'products');
+console.log('Produtos após pular 2:');
+afterSkip2.forEach(product => {
+  console.log(`- ${product.name}: R$ ${product.price}`);
+});
+// Chair: R$ 300
+// Desk: R$ 500  
+// Monitor: R$ 800
+// Lamp: R$ 120
+
+// Pular os primeiros 4 produtos
+const afterSkip4 = await db.skip(4, 'products');
+console.log('Produtos após pular 4:');
+afterSkip4.forEach(product => {
+  console.log(`- ${product.name}: R$ ${product.price}`);
+});
+// Monitor: R$ 800
+// Lamp: R$ 120
+```
+
+### Paginação Completa com Skip e Limit
+
+```javascript
+// Simular dados de vendas
+for (let i = 1; i <= 15; i++) {
+  await db.set(`sale.${String(i).padStart(3, '0')}`, {
+    id: i,
+    date: `2024-01-${String(i).padStart(2, '0')}`,
+    amount: Math.floor(Math.random() * 1000) + 100,
+    customer: `Cliente ${i}`
+  });
+}
+
+// Função de paginação
+async function getPaginatedSales(page, pageSize = 5) {
+  const skipCount = (page - 1) * pageSize;
+  
+  // Ordenar por data (mais recente primeiro)
+  await db.sort('', 'date', 'desc');
+  
+  // Aplicar skip e limit
+  const allAfterSkip = await db.skip(skipCount, '');
+  const pageData = await db.limit(pageSize, '');
+  
+  return pageData;
+}
+
+// Página 1 (vendas 1-5)
+console.log('📄 Página 1 (Vendas 1-5):');
+const salesPage1 = await getPaginatedSales(1, 5);
+salesPage1.forEach(sale => {
+  console.log(`${sale.value.date}: R$ ${sale.value.amount} - ${sale.value.customer}`);
+});
+
+// Página 2 (vendas 6-10)
+console.log('\n📄 Página 2 (Vendas 6-10):');
+const salesPage2 = await getPaginatedSales(2, 5);
+salesPage2.forEach(sale => {
+  console.log(`${sale.value.date}: R$ ${sale.value.amount} - ${sale.value.customer}`);
+});
+
+// Página 3 (vendas 11-15)
+console.log('\n📄 Página 3 (Vendas 11-15):');
+const salesPage3 = await getPaginatedSales(3, 5);
+salesPage3.forEach(sale => {
+  console.log(`${sale.value.date}: R$ ${sale.value.amount} - ${sale.value.customer}`);
+});
+```
+
+### Navegação em Logs
+
+```javascript
+await db.set('systemLogs', [
+  { timestamp: '2024-01-20 10:00:00', level: 'INFO', message: 'Sistema iniciado' },
+  { timestamp: '2024-01-20 10:05:00', level: 'DEBUG', message: 'Cache carregado' },
+  { timestamp: '2024-01-20 10:10:00', level: 'INFO', message: 'Usuário logado' },
+  { timestamp: '2024-01-20 10:15:00', level: 'WARN', message: 'CPU alta' },
+  { timestamp: '2024-01-20 10:20:00', level: 'ERROR', message: 'Falha na conexão' },
+  { timestamp: '2024-01-20 10:25:00', level: 'INFO', message: 'Conexão restaurada' },
+  { timestamp: '2024-01-20 10:30:00', level: 'DEBUG', message: 'Backup iniciado' }
+]);
+
+// Visualizar logs em lotes de 3
+console.log('📋 Primeiros 3 logs:');
+const firstBatch = await db.limit(3, 'systemLogs');
+firstBatch.forEach(log => {
+  console.log(`[${log.level}] ${log.timestamp}: ${log.message}`);
+});
+
+console.log('\n📋 Próximos 3 logs (pular 3):');
+const secondBatch = await db.skip(3, 'systemLogs');
+const secondBatchLimited = await db.limit(3, '');
+secondBatchLimited.forEach(log => {
+  console.log(`[${log.level}] ${log.timestamp}: ${log.message}`);
+});
+
+console.log('\n📋 Último lote (pular 6):');
+const lastBatch = await db.skip(6, 'systemLogs');
+lastBatch.forEach(log => {
+  console.log(`[${log.level}] ${log.timestamp}: ${log.message}`);
+});
+```
+
+## Casos de Uso
+
+### 📱 **Paginação de API**
+```javascript
+// Endpoint com paginação
+app.get('/api/users', async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+  
+  const users = await db.skip(skip, '');
+  const paginatedUsers = await db.limit(limit, '');
+  
+  res.json({
+    data: paginatedUsers,
+    page,
+    limit,
+    total: await db.count('')
+  });
+});
+```
+
+### 🔄 **Infinite Scroll**
+```javascript
+// Carregar mais conteúdo conforme usuário navega
+async function loadMorePosts(offset, batchSize = 10) {
+  const posts = await db.skip(offset, 'posts');
+  return await db.limit(batchSize, '');
+}
+
+// Uso no frontend
+let currentOffset = 0;
+const batchSize = 10;
+
+async function loadNextBatch() {
+  const newPosts = await loadMorePosts(currentOffset, batchSize);
+  currentOffset += batchSize;
+  return newPosts;
+}
+```
+
+### 📊 **Relatórios por Período**
+```javascript
+// Relatório mensal pulando dados antigos
+const thisMonthStart = 30; // pular últimos 30 dias
+const thisMonthData = await db.skip(thisMonthStart, 'dailyStats');
+
+// Análise trimestral (pular 90 dias)
+const quarterData = await db.skip(90, 'dailyStats');
+```
+
+### 🎯 **Amostragem de Dados**
+```javascript
+// Obter amostras pulando intervalos regulares
+async function getSampleData(interval = 10) {
+  const samples = [];
+  let offset = 0;
+  
+  while (true) {
+    const batch = await db.skip(offset, 'measurements');
+    if (batch.length === 0) break;
+    
+    const sample = await db.limit(1, '');
+    if (sample.length > 0) samples.push(sample[0]);
+    
+    offset += interval;
+  }
+  
+  return samples;
+}
+```
+
+## Características Importantes
+
+### ⚡ **Performance Eficiente**
+- Pula registros sem carregá-los na memória
+- Otimizado para grandes conjuntos de dados
+- Combina perfeitamente com limit()
+
+### 📊 **Flexibilidade de Navegação**
+- Permite navegação bidirecional
+- Suporte a tamanhos variáveis de página
+- Compatível com ordenação prévia
+
+### 🔢 **Validação Robusta**
+- Aceita apenas números não-negativos
+- Skip maior que total disponível retorna array vazio
+- Comportamento previsível em edge cases
+
+## Validação e Erros
+
+```javascript
+// ❌ Erro: Count deve ser número
+try {
+  await db.skip('invalid');
+} catch (error) {
+  console.log(error.message); // "Count parameter must be a number"
+}
+
+// ❌ Erro: Count deve ser não-negativo
+try {
+  await db.skip(-5);
+} catch (error) {
+  console.log(error.message); // "Count must be a non-negative number"
+}
+
+// ✅ Skip maior que dados disponíveis
+await db.set('smallList', [1, 2, 3]);
+const result = await db.skip(10, 'smallList');
+console.log(result.length); // 0 (array vazio)
+
+// ✅ Skip zero (não pula nada)
+const noSkip = await db.skip(0, 'data');
+// Retorna todos os dados
+```
+
+## Métodos Relacionados
+
+- [`limit()`](./limit.mdx) - Limita número de resultados
+- [`sort()`](./sort.mdx) - Ordena dados antes de pular
+- [`filter()`](./filter.mdx) - Filtra dados antes de pular
+- [`count()`](./count.mdx) - Conta total de registros
+- [`search()`](./search.mdx) - Busca dados antes de pular
+
+## Implementação Completa de Paginação
+
+```javascript
+class PaginationHelper {
+  constructor(db) {
+    this.db = db;
+  }
+  
+  async paginate(key, page = 1, pageSize = 10, sortField = null, sortOrder = 'asc') {
+    // Validação de parâmetros
+    if (page < 1) page = 1;
+    if (pageSize < 1) pageSize = 10;
+    
+    // Ordenar se especificado
+    if (sortField) {
+      await this.db.sort(key, sortField, sortOrder);
+    }
+    
+    // Calcular skip
+    const skipCount = (page - 1) * pageSize;
+    
+    // Obter dados paginados
+    const skippedData = await this.db.skip(skipCount, key);
+    const pageData = await this.db.limit(pageSize, '');
+    
+    // Contar total
+    const totalItems = await this.db.count(key);
+    const totalPages = Math.ceil(totalItems / pageSize);
+    
+    return {
+      data: pageData,
+      pagination: {
+        currentPage: page,
+        pageSize,
+        totalItems,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+        nextPage: page < totalPages ? page + 1 : null,
+        prevPage: page > 1 ? page - 1 : null
+      }
+    };
+  }
+}
+
+// Uso da classe
+const paginator = new PaginationHelper(db);
+
+// Página 2 com 5 itens, ordenado por nome
+const result = await paginator.paginate('users', 2, 5, 'name', 'asc');
+
+console.log(`Página ${result.pagination.currentPage} de ${result.pagination.totalPages}`);
+console.log(`Mostrando ${result.data.length} de ${result.pagination.totalItems} itens`);
+
+if (result.pagination.hasNextPage) {
+  console.log(`Próxima página: ${result.pagination.nextPage}`);
+}
+```
+
+## Dicas de Performance
+
+```javascript
+// ✅ Use skip com limit para paginação eficiente
+const page = await db.skip(offset, 'data').then(d => db.limit(pageSize, ''));
+
+// ✅ Combine com sort para navegação ordenada
+await db.sort('posts', 'date', 'desc');
+const recentPosts = await db.skip(10, '').then(d => db.limit(5, ''));
+
+// ✅ Cache informações de paginação
+const totalItems = await db.count('products'); // Cache este valor
+const totalPages = Math.ceil(totalItems / pageSize);
+
+// ✅ Use para análise de grandes datasets
+const sampleData = await db.skip(1000, 'bigData').then(d => db.limit(100, ''));
+
+// ❌ Evite skip muito grandes em dados não indexados
+// const hugeskip = await db.skip(1000000, 'data'); // Pode ser lento
+```
