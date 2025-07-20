@@ -1,0 +1,494 @@
+
+---
+title: type
+description: Verifica e retorna o tipo de dados de um valor armazenado
+---
+
+# type()
+
+Verifica e retorna o tipo de dados de um valor armazenado, proporcionando informações detalhadas sobre a estrutura dos dados para validação, debugging e lógica condicional.
+
+## Sintaxe
+
+```typescript
+await db.type(key: string): Promise<string>
+```
+
+## Parâmetros
+
+- `key` (obrigatório): Chave do valor para verificar o tipo
+
+## Retorno
+
+String indicando o tipo do valor: `'string'`, `'number'`, `'boolean'`, `'object'`, `'array'`, `'null'`, `'undefined'`
+
+## Exemplos
+
+### Verificação de Tipos Básicos
+
+```javascript
+// Diferentes tipos de dados
+await db.set('userName', 'João Silva');
+await db.set('userAge', 25);
+await db.set('isActive', true);
+await db.set('config', null);
+
+// Verificar tipos
+const nameType = await db.type('userName');
+console.log(`userName é do tipo: ${nameType}`); // string
+
+const ageType = await db.type('userAge');
+console.log(`userAge é do tipo: ${ageType}`); // number
+
+const activeType = await db.type('isActive');
+console.log(`isActive é do tipo: ${activeType}`); // boolean
+
+const configType = await db.type('config');
+console.log(`config é do tipo: ${configType}`); // null
+```
+
+### Verificação de Estruturas Complexas
+
+```javascript
+// Dados complexos
+await db.set('user.profile', {
+  name: 'João',
+  age: 25,
+  preferences: {
+    theme: 'dark',
+    language: 'pt-BR'
+  }
+});
+
+await db.set('user.hobbies', ['programação', 'leitura', 'música']);
+
+await db.set('user.scores', [95, 87, 92, 88]);
+
+// Verificar tipos de estruturas
+const profileType = await db.type('user.profile');
+console.log(`user.profile é do tipo: ${profileType}`); // object
+
+const hobbiesType = await db.type('user.hobbies');
+console.log(`user.hobbies é do tipo: ${hobbiesType}`); // array
+
+const scoresType = await db.type('user.scores');
+console.log(`user.scores é do tipo: ${scoresType}`); // array
+
+// Verificar propriedades específicas
+const nameType = await db.type('user.profile.name');
+console.log(`user.profile.name é do tipo: ${nameType}`); // string
+
+const themeType = await db.type('user.profile.preferences.theme');
+console.log(`user.profile.preferences.theme é do tipo: ${themeType}`); // string
+```
+
+### Validação de Dados de API
+
+```javascript
+// Simular resposta de API armazenada
+await db.set('api.users', [
+  { id: 1, name: 'João', active: true, salary: 5000.50 },
+  { id: 2, name: 'Maria', active: false, salary: 6200.00 }
+]);
+
+await db.set('api.config', {
+  version: '1.0',
+  timeout: 5000,
+  retries: 3,
+  endpoints: ['users', 'products', 'orders']
+});
+
+// Validar estrutura dos dados recebidos
+async function validateApiData() {
+  console.log('🔍 Validando estrutura dos dados da API...');
+  
+  // Verificar se users é array
+  const usersType = await db.type('api.users');
+  console.log(`✅ api.users: ${usersType}`);
+  
+  if (usersType === 'array') {
+    const users = await db.get('api.users');
+    console.log(`   Contém ${users.length} usuários`);
+    
+    // Verificar tipo do primeiro usuário
+    if (users.length > 0) {
+      await db.set('temp.firstUser', users[0]);
+      const firstUserType = await db.type('temp.firstUser');
+      console.log(`   Primeiro usuário: ${firstUserType}`);
+      
+      // Verificar propriedades específicas
+      const idType = await db.type('temp.firstUser.id');
+      const nameType = await db.type('temp.firstUser.name');
+      const activeType = await db.type('temp.firstUser.active');
+      const salaryType = await db.type('temp.firstUser.salary');
+      
+      console.log(`   id: ${idType}, name: ${nameType}, active: ${activeType}, salary: ${salaryType}`);
+    }
+  }
+  
+  // Verificar configuração
+  const configType = await db.type('api.config');
+  console.log(`✅ api.config: ${configType}`);
+  
+  if (configType === 'object') {
+    const versionType = await db.type('api.config.version');
+    const timeoutType = await db.type('api.config.timeout');
+    const endpointsType = await db.type('api.config.endpoints');
+    
+    console.log(`   version: ${versionType}, timeout: ${timeoutType}, endpoints: ${endpointsType}`);
+  }
+}
+
+await validateApiData();
+```
+
+### Sistema de Validação Dinâmica
+
+```javascript
+// Schema de validação
+const userSchema = {
+  name: 'string',
+  age: 'number',
+  isActive: 'boolean',
+  preferences: 'object',
+  hobbies: 'array'
+};
+
+// Função de validação usando type()
+async function validateUserData(userKey) {
+  console.log(`🔍 Validando dados do usuário: ${userKey}`);
+  
+  const errors = [];
+  
+  for (const [field, expectedType] of Object.entries(userSchema)) {
+    const fullKey = `${userKey}.${field}`;
+    const actualType = await db.type(fullKey);
+    
+    if (actualType === 'undefined') {
+      errors.push(`Campo obrigatório '${field}' não encontrado`);
+    } else if (actualType !== expectedType) {
+      errors.push(`Campo '${field}' deveria ser '${expectedType}', mas é '${actualType}'`);
+    } else {
+      console.log(`   ✅ ${field}: ${actualType}`);
+    }
+  }
+  
+  if (errors.length > 0) {
+    console.log('❌ Erros de validação:');
+    errors.forEach(error => console.log(`   - ${error}`));
+    return false;
+  } else {
+    console.log('✅ Todos os campos são válidos');
+    return true;
+  }
+}
+
+// Teste com dados válidos
+await db.set('user.valid', {
+  name: 'João Silva',
+  age: 30,
+  isActive: true,
+  preferences: { theme: 'dark' },
+  hobbies: ['programação', 'leitura']
+});
+
+await validateUserData('user.valid');
+
+// Teste com dados inválidos
+await db.set('user.invalid', {
+  name: 123, // Deveria ser string
+  age: '30', // Deveria ser number
+  isActive: 'true', // Deveria ser boolean
+  preferences: ['array'], // Deveria ser object
+  // hobbies ausente
+});
+
+await validateUserData('user.invalid');
+```
+
+### Debug e Troubleshooting
+
+```javascript
+// Função para debug de dados desconhecidos
+async function debugData(key) {
+  console.log(`🔧 Debug de dados: ${key}`);
+  
+  const type = await db.type(key);
+  console.log(`Tipo: ${type}`);
+  
+  if (type === 'undefined') {
+    console.log('❌ Chave não existe');
+    return;
+  }
+  
+  const value = await db.get(key);
+  
+  switch (type) {
+    case 'string':
+      console.log(`Valor: "${value}" (${value.length} caracteres)`);
+      break;
+      
+    case 'number':
+      console.log(`Valor: ${value} (${Number.isInteger(value) ? 'inteiro' : 'decimal'})`);
+      break;
+      
+    case 'boolean':
+      console.log(`Valor: ${value}`);
+      break;
+      
+    case 'array':
+      console.log(`Array com ${value.length} elementos:`);
+      value.forEach((item, index) => {
+        console.log(`  [${index}]: ${typeof item} - ${JSON.stringify(item)}`);
+      });
+      break;
+      
+    case 'object':
+      if (value === null) {
+        console.log('Valor: null');
+      } else {
+        const keys = Object.keys(value);
+        console.log(`Objeto com ${keys.length} propriedades:`);
+        keys.forEach(key => {
+          console.log(`  ${key}: ${typeof value[key]} - ${JSON.stringify(value[key])}`);
+        });
+      }
+      break;
+      
+    default:
+      console.log(`Valor: ${JSON.stringify(value)}`);
+  }
+}
+
+// Exemplos de debug
+await db.set('debug.string', 'Hello World');
+await db.set('debug.number', 42.5);
+await db.set('debug.array', [1, 'two', true, { four: 4 }]);
+await db.set('debug.object', { name: 'Test', nested: { value: 123 } });
+
+await debugData('debug.string');
+await debugData('debug.number');
+await debugData('debug.array');
+await debugData('debug.object');
+await debugData('debug.nonexistent');
+```
+
+## Casos de Uso
+
+### ✅ **Validação de Dados**
+```javascript
+// Validar antes de operações específicas
+const scoreType = await db.type('user.score');
+if (scoreType === 'number') {
+  await db.add('user.score', 10);
+} else {
+  console.log('Score deve ser um número para somar');
+}
+```
+
+### 🔍 **Debugging e Logs**
+```javascript
+// Log detalhado para debugging
+async function logDataStructure(key) {
+  const type = await db.type(key);
+  console.log(`[DEBUG] ${key}: ${type}`);
+  
+  if (type === 'object') {
+    const value = await db.get(key);
+    console.log(`[DEBUG] Properties: ${Object.keys(value).join(', ')}`);
+  }
+}
+```
+
+### 🛡️ **Verificação de Integridade**
+```javascript
+// Verificar integridade de dados críticos
+async function checkDataIntegrity() {
+  const criticalKeys = ['user.id', 'user.email', 'user.permissions'];
+  
+  for (const key of criticalKeys) {
+    const type = await db.type(key);
+    if (type === 'undefined') {
+      throw new Error(`Dados críticos ausentes: ${key}`);
+    }
+  }
+}
+```
+
+### 🔄 **Migração de Dados**
+```javascript
+// Converter tipos durante migração
+async function migrateStringToNumber(key) {
+  const type = await db.type(key);
+  
+  if (type === 'string') {
+    const value = await db.get(key);
+    const numValue = parseFloat(value);
+    
+    if (!isNaN(numValue)) {
+      await db.set(key, numValue);
+      console.log(`Migrado ${key}: string -> number`);
+    }
+  }
+}
+```
+
+## Características Importantes
+
+### 🎯 **Detecção Precisa**
+- Distingue entre arrays e objetos
+- Identifica null separadamente de undefined
+- Reconhece todos os tipos primitivos JavaScript
+
+### ⚡ **Performance Otimizada**
+- Operação rápida sem carregar dados grandes
+- Cache interno para verificações repetidas
+- Não afeta o valor armazenado
+
+### 🔧 **Compatibilidade Total**
+- Funciona com notação de ponto para propriedades aninhadas
+- Suporta todos os drivers disponíveis
+- Comportamento consistente entre diferentes ambientes
+
+## Validação e Erros
+
+```javascript
+// ❌ Erro: Chave deve ser string
+try {
+  await db.type(123);
+} catch (error) {
+  console.log(error.message); // "Key must be a string"
+}
+
+// ✅ Chave não existe
+const nonExistentType = await db.type('nonexistent.key');
+console.log(nonExistentType); // 'undefined'
+
+// ✅ Verificação de propriedade aninhada inexistente
+await db.set('obj', { a: 1 });
+const missingProp = await db.type('obj.b.c');
+console.log(missingProp); // 'undefined'
+
+// ✅ Diferentes tipos de null/undefined
+await db.set('nullValue', null);
+await db.set('undefinedValue', undefined);
+
+const nullType = await db.type('nullValue');
+const undefinedType = await db.type('undefinedValue');
+
+console.log(nullType); // 'null'
+console.log(undefinedType); // 'undefined'
+```
+
+## Métodos Relacionados
+
+- [`get()`](./get.mdx) - Obter valor para inspecionar
+- [`has()`](./has.mdx) - Verificar existência de chave
+- [`set()`](./set.mdx) - Definir valores com tipo específico
+- [`size()`](./size.mdx) - Obter tamanho de arrays/objetos
+- [`all()`](./all.mdx) - Listar todos os dados para análise
+
+## Utilitários Avançados
+
+```javascript
+// Classe para análise de tipos
+class TypeAnalyzer {
+  constructor(db) {
+    this.db = db;
+  }
+  
+  async analyzeStructure(keyPattern = '') {
+    const allData = await this.db.all();
+    const analysis = {};
+    
+    for (const { key, value } of allData) {
+      if (keyPattern && !key.includes(keyPattern)) continue;
+      
+      const type = await this.db.type(key);
+      
+      if (!analysis[type]) {
+        analysis[type] = { count: 0, keys: [] };
+      }
+      
+      analysis[type].count++;
+      analysis[type].keys.push(key);
+    }
+    
+    return analysis;
+  }
+  
+  async findTypeInconsistencies(keyPattern) {
+    const allData = await this.db.all();
+    const inconsistencies = [];
+    
+    // Agrupar por padrão de chave
+    const patterns = {};
+    
+    for (const { key } of allData) {
+      if (!key.includes(keyPattern)) continue;
+      
+      const baseKey = key.replace(/\.\d+/g, '.N'); // user.1 -> user.N
+      const type = await this.db.type(key);
+      
+      if (!patterns[baseKey]) {
+        patterns[baseKey] = new Set();
+      }
+      patterns[baseKey].add(type);
+    }
+    
+    // Encontrar padrões com tipos inconsistentes
+    for (const [pattern, types] of Object.entries(patterns)) {
+      if (types.size > 1) {
+        inconsistencies.push({
+          pattern,
+          types: Array.from(types)
+        });
+      }
+    }
+    
+    return inconsistencies;
+  }
+}
+
+// Uso da análise
+const analyzer = new TypeAnalyzer(db);
+
+// Analisar toda a estrutura
+const analysis = await analyzer.analyzeStructure();
+console.log('📊 Análise de tipos:', analysis);
+
+// Encontrar inconsistências
+const inconsistencies = await analyzer.findTypeInconsistencies('user');
+if (inconsistencies.length > 0) {
+  console.log('⚠️ Inconsistências encontradas:', inconsistencies);
+}
+```
+
+## Dicas de Performance
+
+```javascript
+// ✅ Use type() para validação rápida antes de operações
+const userIdType = await db.type('user.id');
+if (userIdType === 'number') {
+  // Proceder com operações numéricas
+}
+
+// ✅ Cache resultados de type() para verificações repetidas
+const typeCache = new Map();
+async function getCachedType(key) {
+  if (!typeCache.has(key)) {
+    typeCache.set(key, await db.type(key));
+  }
+  return typeCache.get(key);
+}
+
+// ✅ Use para debugging inteligente
+if (process.env.NODE_ENV === 'development') {
+  const debugType = await db.type('debug.data');
+  console.log(`Debug data type: ${debugType}`);
+}
+
+// ✅ Combine com outras verificações
+const hasKey = await db.has('user.preferences');
+const keyType = hasKey ? await db.type('user.preferences') : 'undefined';
+```
