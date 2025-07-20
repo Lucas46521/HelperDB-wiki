@@ -1,0 +1,231 @@
+
+---
+title: every
+description: Verifica se todos os elementos de um array satisfazem uma condição
+---
+
+# every()
+
+Testa se todos os elementos do array passam no teste implementado pela função fornecida. Retorna `true` se todos os elementos satisfizerem a condição, caso contrário retorna `false`.
+
+## Sintaxe
+
+```typescript
+await db.every(key: string, callback: function): Promise<boolean>
+```
+
+## Parâmetros
+
+- `key` (obrigatório): Chave do array para testar
+- `callback` (obrigatório): Função de teste que recebe (element, index, array)
+
+## Retorno
+
+`true` se todos os elementos passarem no teste, `false` caso contrário.
+
+## Exemplos
+
+### Validação de Dados de Usuários
+
+```javascript
+await db.set('users', [
+  { id: 1, name: 'João', age: 25, active: true },
+  { id: 2, name: 'Maria', age: 30, active: true },
+  { id: 3, name: 'Pedro', age: 35, active: true }
+]);
+
+// Verificar se todos os usuários estão ativos
+const allActive = await db.every('users', user => user.active);
+console.log(allActive); // true
+
+// Verificar se todos são maiores de idade
+const allAdults = await db.every('users', user => user.age >= 18);
+console.log(allAdults); // true
+
+// Verificar se todos têm mais de 30 anos
+const allOver30 = await db.every('users', user => user.age > 30);
+console.log(allOver30); // false (João tem 25)
+```
+
+### Validação de Estoque
+
+```javascript
+await db.set('products', [
+  { id: 1, name: 'Notebook', stock: 10, price: 2500 },
+  { id: 2, name: 'Mouse', stock: 25, price: 50 },
+  { id: 3, name: 'Keyboard', stock: 15, price: 120 }
+]);
+
+// Verificar se todos os produtos têm estoque
+const allInStock = await db.every('products', product => product.stock > 0);
+console.log(allInStock); // true
+
+// Verificar se todos custam menos de R$ 3000
+const allAffordable = await db.every('products', product => product.price < 3000);
+console.log(allAffordable); // true
+
+// Verificar se todos têm estoque alto (>20)
+const allHighStock = await db.every('products', product => product.stock > 20);
+console.log(allHighStock); // false
+```
+
+### Validação de Números
+
+```javascript
+await db.set('scores', [85, 92, 78, 96, 88]);
+
+// Verificar se todas as notas são aprovação (>=70)
+const allPassed = await db.every('scores', score => score >= 70);
+console.log(allPassed); // true
+
+// Verificar se todas são notas máximas (100)
+const allPerfect = await db.every('scores', score => score === 100);
+console.log(allPerfect); // false
+
+await db.set('positiveNumbers', [1, 5, 10, 15, 20]);
+
+// Verificar se todos são positivos
+const allPositive = await db.every('positiveNumbers', num => num > 0);
+console.log(allPositive); // true
+```
+
+### Validação de Configurações
+
+```javascript
+await db.set('apiKeys', [
+  { service: 'payment', key: 'pk_live_123', valid: true },
+  { service: 'email', key: 'sg_456', valid: true },
+  { service: 'storage', key: 'aws_789', valid: true }
+]);
+
+// Verificar se todas as chaves de API são válidas
+const allKeysValid = await db.every('apiKeys', apiKey => apiKey.valid);
+console.log(allKeysValid); // true
+
+// Verificar se todas têm chaves definidas
+const allHaveKeys = await db.every('apiKeys', apiKey => 
+  apiKey.key && apiKey.key.length > 0
+);
+console.log(allHaveKeys); // true
+```
+
+## Casos de Uso
+
+### ✅ **Validação de Formulários**
+```javascript
+// Verificar se todos os campos obrigatórios estão preenchidos
+const allFieldsValid = await db.every('formData', field => 
+  field.required ? field.value && field.value.trim().length > 0 : true
+);
+```
+
+### 🔒 **Verificação de Permissões**
+```javascript
+// Verificar se usuário tem todas as permissões necessárias
+const hasAllPermissions = await db.every('requiredPermissions', permission => 
+  userPermissions.includes(permission)
+);
+```
+
+### 📊 **Validação de Qualidade**
+```javascript
+// Verificar se todos os produtos passaram no controle de qualidade
+const allApproved = await db.every('batchProducts', product => 
+  product.qualityCheck === 'approved'
+);
+```
+
+### 🎯 **Validação de Estado**
+```javascript
+// Verificar se todos os serviços estão online
+const allServicesUp = await db.every('services', service => 
+  service.status === 'online'
+);
+```
+
+## Características Importantes
+
+### ⚡ **Avaliação de Curto-Circuito**
+- Para na primeira condição falsa encontrada
+- Não processa elementos desnecessários
+- Otimizado para arrays grandes
+
+### 🔄 **Array Vazio**
+- Retorna `true` para arrays vazios (vacuous truth)
+- Comportamento consistente com JavaScript nativo
+
+### 🛡️ **Validação Robusta**
+- Verifica tipos dos parâmetros
+- Tratamento seguro de erros
+- Não modifica o array original
+
+## Validação e Erros
+
+```javascript
+// ❌ Erro: Chave deve ser string
+try {
+  await db.every(123, item => item.valid);
+} catch (error) {
+  console.log(error.message); // "First argument (key) needs to be a string"
+}
+
+// ❌ Erro: Callback deve ser função
+try {
+  await db.every('items', 'not a function');
+} catch (error) {
+  console.log(error.message); // "Second argument (callback) needs to be a function"
+}
+
+// ✅ Array vazio retorna true
+await db.set('empty', []);
+const result = await db.every('empty', item => false);
+console.log(result); // true
+
+// ✅ Array não existe é tratado como vazio
+const nonExistent = await db.every('nonexistent', item => true);
+console.log(nonExistent); // true
+```
+
+## Métodos Relacionados
+
+- [`some()`](./some.mdx) - Verifica se algum elemento satisfaz a condição
+- [`find()`](./find.mdx) - Encontra primeiro elemento que satisfaz a condição
+- [`filter()`](./filter.mdx) - Filtra elementos que satisfazem a condição
+- [`includes()`](./includes.mdx) - Verifica se array contém um valor
+- [`indexOf()`](./indexof.mdx) - Encontra índice de um elemento
+
+## Combinando com Outros Métodos
+
+```javascript
+// Verificar se todos passaram e obter estatísticas
+const allPassed = await db.every('students', student => student.grade >= 70);
+if (allPassed) {
+  const average = await db.avg('grade', 'students');
+  console.log(`Todos aprovados! Média da turma: ${average}`);
+}
+
+// Validar antes de operação em lote
+const allValid = await db.every('records', record => record.status === 'ready');
+if (allValid) {
+  await db.updateMany(records.map(r => [r.id, { processed: true }]));
+}
+```
+
+## Dicas de Performance
+
+```javascript
+// ✅ Use every para validações rápidas
+const canProceed = await db.every('prerequisites', req => req.completed);
+
+// ✅ Combine com agregações para análises completas
+const stats = {
+  allValid: await db.every('data', item => item.valid),
+  totalCount: await db.count('data'),
+  validCount: (await db.filter('data', item => item.valid)).length
+};
+
+// ✅ Use para controle de fluxo
+if (await db.every('services', s => s.healthy)) {
+  // Prosseguir com operação
+}
+```
