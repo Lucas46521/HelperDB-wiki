@@ -1,0 +1,254 @@
+
+---
+title: some
+description: Verifica se pelo menos um elemento de um array satisfaz uma condição
+---
+
+# some()
+
+Testa se pelo menos um elemento do array passa no teste implementado pela função fornecida. Retorna `true` se pelo menos um elemento satisfizer a condição, caso contrário retorna `false`.
+
+## Sintaxe
+
+```typescript
+await db.some(key: string, callback: function): Promise<boolean>
+```
+
+## Parâmetros
+
+- `key` (obrigatório): Chave do array para testar
+- `callback` (obrigatório): Função de teste que recebe (element, index, array)
+
+## Retorno
+
+`true` se pelo menos um elemento passar no teste, `false` caso contrário.
+
+## Exemplos
+
+### Verificação de Status
+
+```javascript
+await db.set('users', [
+  { id: 1, name: 'João', age: 25, active: false },
+  { id: 2, name: 'Maria', age: 30, active: true },
+  { id: 3, name: 'Pedro', age: 35, active: false }
+]);
+
+// Verificar se há pelo menos um usuário ativo
+const hasActiveUser = await db.some('users', user => user.active);
+console.log(hasActiveUser); // true
+
+// Verificar se há usuários menores de idade
+const hasMinor = await db.some('users', user => user.age < 18);
+console.log(hasMinor); // false
+
+// Verificar se há usuários com mais de 30 anos
+const hasOlderUser = await db.some('users', user => user.age > 30);
+console.log(hasOlderUser); // true (Pedro tem 35)
+```
+
+### Verificação de Estoque
+
+```javascript
+await db.set('products', [
+  { id: 1, name: 'Notebook', stock: 0, price: 2500 },
+  { id: 2, name: 'Mouse', stock: 5, price: 50 },
+  { id: 3, name: 'Keyboard', stock: 0, price: 120 }
+]);
+
+// Verificar se há produtos em estoque
+const hasStock = await db.some('products', product => product.stock > 0);
+console.log(hasStock); // true (Mouse tem estoque)
+
+// Verificar se há produtos caros (>R$ 1000)
+const hasExpensive = await db.some('products', product => product.price > 1000);
+console.log(hasExpensive); // true (Notebook custa R$ 2500)
+
+// Verificar se há produtos com muito estoque (>10)
+const hasHighStock = await db.some('products', product => product.stock > 10);
+console.log(hasHighStock); // false
+```
+
+### Detecção de Problemas
+
+```javascript
+await db.set('servers', [
+  { name: 'web-01', status: 'online', cpu: 45 },
+  { name: 'web-02', status: 'online', cpu: 78 },
+  { name: 'db-01', status: 'maintenance', cpu: 12 }
+]);
+
+// Verificar se há servidores offline
+const hasOfflineServer = await db.some('servers', server => 
+  server.status === 'offline'
+);
+console.log(hasOfflineServer); // false
+
+// Verificar se há servidores com alta CPU
+const hasHighCPU = await db.some('servers', server => server.cpu > 70);
+console.log(hasHighCPU); // true (web-02 tem 78%)
+
+// Verificar se há servidores em manutenção
+const hasMaintenance = await db.some('servers', server => 
+  server.status === 'maintenance'
+);
+console.log(hasMaintenance); // true
+```
+
+### Validação de Dados
+
+```javascript
+await db.set('scores', [45, 67, 89, 92, 78]);
+
+// Verificar se há notas acima de 90
+const hasExcellent = await db.some('scores', score => score > 90);
+console.log(hasExcellent); // true (92)
+
+// Verificar se há reprovações (nota < 60)
+const hasFailure = await db.some('scores', score => score < 60);
+console.log(hasFailure); // true (45)
+
+await db.set('emails', [
+  'joao@empresa.com',
+  'maria@gmail.com', 
+  'pedro@empresa.com'
+]);
+
+// Verificar se há emails corporativos
+const hasCorporateEmail = await db.some('emails', email => 
+  email.includes('@empresa.com')
+);
+console.log(hasCorporateEmail); // true
+```
+
+## Casos de Uso
+
+### 🚨 **Sistema de Alertas**
+```javascript
+// Verificar se há alertas críticos
+const hasCriticalAlert = await db.some('alerts', alert => 
+  alert.level === 'critical'
+);
+
+if (hasCriticalAlert) {
+  // Disparar notificação urgente
+}
+```
+
+### 🔍 **Verificação de Existência**
+```javascript
+// Verificar se email já está cadastrado
+const emailExists = await db.some('users', user => 
+  user.email === 'novo@email.com'
+);
+
+if (emailExists) {
+  throw new Error('Email já cadastrado');
+}
+```
+
+### 🎯 **Controle de Acesso**
+```javascript
+// Verificar se usuário tem alguma permissão administrativa
+const isAdmin = await db.some('permissions', permission => 
+  permission.userId === userId && permission.type === 'admin'
+);
+```
+
+### 📊 **Análise de Dados**
+```javascript
+// Verificar se há vendas no último mês
+const hasRecentSales = await db.some('sales', sale => 
+  sale.date > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+);
+```
+
+## Características Importantes
+
+### ⚡ **Avaliação de Curto-Circuito**
+- Para na primeira condição verdadeira encontrada
+- Não processa elementos desnecessários
+- Otimizado para arrays grandes
+
+### 🔄 **Array Vazio**
+- Retorna `false` para arrays vazios
+- Comportamento consistente com JavaScript nativo
+
+### 🛡️ **Validação Robusta**
+- Verifica tipos dos parâmetros
+- Tratamento seguro de erros
+- Não modifica o array original
+
+## Validação e Erros
+
+```javascript
+// ❌ Erro: Chave deve ser string
+try {
+  await db.some(123, item => item.valid);
+} catch (error) {
+  console.log(error.message); // "First argument (key) needs to be a string"
+}
+
+// ❌ Erro: Callback deve ser função
+try {
+  await db.some('items', 'not a function');
+} catch (error) {
+  console.log(error.message); // "Second argument (callback) needs to be a function"
+}
+
+// ✅ Array vazio retorna false
+await db.set('empty', []);
+const result = await db.some('empty', item => true);
+console.log(result); // false
+
+// ✅ Array não existe é tratado como vazio
+const nonExistent = await db.some('nonexistent', item => true);
+console.log(nonExistent); // false
+```
+
+## Métodos Relacionados
+
+- [`every()`](./every.mdx) - Verifica se todos os elementos satisfazem a condição
+- [`find()`](./find.mdx) - Encontra primeiro elemento que satisfaz a condição
+- [`filter()`](./filter.mdx) - Filtra elementos que satisfazem a condição
+- [`includes()`](./includes.mdx) - Verifica se array contém um valor
+- [`indexOf()`](./indexof.mdx) - Encontra índice de um elemento
+
+## Comparação com Every
+
+```javascript
+const data = [1, 2, 3, 4, 5];
+
+// some() - pelo menos um elemento > 3
+const someGreater = await db.some('data', x => x > 3); // true (4 e 5)
+
+// every() - todos os elementos > 3  
+const allGreater = await db.every('data', x => x > 3); // false (1, 2 e 3 não são)
+
+// Uso combinado para análises
+const hasHighScores = await db.some('scores', s => s > 90);
+const allPassed = await db.every('scores', s => s >= 60);
+
+if (hasHighScores && allPassed) {
+  console.log('Turma excelente: todos aprovados e alguns com notas máximas!');
+}
+```
+
+## Dicas de Performance
+
+```javascript
+// ✅ Use some para verificações rápidas
+const needsAttention = await db.some('systems', sys => sys.status !== 'ok');
+
+// ✅ Combine com outras operações para análise completa
+const analysis = {
+  hasErrors: await db.some('logs', log => log.level === 'error'),
+  hasWarnings: await db.some('logs', log => log.level === 'warning'),
+  totalLogs: await db.count('logs')
+};
+
+// ✅ Use para validação antes de operações custosas
+if (await db.some('queue', task => task.priority === 'high')) {
+  // Processar fila de alta prioridade primeiro
+}
+```
