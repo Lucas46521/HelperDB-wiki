@@ -1,0 +1,494 @@
+
+---
+title: size
+description: Retorna o tamanho de arrays, objetos ou strings armazenados
+---
+
+# size()
+
+Retorna o tamanho de arrays, objetos ou strings armazenados, fornecendo informações úteis sobre a quantidade de elementos, propriedades ou caracteres contidos nos dados.
+
+## Sintaxe
+
+```typescript
+await db.size(key: string): Promise<number>
+```
+
+## Parâmetros
+
+- `key` (obrigatório): Chave do valor para obter o tamanho
+
+## Retorno
+
+Número representando:
+- Para **arrays**: quantidade de elementos
+- Para **objetos**: quantidade de propriedades
+- Para **strings**: quantidade de caracteres
+- Para outros tipos: `0`
+
+## Exemplos
+
+### Tamanho de Arrays
+
+```javascript
+// Arrays com diferentes tamanhos
+await db.set('fruits', ['maçã', 'banana', 'laranja', 'uva']);
+await db.set('numbers', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+await db.set('emptyArray', []);
+
+// Verificar tamanhos
+const fruitsSize = await db.size('fruits');
+console.log(`fruits tem ${fruitsSize} elementos`); // 4
+
+const numbersSize = await db.size('numbers');
+console.log(`numbers tem ${numbersSize} elementos`); // 10
+
+const emptySize = await db.size('emptyArray');
+console.log(`emptyArray tem ${emptySize} elementos`); // 0
+
+// Array de objetos
+await db.set('users', [
+  { id: 1, name: 'João' },
+  { id: 2, name: 'Maria' },
+  { id: 3, name: 'Pedro' }
+]);
+
+const usersCount = await db.size('users');
+console.log(`${usersCount} usuários cadastrados`); // 3
+```
+
+### Tamanho de Objetos
+
+```javascript
+// Objetos com diferentes quantidades de propriedades
+await db.set('user.profile', {
+  name: 'João Silva',
+  age: 30,
+  email: 'joao@email.com',
+  active: true,
+  preferences: {
+    theme: 'dark',
+    language: 'pt-BR'
+  }
+});
+
+await db.set('config', {
+  host: 'localhost',
+  port: 3000,
+  debug: true
+});
+
+await db.set('emptyObject', {});
+
+// Verificar número de propriedades
+const profileSize = await db.size('user.profile');
+console.log(`profile tem ${profileSize} propriedades`); // 5
+
+const configSize = await db.size('config');
+console.log(`config tem ${configSize} propriedades`); // 3
+
+const emptyObjSize = await db.size('emptyObject');
+console.log(`emptyObject tem ${emptyObjSize} propriedades`); // 0
+
+// Objeto aninhado
+const preferencesSize = await db.size('user.profile.preferences');
+console.log(`preferences tem ${preferencesSize} propriedades`); // 2
+```
+
+### Tamanho de Strings
+
+```javascript
+// Strings de diferentes tamanhos
+await db.set('shortText', 'Olá');
+await db.set('longText', 'Este é um texto mais longo para testar o método size');
+await db.set('emptyString', '');
+await db.set('user.bio', 'Desenvolvedor Full Stack com 5 anos de experiência');
+
+// Verificar comprimento das strings
+const shortSize = await db.size('shortText');
+console.log(`shortText tem ${shortSize} caracteres`); // 3
+
+const longSize = await db.size('longText');
+console.log(`longText tem ${longSize} caracteres`); // 54
+
+const emptyStrSize = await db.size('emptyString');
+console.log(`emptyString tem ${emptyStrSize} caracteres`); // 0
+
+const bioSize = await db.size('user.bio');
+console.log(`bio tem ${bioSize} caracteres`); // 48
+```
+
+### Sistema de Inventário
+
+```javascript
+// Sistema de gestão de estoque
+await db.set('inventory.electronics', [
+  { id: 1, name: 'Laptop', stock: 15 },
+  { id: 2, name: 'Mouse', stock: 50 },
+  { id: 3, name: 'Keyboard', stock: 25 }
+]);
+
+await db.set('inventory.books', [
+  { id: 1, title: 'JavaScript Guide', stock: 12 },
+  { id: 2, title: 'Python Basics', stock: 8 }
+]);
+
+await db.set('inventory.furniture', []);
+
+// Relatório de inventário
+async function generateInventoryReport() {
+  console.log('📦 Relatório de Inventário:');
+  
+  const electronicsCount = await db.size('inventory.electronics');
+  const booksCount = await db.size('inventory.books');
+  const furnitureCount = await db.size('inventory.furniture');
+  
+  console.log(`Electronics: ${electronicsCount} tipos de produtos`);
+  console.log(`Books: ${booksCount} tipos de produtos`);
+  console.log(`Furniture: ${furnitureCount} tipos de produtos`);
+  
+  const totalCategories = [electronicsCount, booksCount, furnitureCount]
+    .filter(count => count > 0).length;
+  
+  console.log(`\n📊 Resumo: ${totalCategories} categorias ativas`);
+  
+  // Calcular total de itens únicos
+  const totalProducts = electronicsCount + booksCount + furnitureCount;
+  console.log(`Total de produtos únicos: ${totalProducts}`);
+}
+
+await generateInventoryReport();
+```
+
+### Validação de Limites
+
+```javascript
+// Sistema com limites de capacidade
+await db.set('cart.items', []);
+await db.set('favorites.products', []);
+await db.set('settings.notifications', {});
+
+const LIMITS = {
+  cartMaxItems: 10,
+  favoritesMaxItems: 50,
+  maxNotificationSettings: 20
+};
+
+// Função para verificar se pode adicionar mais itens
+async function canAddToCart() {
+  const currentSize = await db.size('cart.items');
+  const canAdd = currentSize < LIMITS.cartMaxItems;
+  
+  console.log(`🛒 Carrinho: ${currentSize}/${LIMITS.cartMaxItems} itens`);
+  console.log(`Pode adicionar mais: ${canAdd ? 'Sim' : 'Não'}`);
+  
+  return canAdd;
+}
+
+async function canAddToFavorites() {
+  const currentSize = await db.size('favorites.products');
+  const canAdd = currentSize < LIMITS.favoritesMaxItems;
+  
+  console.log(`❤️ Favoritos: ${currentSize}/${LIMITS.favoritesMaxItems} itens`);
+  console.log(`Pode adicionar mais: ${canAdd ? 'Sim' : 'Não'}`);
+  
+  return canAdd;
+}
+
+// Simular adição de itens
+for (let i = 1; i <= 12; i++) {
+  if (await canAddToCart()) {
+    await db.push('cart.items', { id: i, product: `Product ${i}` });
+    console.log(`✅ Produto ${i} adicionado ao carrinho`);
+  } else {
+    console.log(`❌ Carrinho cheio! Não é possível adicionar produto ${i}`);
+    break;
+  }
+}
+```
+
+### Dashboard de Estatísticas
+
+```javascript
+// Dados para dashboard
+await db.set('analytics.pageViews', Array(1500).fill().map((_, i) => ({
+  page: `/page${i % 10}`,
+  views: Math.floor(Math.random() * 100)
+})));
+
+await db.set('analytics.users', Array(250).fill().map((_, i) => ({
+  id: i + 1,
+  lastActive: Date.now() - Math.random() * 86400000
+})));
+
+await db.set('analytics.errors', Array(45).fill().map((_, i) => ({
+  type: 'error',
+  timestamp: Date.now() - Math.random() * 86400000
+})));
+
+await db.set('system.cache', {
+  users: 'cached',
+  products: 'cached',
+  orders: 'cached',
+  analytics: 'cached',
+  settings: 'cached',
+  notifications: 'cached'
+});
+
+// Função para dashboard
+async function generateDashboard() {
+  console.log('📊 Dashboard de Estatísticas:');
+  console.log('================================');
+  
+  // Contadores principais
+  const pageViewsCount = await db.size('analytics.pageViews');
+  const usersCount = await db.size('analytics.users');
+  const errorsCount = await db.size('analytics.errors');
+  const cacheEntriesCount = await db.size('system.cache');
+  
+  console.log(`📈 Page Views registradas: ${pageViewsCount.toLocaleString()}`);
+  console.log(`👥 Usuários ativos: ${usersCount.toLocaleString()}`);
+  console.log(`❌ Erros registrados: ${errorsCount}`);
+  console.log(`💾 Entradas em cache: ${cacheEntriesCount}`);
+  
+  // Cálculos adicionais
+  const avgViewsPerUser = pageViewsCount / usersCount;
+  const errorRate = (errorsCount / pageViewsCount * 100);
+  
+  console.log('\n📊 Métricas Calculadas:');
+  console.log(`Média de views por usuário: ${avgViewsPerUser.toFixed(2)}`);
+  console.log(`Taxa de erro: ${errorRate.toFixed(3)}%`);
+  
+  // Status do sistema
+  console.log('\n🎯 Status do Sistema:');
+  console.log(`Cache Health: ${cacheEntriesCount > 0 ? '✅ Ativo' : '❌ Inativo'}`);
+  console.log(`Error Level: ${errorsCount < 50 ? '✅ Normal' : '⚠️ Alto'}`);
+}
+
+await generateDashboard();
+```
+
+## Casos de Uso
+
+### 📊 **Relatórios e Analytics**
+```javascript
+// Estatísticas de uso
+const totalProducts = await db.size('products');
+const totalUsers = await db.size('users');
+const totalOrders = await db.size('orders');
+
+console.log(`Sistema: ${totalProducts} produtos, ${totalUsers} usuários, ${totalOrders} pedidos`);
+```
+
+### 🛡️ **Validação de Limites**
+```javascript
+// Verificar antes de adicionar
+const currentItems = await db.size('shoppingCart');
+if (currentItems < 10) {
+  await db.push('shoppingCart', newItem);
+} else {
+  throw new Error('Carrinho cheio!');
+}
+```
+
+### 📱 **Paginação Dinâmica**
+```javascript
+// Calcular número de páginas
+const totalItems = await db.size('products');
+const itemsPerPage = 20;
+const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+console.log(`${totalItems} produtos em ${totalPages} páginas`);
+```
+
+### 🎯 **Performance Monitoring**
+```javascript
+// Monitorar crescimento de dados
+const cacheSize = await db.size('cache');
+const logSize = await db.size('logs');
+
+if (cacheSize > 1000) {
+  console.log('⚠️ Cache muito grande, considere limpeza');
+}
+
+if (logSize > 5000) {
+  console.log('⚠️ Muitos logs, considere arquivamento');
+}
+```
+
+## Características Importantes
+
+### 🎯 **Flexibilidade de Tipos**
+- Funciona com arrays, objetos e strings
+- Retorna 0 para tipos não suportados
+- Suporte completo a estruturas aninhadas
+
+### ⚡ **Performance Otimizada**
+- Operação rápida sem carregar dados completos
+- Não afeta o valor armazenado
+- Cache interno para melhor performance
+
+### 🔧 **Integração Perfeita**
+- Combina bem com outros métodos
+- Essencial para validações e controles
+- Suporte a notação de ponto
+
+## Validação e Erros
+
+```javascript
+// ❌ Erro: Chave deve ser string
+try {
+  await db.size(123);
+} catch (error) {
+  console.log(error.message); // "Key must be a string"
+}
+
+// ✅ Chave não existe
+const nonExistentSize = await db.size('nonexistent.key');
+console.log(nonExistentSize); // 0
+
+// ✅ Tipos não suportados retornam 0
+await db.set('numberValue', 42);
+await db.set('booleanValue', true);
+await db.set('nullValue', null);
+
+console.log(await db.size('numberValue')); // 0
+console.log(await db.size('booleanValue')); // 0
+console.log(await db.size('nullValue')); // 0
+
+// ✅ Verificação de propriedade aninhada
+await db.set('nested', { level1: { level2: [1, 2, 3] } });
+const nestedSize = await db.size('nested.level1.level2');
+console.log(nestedSize); // 3
+```
+
+## Métodos Relacionados
+
+- [`count()`](./count.mdx) - Conta registros que atendem critérios
+- [`type()`](./type.mdx) - Verifica tipo do valor
+- [`get()`](./get.mdx) - Obtém valor para inspecionar
+- [`has()`](./has.mdx) - Verifica existência de chave
+- [`all()`](./all.mdx) - Lista todos os dados
+
+## Utilitários Avançados
+
+```javascript
+// Classe para análise de tamanhos
+class SizeAnalyzer {
+  constructor(db) {
+    this.db = db;
+  }
+  
+  async analyzeDataSizes(pattern = '') {
+    const allData = await this.db.all();
+    const analysis = {
+      arrays: [],
+      objects: [],
+      strings: [],
+      totalSize: 0
+    };
+    
+    for (const { key } of allData) {
+      if (pattern && !key.includes(pattern)) continue;
+      
+      const type = await this.db.type(key);
+      const size = await this.db.size(key);
+      
+      const entry = { key, size };
+      
+      switch (type) {
+        case 'array':
+          analysis.arrays.push(entry);
+          break;
+        case 'object':
+          analysis.objects.push(entry);
+          break;
+        case 'string':
+          analysis.strings.push(entry);
+          break;
+      }
+      
+      analysis.totalSize += size;
+    }
+    
+    // Ordenar por tamanho (maior primeiro)
+    analysis.arrays.sort((a, b) => b.size - a.size);
+    analysis.objects.sort((a, b) => b.size - a.size);
+    analysis.strings.sort((a, b) => b.size - a.size);
+    
+    return analysis;
+  }
+  
+  async findLargestData(limit = 10) {
+    const allData = await this.db.all();
+    const sizesWithKeys = [];
+    
+    for (const { key } of allData) {
+      const size = await this.db.size(key);
+      const type = await this.db.type(key);
+      sizesWithKeys.push({ key, size, type });
+    }
+    
+    return sizesWithKeys
+      .sort((a, b) => b.size - a.size)
+      .slice(0, limit);
+  }
+  
+  async generateSizeReport() {
+    const analysis = await this.analyzeDataSizes();
+    const largest = await this.findLargestData(5);
+    
+    console.log('📊 Relatório de Tamanhos:');
+    console.log('==========================');
+    
+    console.log(`Arrays: ${analysis.arrays.length} (total elements: ${analysis.arrays.reduce((sum, a) => sum + a.size, 0)})`);
+    console.log(`Objects: ${analysis.objects.length} (total properties: ${analysis.objects.reduce((sum, o) => sum + o.size, 0)})`);
+    console.log(`Strings: ${analysis.strings.length} (total characters: ${analysis.strings.reduce((sum, s) => sum + s.size, 0)})`);
+    
+    console.log('\n🎯 Maiores estruturas:');
+    largest.forEach((item, index) => {
+      console.log(`${index + 1}. ${item.key} (${item.type}): ${item.size}`);
+    });
+    
+    return analysis;
+  }
+}
+
+// Uso da análise
+const analyzer = new SizeAnalyzer(db);
+await analyzer.generateSizeReport();
+```
+
+## Dicas de Performance
+
+```javascript
+// ✅ Use size() para validações rápidas
+const cartSize = await db.size('cart');
+if (cartSize < MAX_CART_ITEMS) {
+  // Adicionar item
+}
+
+// ✅ Monitore crescimento de dados
+const logSize = await db.size('logs');
+if (logSize > 1000) {
+  // Limpar logs antigos
+  await db.set('logs', []);
+}
+
+// ✅ Otimize carregamento baseado no tamanho
+const dataSize = await db.size('heavyData');
+if (dataSize > 100) {
+  // Carregar com paginação
+  const firstBatch = await db.limit(50, 'heavyData');
+} else {
+  // Carregar tudo
+  const allData = await db.get('heavyData');
+}
+
+// ✅ Use para relatórios eficientes
+const summary = {
+  users: await db.size('users'),
+  products: await db.size('products'),
+  orders: await db.size('orders')
+};
+```
