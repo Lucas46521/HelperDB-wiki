@@ -1,0 +1,270 @@
+
+---
+title: sort
+description: Ordena dados por um campo específico em ordem crescente ou decrescente
+---
+
+# sort()
+
+Ordena os dados armazenados por um campo específico, permitindo organização em ordem crescente (asc) ou decrescente (desc). Útil para classificar registros e preparar dados para exibição.
+
+## Sintaxe
+
+```typescript
+await db.sort(key: string, field: string, order?: 'asc' | 'desc'): Promise<any[]>
+```
+
+## Parâmetros
+
+- `key` (obrigatório): Chave dos dados para ordenar (use "" para todos os dados)
+- `field` (obrigatório): Campo pelo qual ordenar
+- `order` (opcional): Ordem da classificação - 'asc' (crescente) ou 'desc' (decrescente). Padrão: 'asc'
+
+## Retorno
+
+Array com os dados ordenados pelo campo especificado.
+
+## Exemplos
+
+### Ordenar Usuários por Idade
+
+```javascript
+await db.set('user.123', { name: 'João', age: 25, salary: 5000 });
+await db.set('user.456', { name: 'Maria', age: 30, salary: 6000 });
+await db.set('user.789', { name: 'Pedro', age: 22, salary: 4500 });
+await db.set('user.101', { name: 'Ana', age: 35, salary: 7000 });
+
+// Ordenar por idade (crescente)
+const byAgeAsc = await db.sort('', 'age', 'asc');
+console.log(byAgeAsc.map(u => `${u.value.name}: ${u.value.age} anos`));
+// ['Pedro: 22 anos', 'João: 25 anos', 'Maria: 30 anos', 'Ana: 35 anos']
+
+// Ordenar por idade (decrescente)
+const byAgeDesc = await db.sort('', 'age', 'desc');
+console.log(byAgeDesc.map(u => `${u.value.name}: ${u.value.age} anos`));
+// ['Ana: 35 anos', 'Maria: 30 anos', 'João: 25 anos', 'Pedro: 22 anos']
+
+// Ordenar por salário (decrescente)
+const bySalary = await db.sort('', 'salary', 'desc');
+console.log(bySalary.map(u => `${u.value.name}: R$ ${u.value.salary}`));
+// ['Ana: R$ 7000', 'Maria: R$ 6000', 'João: R$ 5000', 'Pedro: R$ 4500']
+```
+
+### Ordenar Array de Produtos
+
+```javascript
+await db.set('products', [
+  { id: 1, name: 'Notebook', price: 2500, rating: 4.5 },
+  { id: 2, name: 'Mouse', price: 50, rating: 4.8 },
+  { id: 3, name: 'Keyboard', price: 120, rating: 4.2 },
+  { id: 4, name: 'Monitor', price: 800, rating: 4.7 }
+]);
+
+// Ordenar produtos por preço (crescente)
+const byPrice = await db.sort('products', 'price', 'asc');
+console.log(byPrice.map(p => `${p.name}: R$ ${p.price}`));
+// ['Mouse: R$ 50', 'Keyboard: R$ 120', 'Monitor: R$ 800', 'Notebook: R$ 2500']
+
+// Ordenar por rating (decrescente)
+const byRating = await db.sort('products', 'rating', 'desc');
+console.log(byRating.map(p => `${p.name}: ${p.rating}⭐`));
+// ['Mouse: 4.8⭐', 'Monitor: 4.7⭐', 'Notebook: 4.5⭐', 'Keyboard: 4.2⭐']
+
+// Ordenar por nome (alfabética)
+const byName = await db.sort('products', 'name', 'asc');
+console.log(byName.map(p => p.name));
+// ['Keyboard', 'Monitor', 'Mouse', 'Notebook']
+```
+
+### Ordenar Vendas por Data
+
+```javascript
+await db.set('sales.001', { 
+  date: '2024-01-15', 
+  amount: 1500, 
+  customer: 'João Silva' 
+});
+await db.set('sales.002', { 
+  date: '2024-01-10', 
+  amount: 2300, 
+  customer: 'Maria Santos' 
+});
+await db.set('sales.003', { 
+  date: '2024-01-20', 
+  amount: 800, 
+  customer: 'Pedro Costa' 
+});
+
+// Ordenar vendas por data (mais recente primeiro)
+const recentSales = await db.sort('', 'date', 'desc');
+console.log('Vendas mais recentes:');
+recentSales.forEach(sale => {
+  console.log(`${sale.value.date}: R$ ${sale.value.amount} - ${sale.value.customer}`);
+});
+// 2024-01-20: R$ 800 - Pedro Costa
+// 2024-01-15: R$ 1500 - João Silva  
+// 2024-01-10: R$ 2300 - Maria Santos
+
+// Ordenar por valor (maior primeiro)
+const topSales = await db.sort('', 'amount', 'desc');
+console.log('Maiores vendas:');
+topSales.forEach(sale => {
+  console.log(`R$ ${sale.value.amount} - ${sale.value.customer}`);
+});
+// R$ 2300 - Maria Santos
+// R$ 1500 - João Silva
+// R$ 800 - Pedro Costa
+```
+
+### Ranking de Jogadores
+
+```javascript
+await db.set('players', [
+  { id: 1, name: 'Player1', score: 1500, level: 15 },
+  { id: 2, name: 'Player2', score: 2300, level: 23 },
+  { id: 3, name: 'Player3', score: 1800, level: 18 },
+  { id: 4, name: 'Player4', score: 2100, level: 21 }
+]);
+
+// Ranking por pontuação (maior primeiro)
+const scoreRanking = await db.sort('players', 'score', 'desc');
+console.log('🏆 Ranking por Pontuação:');
+scoreRanking.forEach((player, index) => {
+  console.log(`${index + 1}º ${player.name}: ${player.score} pontos`);
+});
+// 1º Player2: 2300 pontos
+// 2º Player4: 2100 pontos  
+// 3º Player3: 1800 pontos
+// 4º Player1: 1500 pontos
+
+// Ranking por nível
+const levelRanking = await db.sort('players', 'level', 'desc');
+console.log('📊 Ranking por Nível:');
+levelRanking.forEach((player, index) => {
+  console.log(`${index + 1}º ${player.name}: Nível ${player.level}`);
+});
+```
+
+## Casos de Uso
+
+### 📊 **Dashboards e Relatórios**
+```javascript
+// Top vendedores do mês
+const topSellers = await db.sort('', 'salesAmount', 'desc');
+
+// Produtos mais vendidos
+const bestProducts = await db.sort('inventory', 'soldQuantity', 'desc');
+
+// Clientes por valor total de compras
+const topCustomers = await db.sort('', 'totalPurchases', 'desc');
+```
+
+### 🎯 **Listagens Organizadas**
+```javascript
+// Lista de funcionários por nome
+const employeesByName = await db.sort('', 'fullName', 'asc');
+
+// Produtos por preço (do menor ao maior)
+const productsByPrice = await db.sort('catalog', 'price', 'asc');
+
+// Eventos por data (cronológico)
+const eventsByDate = await db.sort('events', 'startDate', 'asc');
+```
+
+### 🏆 **Rankings e Classificações**
+```javascript
+// Ranking de usuários por pontos
+const userRanking = await db.sort('', 'points', 'desc');
+
+// Classificação de times por vitórias
+const teamRanking = await db.sort('teams', 'wins', 'desc');
+```
+
+## Características Importantes
+
+### 🔢 **Tipos de Dados Suportados**
+- **Números**: Ordenação numérica correta
+- **Strings**: Ordenação alfabética
+- **Datas**: Ordenação cronológica
+- **Booleanos**: false vem antes de true
+
+### ⚡ **Performance Otimizada**
+- Algoritmo de ordenação eficiente
+- Suporte a grandes conjuntos de dados
+- Cache automático para consultas repetidas
+
+### 🎯 **Flexibilidade de Uso**
+- Funciona com dados globais (key = "")
+- Suporte a arrays específicos
+- Campos aninhados usando notação de ponto
+
+## Validação e Erros
+
+```javascript
+// ❌ Erro: Parâmetros obrigatórios
+try {
+  await db.sort();
+} catch (error) {
+  console.log(error.message); // "Key and field parameters are required"
+}
+
+// ❌ Erro: Ordem inválida
+try {
+  await db.sort('data', 'name', 'invalid');
+} catch (error) {
+  console.log(error.message); // "Order must be 'asc' or 'desc'"
+}
+
+// ✅ Campo não existe em alguns registros
+await db.set('mixed.1', { name: 'João', age: 25 });
+await db.set('mixed.2', { name: 'Maria' }); // sem campo 'age'
+
+const sorted = await db.sort('', 'age', 'asc');
+// Registros sem o campo aparecerão no final
+```
+
+## Métodos Relacionados
+
+- [`limit()`](./limit.mdx) - Limita o número de resultados
+- [`skip()`](./skip.mdx) - Pula um número de registros
+- [`filter()`](./filter.mdx) - Filtra dados por condições
+- [`search()`](./search.mdx) - Busca dados por termo
+- [`aggregate()`](./aggregate.mdx) - Operações estatísticas nos dados ordenados
+
+## Combinando com Outros Métodos
+
+```javascript
+// Ordenar e limitar (Top 10)
+const top10 = await db.sort('', 'score', 'desc')
+  .then(sorted => db.limit(10, ''));
+
+// Ordenar, pular e limitar (Paginação)
+const page2 = await db.sort('products', 'name', 'asc')
+  .then(sorted => db.skip(10, ''))
+  .then(skipped => db.limit(10, ''));
+
+// Filtrar e ordenar
+const activeUsersSorted = await db.filter('users', user => user.active)
+  .then(filtered => db.sort('', 'lastLogin', 'desc'));
+```
+
+## Dicas de Performance
+
+```javascript
+// ✅ Use sort para preparar dados para exibição
+const displayData = await db.sort('products', 'name', 'asc');
+
+// ✅ Combine com limit para paginação eficiente
+const firstPage = await db.sort('', 'createdAt', 'desc')
+  .then(sorted => db.limit(20, ''));
+
+// ✅ Cache resultados ordenados para reutilização
+const sortedUsers = await db.sort('', 'name', 'asc');
+// Use sortedUsers múltiplas vezes sem re-ordenar
+
+// ✅ Use para análises e relatórios
+const salesReport = {
+  topProducts: await db.sort('sales', 'quantity', 'desc'),
+  recentOrders: await db.sort('orders', 'date', 'desc')
+};
+```
