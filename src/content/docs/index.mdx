@@ -1,86 +1,48 @@
 ---
 title: Helper.DB
-description: Biblioteca JavaScript simples e poderosa para gerenciamento de banco de dados
+description: Uma biblioteca de banco de dados JavaScript simples e poderosa
 template: splash
 hero:
-  tagline: Biblioteca JavaScript simples e poderosa para gerenciamento de banco de dados
+  tagline: Fork do popular quick.db com funcionalidades expandidas e melhorias de performance
   image:
     file: ../../assets/logo.png
-    alt: Helper.DB Logo
   actions:
-    - text: Guia de Instalação
-      link: /guides/installation/
+    - text: Começar agora
+      link: /guides/quick-start/
       icon: right-arrow
       variant: primary
-    - text: Início Rápido
-      link: /guides/quick-start/
-      icon: rocket
+    - text: Ver no GitHub
+      link: https://github.com/Lucas46521/Helper.db
+      icon: external
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+## 🚀 Versão Atual: 1.4.2
 
-## Início rápido
+### ✨ Novidades da v1.4.2
 
-Configure o Helper.db em seu projeto Node.js em poucos minutos. Siga os passos abaixo para começar a armazenar e recuperar dados facilmente.
+- **🔍 Método `search()` Aprimorado**: Nova funcionalidade de busca com suporte a profundidade
+  - Busca por chaves aninhadas usando notação de ponto
+  - Parâmetro `depth` para controlar profundidade da busca
+  - Suporte a busca em objetos complexos e arrays
 
-### Pré-requisitos
-- Node.js (versão 18 ou superior)
-- npm ou yarn instalado
+- **🛡️ Validação Aprimorada no MemoryDriver**:
+  - Validação de parâmetros obrigatórios (table, key)
+  - Método `clear()` para limpeza completa da memória
+  - Método `getStats()` para estatísticas de uso
 
-### Instalação
-```bash frame="none"
-npm install helper.db
-```
+- **🔧 Novos Tipos de Erro**:
+  - `CONNECTION_FAILED`
+  - `TABLE_NOT_FOUND` 
+  - `DRIVER_NOT_INITIALIZED`
+  - `VALIDATION_FAILED`
 
+## Principais funcionalidades
 
-## Exemplo:
-```javascript title="Exemplo Simples"
-const { Database } = require('helper.db');
-const db = new Database('myapp');
-
-// Armazenar dados
-db.set('user.name', 'João');
-db.set('user.preferences.theme', 'dark');
-
-// Recuperar dados
-console.log(db.get('user.name')); // João
-console.log(db.get('user.preferences')); // { theme: 'dark' }
-```
-
-### Próximos Passos
-- Aprenda a instalar o Helper.db: [Guia de Instalação →](/guias/instalacao/)
-- Explore todos os métodos disponíveis: [Referência da API →](/referencia/banco-de-dados/)
-
-## Por que Escolher o Helper.db?
-
-A Helper.db foi projetado para simplificar o gerenciamento de dados em aplicações Node.js. Veja seus principais recursos:
-<CardGrid>
-  <Card title="API Simples" icon="code">
-    Use métodos intuitivos como `set` e `get` com notação de ponto para lidar com objetos aninhados sem esforço. [Saiba mais →](/referencia/banco-de-dados/#set)
-  </Card>
-  <Card title="Alta Performance" icon="lightning">
-    Otimizado para velocidade com mecanismos eficientes de armazenamento em memória e disco. [Veja benchmarks →](/guias/performance/)
-  </Card>
-  <Card title="Segurança de Tipos" icon="shield-check">
-    Suporte completo ao TypeScript com definições de tipo detalhadas para uma experiência de codificação mais segura. [Guia TypeScript →](/guias/typescript/)
-  </Card>
-  <Card title="Backup e Restauração" icon="cloud-upload">
-    Ferramentas integradas para criar e restaurar backups, garantindo a segurança dos seus dados. [Guia de Backup →](/guias/backup/)
-  </Card>
-</CardGrid>
-
-## Primeiros Passos com o Helper.db
-
-Pronto para começar? Escolha um ponto de partida abaixo para explorar os recursos do Helper.db e integrá-lo ao seu projeto.
-
-<CardGrid>
-  <Card title="Instalar o Helper.db" icon="download">
-    Instale o Helper.db em seu projeto Node.js com um único comando. [Instalar agora →](/guides/installation/)
-  </Card>
-  <Card title="Guia de Início Rápido" icon="rocket">
-    Aprenda o básico do Helper.db com nosso guia de início rápido. [Experimente agora →](/guides/quick-start/)
-  </Card>
-  <Card title="Referência da API" icon="book-open">
-    Explore todos os métodos disponíveis e seus usos na documentação detalhada da API. [Leia a documentação →](/reference/database/)
-  </Card>
-</CardGrid>
+- 🚀 **Alta Performance**: Otimizado para velocidade e eficiência
+- 🔄 **Múltiplos Drivers**: SQLite, MySQL, MariaDB, MongoDB, JSON e Memory
+- 💾 **Cache Inteligente**: Sistema de cache automático para melhor performance
+- 📦 **Operações em Lote**: Métodos para manipular múltiplos registros
+- 🔍 **Busca Avançada**: Sistema de busca poderoso com filtros e regex
+- 📊 **Estatísticas**: Métodos para análise de dados (count, sum, avg, etc.)
+- 🔧 **Configurável**: Extenso sistema de configuração e eventos
+- 💾 **Backup Automático**: Sistema de backup e restauração integrado

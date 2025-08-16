@@ -1,24 +1,26 @@
-
-
 ---
 title: search
 description: Busca geral de registros no banco de dados
 ---
 
-# search(term, property?)
+# search(term, property?, options?)
 
 Realiza busca global nos dados armazenados.
 
 ## Sintaxe
 
 ```javascript
-const results = await db.search(term, property)
+await db.search(term, property?, options?)
 ```
 
 ## Parâmetros
 
-- `term` (string): Termo a ser buscado
-- `property` (string, opcional): Propriedade específica para buscar
+- `term` (string): Termo a ser pesquisado
+- `property` (string, opcional): Propriedade específica para buscar (suporta notação de ponto)
+- `options` (objeto, opcional): Opções de busca
+  - `caseSensitive` (boolean): Se a busca é sensível a maiúsculas/minúsculas (padrão: `true`)
+  - `exactMatch` (boolean): Se deve buscar correspondência exata (padrão: `false`)
+  - `depth` (number): Profundidade máxima para busca aninhada (padrão: `Infinity`)
 
 ## Retorno
 
@@ -134,12 +136,12 @@ async function searchMultiple(terms) {
         const found = await db.search(term);
         resultados.push(...found);
     }
-    
+
     // Remover duplicatas e ordenar por score
     const unique = resultados.filter((item, index, arr) => 
         arr.findIndex(i => i.key === item.key) === index
     );
-    
+
     return unique.sort((a, b) => b.score - a.score);
 }
 
@@ -168,12 +170,12 @@ async function buscarUsuarios(query) {
         db.search(query, 'email'),
         db.search(query, 'telefone')
     ]);
-    
+
     const todos = [...porNome, ...porEmail, ...porTelefone];
     const unicos = todos.filter((item, index, arr) => 
         arr.findIndex(i => i.key === item.key) === index
     );
-    
+
     return unicos.sort((a, b) => b.score - a.score);
 }
 ```
@@ -182,7 +184,7 @@ async function buscarUsuarios(query) {
 ```javascript
 async function buscarProdutos(termo) {
     const resultados = await db.search(termo);
-    
+
     return resultados
         .filter(r => r.key.startsWith('produto_'))
         .map(r => ({
@@ -208,11 +210,39 @@ async function searchWithCache(term) {
     if (cache.has(term)) {
         return cache.get(term);
     }
-    
+
     const results = await db.search(term);
     cache.set(term, results);
     return results;
 }
+```
+
+## Novas Funcionalidades de Busca
+
+```javascript
+// Buscar qualquer valor que contenha "admin"
+const admins = await db.search("admin");
+
+// Buscar na propriedade "role" (case-insensitive)
+const usuarios = await db.search("manager", "role", { caseSensitive: false });
+
+// Busca exata
+const exatos = await db.search("Admin", "type", { exactMatch: true });
+
+// 🆕 Busca aninhada com notação de ponto
+const enderecos = await db.search("São Paulo", "endereco.cidade");
+
+// 🆕 Busca com profundidade controlada
+const resultados = await db.search("admin", "user.permissions.role", {
+  depth: 3,
+  caseSensitive: false
+});
+
+// 🆕 Busca em objetos complexos
+const complexos = await db.search("premium", "subscription.plan.type", {
+  depth: 4,
+  exactMatch: true
+});
 ```
 
 ## Veja Também
@@ -221,4 +251,3 @@ async function searchWithCache(term) {
 - [startsWith](./startsWith.mdx) - Busca por prefixo
 - [regex](./regex.mdx) - Busca com expressões regulares
 - [custom](./custom.mdx) - Busca personalizada
-

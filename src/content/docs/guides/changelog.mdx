@@ -1,0 +1,126 @@
+
+---
+title: Changelog
+description: Histórico de mudanças e atualizações do Helper.DB
+---
+
+# 📋 Changelog
+
+## [1.4.2] - 🚀 **ATUAL**
+
+### ✨ Adicionado
+- **🔍 Método `search()` Aprimorado**: Nova funcionalidade de busca com suporte a profundidade
+  - Busca por chaves aninhadas usando notação de ponto
+  - Parâmetro `depth` para controlar profundidade da busca
+  - Suporte a busca em objetos complexos e arrays
+- **🛡️ Validação Aprimorada no MemoryDriver**:
+  - Validação de parâmetros obrigatórios (table, key)
+  - Método `clear()` para limpeza completa da memória
+  - Método `getStats()` para estatísticas de uso
+- **🔧 Novos Tipos de Erro**:
+  - `CONNECTION_FAILED`
+  - `TABLE_NOT_FOUND` 
+  - `DRIVER_NOT_INITIALIZED`
+  - `VALIDATION_FAILED`
+
+### 🔧 Melhorado
+- **📚 Documentação Completa**: Arquivo `HELPER_DB_DOCUMENTATION.md` atualizado
+- **🎯 Performance do Search**: Busca otimizada com controle de profundidade
+- **🛡️ Tratamento de Erros**: Categorização mais específica de problemas
+
+### 🐛 Corrigido
+- Melhor tratamento de casos edge no método `search()`
+- Validação robusta de entrada no MemoryDriver
+
+---
+
+## Exemplos das Novas Funcionalidades
+
+### 🔍 Busca com Profundidade
+
+```javascript
+// Busca simples
+const resultados = await db.search("João");
+
+// Busca com profundidade específica
+const usuarios = await db.search("admin", "user.role", { depth: 2 });
+
+// Busca em objetos aninhados
+const enderecos = await db.search("São Paulo", "endereco.cidade", {
+  caseSensitive: false,
+  depth: 3
+});
+```
+
+### 🛡️ MemoryDriver Aprimorado
+
+```javascript
+const { HelperDB, MemoryDriver } = require('helper.db');
+
+const cache = new HelperDB({ 
+  driver: new MemoryDriver(),
+  table: "sessoes"
+});
+
+await cache.init();
+
+// Validação automática de parâmetros
+await cache.set("user:123", { nome: "João" }); // ✅ Válido
+// await cache.set("", { dados }); // ❌ Erro de validação
+
+// Limpeza completa
+cache.driver.clear();
+
+// Estatísticas detalhadas
+const stats = cache.driver.getStats();
+console.log(stats);
+// {
+//   sessoes: {
+//     rows: 150,
+//     sizeEstimate: 25000
+//   }
+// }
+```
+
+### 🔧 Tratamento de Erros Aprimorado
+
+```javascript
+try {
+  await db.set("chave", "valor");
+} catch (error) {
+  switch(error.type) {
+    case 'CONNECTION_FAILED':
+      console.log('Erro de conexão com o banco');
+      break;
+    case 'TABLE_NOT_FOUND':
+      console.log('Tabela não encontrada');
+      break;
+    case 'DRIVER_NOT_INITIALIZED':
+      console.log('Driver não foi inicializado');
+      break;
+    case 'VALIDATION_FAILED':
+      console.log('Dados inválidos:', error.details);
+      break;
+    default:
+      console.log('Erro desconhecido:', error.message);
+  }
+}
+```
+
+## 📈 Roadmap
+
+### Próximas Versões
+- **v1.5.0**: Sistema de índices automáticos
+- **v1.6.0**: Replicação de dados
+- **v2.0.0**: Suporte completo a TypeScript nativo
+
+### Funcionalidades Planejadas
+- 🔄 Sincronização entre instâncias
+- 📊 Dashboard de monitoramento
+- 🔐 Criptografia de dados
+- 🌐 Clustering automático
+- 📱 Suporte a React Native
+
+---
+
+**Mantenha-se atualizado**: Acompanhe as novidades no [GitHub](https://github.com/Lucas46521/Helper.db)

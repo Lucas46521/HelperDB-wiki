@@ -30,7 +30,8 @@ export default defineConfig({
               { label: 'Introdução', slug: 'guides/introduction' },
               { label: 'Instalação', slug: 'guides/installation' },
               { label: 'Início Rápido', slug: 'guides/quick-start' },
-              { label: 'Migrar de Quick.DB', slug: 'guides/migrate' },
+              { label: 'Migração', slug: 'guides/migrate' },
+              { label: 'Changelog', slug: 'guides/changelog' },
             ],
           },
           {

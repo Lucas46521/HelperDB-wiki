@@ -5,131 +5,105 @@ sidebar:
   order: 1
 ---
 
-# Introduction to Helper.db
+# 📋 Introdução ao Helper.DB
 
-Helper.db is a simple and powerful database library for Node.js applications.
+> **Uma biblioteca de banco de dados JavaScript simples, poderosa e versátil**
+> 
+> Fork do popular quick.db com funcionalidades expandidas e melhorias de performance
 
-## Quick Example
+Helper.DB é uma solução completa para persistência de dados em aplicações JavaScript/Node.js. Oferece uma API simples e intuitiva para trabalhar com diferentes tipos de bancos de dados, desde soluções simples como JSON até bancos de dados robustos como MySQL e MongoDB.
 
-```javascript title="app.js"
-const { Database } = require('helper.db');
-const db = new Database('myapp');
+## 🎯 Por que escolher Helper.DB?
 
-// Set data
-db.set('user.name', 'João');
-db.set('user.age', 25);
+### ✨ Funcionalidades Principais
+- **🚀 Alta Performance**: Otimizado para velocidade com cache inteligente
+- **🔄 Múltiplos Drivers**: SQLite, MySQL, MariaDB, MongoDB, JSON e Memory
+- **📦 Operações em Lote**: Métodos eficientes para múltiplos registros
+- **🔍 Busca Avançada**: Sistema de busca com regex, filtros e profundidade
+- **📊 Estatísticas**: Análise de dados com count, sum, avg, min, max
+- **💾 Backup Automático**: Sistema integrado de backup e restauração
+- **🛡️ Validação**: Sistema de validação de schema
+- **🔧 Configurável**: Extenso sistema de configuração e eventos
+- **📡 Monitoramento**: Sistema de ping e diagnósticos
+- **🔒 Transações**: Suporte a transações (drivers compatíveis)
 
-// Get data
-console.log(db.get('user.name')); // João
+### 🎯 Ideal Para
+- **Desenvolvimento**: Prototipagem rápida com JSONDriver ou MemoryDriver
+- **Produção**: Aplicações robustas com MySQL, MariaDB ou MongoDB
+- **Cache**: Sistemas de cache temporário com MemoryDriver
+- **Aplicações Desktop**: Persistência local com SQLite
+
+## 🔧 Drivers Disponíveis
+
+| Driver | Uso Ideal | Persistência | Performance |
+|--------|-----------|--------------|-------------|
+| **SqliteDriver** | Desenvolvimento, apps pequenos/médios | ✅ Sim | 🟢 Alta |
+| **MySQLDriver** | Produção, alta concorrência | ✅ Sim | 🟢 Muito Alta |
+| **MariaDBDriver** | Alternativa open-source ao MySQL | ✅ Sim | 🟢 Muito Alta |
+| **MongoDriver** | Dados não estruturados, JSON complexo | ✅ Sim | 🟢 Alta |
+| **JSONDriver** | Desenvolvimento, configurações | ✅ Sim | 🟡 Média |
+| **MemoryDriver** | Cache, dados temporários | ❌ Não | 🟢 Máxima |
+
+## 📈 Versão Atual: v1.4.2
+
+### 🆕 Novidades da Versão 1.4.2
+
+#### ✨ Método `search()` Aprimorado
+- Busca por chaves aninhadas usando notação de ponto
+- Parâmetro `depth` para controlar profundidade da busca
+- Suporte a busca em objetos complexos e arrays
+
+```javascript
+// Busca com profundidade específica
+const resultados = await db.search("admin", "user.role", { depth: 3 });
+
+// Busca aninhada em objetos complexos
+const usuarios = await db.search("São Paulo", "endereco.cidade");
 ```
 
-## Features
+#### 🛡️ Validação Aprimorada no MemoryDriver
+- Validação de parâmetros obrigatórios (table, key)
+- Método `clear()` para limpeza completa da memória
+- Método `getStats()` para estatísticas de uso
 
-- Simple key-value storage
-- Nested object support
-- Fast and lightweight
-- Easy to use API
+```javascript
+const cache = new HelperDB({ driver: new MemoryDriver() });
 
-## What is Helper.db?
+// Limpar todos os dados
+cache.driver.clear();
 
-Helper.db is designed to simplify database operations while providing:
-
-- **Object-oriented approach**: Clean, readable code patterns
-- **Predictable abstractions**: Consistent API across different operations  
-- **High performance**: Optimized for speed and efficiency
-- **100% coverage**: Complete database operation support
-
-## Key Features
-
-### Simple Database Operations
-
-```javascript title="database-operations.js"
-const { Database } = require('helper.db');
-const db = new Database('myDatabase.db');
-
-// Insert data
-await db.insert('users', { name: 'John', age: 30 });
-
-// Query data
-const users = await db.find('users', { age: { $gt: 25 } });
-
-// Update data
-await db.update('users', { name: 'John' }, { age: 31 });
+// Obter estatísticas
+const stats = cache.driver.getStats();
+console.log(stats); // { tabela: { rows: 150, sizeEstimate: 25000 } }
 ```
 
-### Advanced Querying
+#### 🔧 Novos Tipos de Erro
+- `CONNECTION_FAILED`: Falha na conexão com o banco
+- `TABLE_NOT_FOUND`: Tabela não encontrada
+- `DRIVER_NOT_INITIALIZED`: Driver não inicializado
+- `VALIDATION_FAILED`: Falha na validação de dados
 
-```javascript title="advanced-query.js"
-// Complex queries made simple
-const results = await db.query()
-  .from('users')
-  .where('age', '>', 18)
-  .and('status', '=', 'active')
-  .orderBy('created_at', 'desc')
-  .limit(10)
-  .execute();
+## 🚀 Começando
+
+```bash
+npm install helper.db
 ```
 
-### Built-in Backup System
+```javascript
+const { HelperDB } = require('helper.db');
 
-```javascript title="backup.js"
-// Automatic backups
-const backup = new Backup(db);
-await backup.create('backup_20240101.db');
-await backup.restore('backup_20240101.db');
+// Inicialização simples
+const db = new HelperDB();
+await db.init();
+
+// Operações básicas
+await db.set("usuario:1", { nome: "João", idade: 25 });
+const usuario = await db.get("usuario:1");
 ```
 
-## Why Choose Helper.db?
+## 📚 Próximos Passos
 
-- **Easy to learn**: Intuitive API that follows JavaScript best practices
-- **Flexible**: Works with various database engines
-- **Reliable**: Extensively tested and battle-proven
-- **Well documented**: Comprehensive guides and examples
-
-## Exemplo de uso múltiplo
-
-import { Tabs, TabItem } from '@astrojs/starlight/components';
-
-<Tabs>
-  <TabItem label="npm">
-  ```bash title="package.json"
-  npm install helper.db
-  ```
-  </TabItem>
-  <TabItem label="yarn">
-  ```bash title="package.json"
-  yarn add helper.db
-  ```
-  </TabItem>
-</Tabs>
-
-<Tabs>
-  <TabItem label="CommonJS">
-  ```javascript title="index.js"
-  const { Database } = require('helper.db');
-
-  const db = new Database('./database.json');
-
-  // Configurar dados iniciais
-  db.set('users', []);
-  db.set('settings', { theme: 'dark' });
-  ```
-  </TabItem>
-  <TabItem label="ES Modules">
-  ```javascript title="index.mjs"
-  import { Database } from 'helper.db';
-
-  const db = new Database('./database.json');
-
-  // Configurar dados iniciais
-  db.set('users', []);
-  db.set('settings', { theme: 'dark' });
-  ```
-  </TabItem>
-</Tabs>
-
-## Next Steps
-
-Ready to get started? Check out our [Installation Guide](/guides/installation/) to begin using Helper.db in your project.
-
-Or jump straight to the [Quick Start Guide](/guides/quick-start/) to see Helper.db in action!
+- [Instalação e Configuração](/guides/installation/)
+- [Guia de Início Rápido](/guides/quick-start/)
+- [Configuração Avançada](/config/config/)
+- [Drivers Disponíveis](/drivers/sqlite/)
