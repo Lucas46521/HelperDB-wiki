@@ -1,4 +1,4 @@
-modules = ["web", "nodejs-20"]
+modules = ["nodejs-20", "web"]
 hidden = [".config", "package-lock.json"]
 run = "npm run dev"
 
@@ -6,7 +6,7 @@ run = "npm run dev"
 requiredFiles = [".replit", "replit.nix", "package.json", "package-lock.json"]
 
 [nix]
-channel = "stable-24_05"
+channel = "stable-25_05"
 
 [deployment]
 run = ["sh", "-c", "npm run dev"]
