@@ -28,7 +28,7 @@ export default defineConfig({
             label: 'Guias',
             items: [
               { label: 'Introdução', slug: 'guides/introduction' },
-              
+              { label: 'Instalação', slug: 'guides/installation' },
               { label: 'Início Rápido', slug: 'guides/quick-start' },
               { label: 'Migração', slug: 'guides/migrate' },
               { label: 'Changelog', slug: 'guides/changelog' },
