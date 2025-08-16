@@ -91,10 +91,6 @@ export default defineConfig({
               { label: 'compare', slug: 'search/compare' },
               { label: 'custom', slug: 'search/custom' },
             ],
-          },ug: 'search/in' },
-              { label: 'compare', slug: 'search/compare' },
-              { label: 'custom', slug: 'search/custom' },
-            ],
           },
           {
             label: 'Ordenação e Limitação',
